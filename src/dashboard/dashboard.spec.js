@@ -9,7 +9,7 @@ test.describe('Eval View Dashboard', () => {
 
     await expect(page.locator('.landing-title')).toContainText('Modern Web Guidance Evals');
     await expect(page.locator('.header-links a', { hasText: 'Docs' })).toHaveAttribute('href', 'https://developer.chrome.com/docs/modern-web-guidance');
-    await expect(page.locator('.header-links a', { hasText: 'GitHub' })).toHaveAttribute('href', 'https://github.com/GoogleChrome/modern-web-guidance-src');
+    await expect(page.locator('.header-links a', { hasText: 'GitHub' })).toHaveAttribute('href', 'https://github.com/theobarros22/modern-web-guidance-src');
 
     // Check suites content
     await expect(page.locator('.suite-table-row').first()).toBeVisible();
