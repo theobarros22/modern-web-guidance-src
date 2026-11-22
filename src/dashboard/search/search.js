@@ -146,77 +146,77 @@ const K_CURVES = {
 
 /** @type {MilestoneDef[]} */
 const MILESTONES = [
-  { id: 'pre-#528', date: '2026-03-23', label: 'pre-#528', sub: 'whole guide', k: 5, when: 'Shipped through v0.0.26', note: 'One embedding per guide; long guides were truncated.' },
-  { id: '#528', date: '2026-04-10', label: '#528', sub: 'chunk max-pool', k: 5, when: 'Released Apr 10 in v0.0.27', note: 'Splits guides into chunks and scores each guide by its best chunk.' },
-  { id: '#824', date: '2026-05-14', label: '#824', sub: '+ features', k: 5, when: 'Released v0.0.138 through v0.0.194', note: 'Adds each guide’s features list to its chunk embeddings.' },
+  { id: 'pre-#528', date: '2026-03-23', label: 'pre-#528', sub: 'guia inteiro', k: 5, when: 'Distribuído até v0.0.26', note: 'Um embedding por guia; guias longos eram truncados.' },
+  { id: '#528', date: '2026-04-10', label: '#528', sub: 'max-pool chunks', k: 5, when: 'Lançado em 10 abr na v0.0.27', note: 'Divide os guias em chunks e pontua cada guia pelo seu melhor chunk.' },
+  { id: '#824', date: '2026-05-14', label: '#824', sub: '+ recursos', k: 5, when: 'Lançado da v0.0.138 até a v0.0.194', note: 'Adiciona a lista de recursos de cada guia aos embeddings de seus chunks.' },
   {
-    id: 'v0.0.195', date: '2026-10-19', label: 'v0.0.195', sub: '#1853 gate', k: 5, when: 'Released · tagged Oct 19',
-    note: '#1853 cleaned up chunks but added a 0.35 floor and a 0.38 top-1 hurdle; anything below returns [].', tone: 'bad',
-    counterfactual: { id: '#1853-clean', note: 'The same #1853 chunk cleanup (title + description instead of raw YAML, bare headings merged) without the gate.' },
+    id: 'v0.0.195', date: '2026-10-19', label: 'v0.0.195', sub: 'filtro #1853', k: 5, when: 'Lançado · tag em 19 out',
+    note: '#1853 limpou os chunks, mas adicionou um piso de 0,35 e um patamar top-1 de 0,38; qualquer valor abaixo retorna [].', tone: 'bad',
+    counterfactual: { id: '#1853-clean', note: 'A mesma limpeza de chunks do #1853 (título + descrição em vez de YAML bruto, cabeçalhos isolados mesclados) sem o filtro.' },
   },
-  { id: '#2052', date: '2026-10-21', label: 'v0.0.196', sub: '#2052 BM25', k: 5, when: 'Shipped Oct 26 in v0.0.196 (with #2130’s dialog guide)', note: 'Replaces the 0.38 gate with a 0.30 MiniLM floor; fuses BM25 with MiniLM via reciprocal rank fusion.' },
-  { id: '#3048', date: '2026-10-26', label: '#3048', sub: 'top-10', k: 10, when: 'Shipped Nov 2 in v0.0.197', note: 'Returns 10 compact {id, description} results instead of 5 verbose ones.', annotation: 'segment' },
-  { id: '#3048+#3102', date: '2026-10-30', label: '#3102', sub: 'BM25 stem', k: 10, when: 'Shipped Nov 2 in v0.0.197', note: 'Lucene EnglishMinimalStemmer in tokenizeBm25(), BM25-aware 0.30 similarity gate, and sub-floor dense exclusion on BM25 rescues.' },
-  { id: 'rag-chunk-metadata', date: '2026-10-31', label: '#3172', sub: 'chunk meta', k: 10, when: 'Merged Nov 2 · on main', note: 'Prepends guide title, ID, category, and raw + unslugged web-feature IDs to every chunk for MiniLM and BM25 indexing.' },
-  { id: '#3089+#3102+meta', date: '2026-11-04', label: '#3089', sub: 'static 256-d', k: 10, when: 'Merged Nov 4 · on main', note: '256-d Int8 static query vectors against build-time gemini-embedding-001 chunk vectors + BM25 rescue gate (0.30 floor), stacked on #3102 and #3172 (3.2× faster cold start, −58% RAM, −64% tarball).', tone: 'current', annotation: 'below' },
-  { id: 'Gemini 001', label: 'gemini-001', sub: 'online 768-d', k: 10, when: 'Online API · not an offline option', note: '768-d gemini-embedding-001 alone, embedding every query online.', tone: 'research' },
-  { id: 'Gemini Flash', label: 'gemini-flash', sub: 'online catalog', k: 10, when: 'Online LLM · not an offline option', note: 'gemini-3.8-flash reading all 192 guide descriptions (~8.1k tokens) and ranking the top 10 per query. Note: also graded qrels from full guide cards.', tone: 'ceiling' },
+  { id: '#2052', date: '2026-10-21', label: 'v0.0.196', sub: '#2052 BM25', k: 5, when: 'Distribuído em 26 out na v0.0.196 (com o guia dialog do #2130)', note: 'Substitui o filtro de 0,38 por um piso de 0,30 no MiniLM; combina BM25 com MiniLM via fusão de classificação recíproca (RRF).' },
+  { id: '#3048', date: '2026-10-26', label: '#3048', sub: 'top-10', k: 10, when: 'Distribuído em 2 nov na v0.0.197', note: 'Retorna 10 resultados compactos {id, description} em vez de 5 detalhados.', annotation: 'segment' },
+  { id: '#3048+#3102', date: '2026-10-30', label: '#3102', sub: 'stem BM25', k: 10, when: 'Distribuído em 2 nov na v0.0.197', note: 'Lucene EnglishMinimalStemmer em tokenizeBm25(), filtro de similaridade de 0,30 ciente de BM25 e exclusão densa abaixo do piso em resgates por BM25.' },
+  { id: 'rag-chunk-metadata', date: '2026-10-31', label: '#3172', sub: 'meta chunk', k: 10, when: 'Mesclado em 2 nov · na main', note: 'Prefixa título do guia, ID, categoria e IDs de recursos web brutos + sem hífen em cada chunk para indexação no MiniLM e no BM25.' },
+  { id: '#3089+#3102+meta', date: '2026-11-04', label: '#3089', sub: 'estático 256-d', k: 10, when: 'Mesclado em 4 nov · na main', note: 'Vetores estáticos de consulta 256-d Int8 contra vetores de chunks gemini-embedding-001 gerados no build + filtro de resgate BM25 (piso 0,30), empilhado sobre #3102 e #3172 (inicialização a frio 3,2× mais rápida, −58% de RAM, −64% de tarball).', tone: 'current', annotation: 'below' },
+  { id: 'Gemini 001', label: 'gemini-001', sub: 'online 768-d', k: 10, when: 'API online · não é opção offline', note: 'Apenas gemini-embedding-001 768-d, gerando embedding de cada consulta online.', tone: 'research' },
+  { id: 'Gemini Flash', label: 'gemini-flash', sub: 'catálogo online', k: 10, when: 'LLM online · não é opção offline', note: 'gemini-3.8-flash lendo todas as 192 descrições de guias (~8,1k tokens) e ranqueando o top 10 por consulta. Observação: também avaliou os qrels a partir dos cartões completos dos guias.', tone: 'ceiling' },
 ];
 
 const PHASES = [
-  { label: 'In npm', from: 0, to: 6 },
-  { label: 'On main', from: 7, to: 8, shaded: true },
-  { label: 'Reference', from: 9, to: 10 },
+  { label: 'No npm', from: 0, to: 6 },
+  { label: 'Na main', from: 7, to: 8, shaded: true },
+  { label: 'Referência', from: 9, to: 10 },
 ];
 
 /** @type {Record<MetricKey, { name: string, short: string }>} */
 const METRICS = {
-  hit: { name: 'Right guide shown', short: 'Hit@K' },
+  hit: { name: 'Guia certo exibido', short: 'Hit@K' },
   ndcg: { name: 'Leaf nDCG@K', short: 'Leaf nDCG' },
-  snr: { name: 'Signal-to-noise', short: 'Signal-to-noise' },
+  snr: { name: 'Sinal-ruído', short: 'Sinal-ruído' },
 };
 
 /** @type {Record<ViewKey, { name: string, detail: string }>} */
 const VIEWS = {
-  all: { name: 'Wild-v2 test', detail: '865 of 2,000 held-out queries (#3106) · gemini-3.8-flash judge' },
-  short: { name: 'Short queries', detail: '2–5 words · 702 test queries, 81% of test split' },
-  long: { name: 'Long queries', detail: '6+ words · 159 test queries' },
-  nightly: { name: 'Agent test', detail: '494 of 514 held-out task queries (#3106) · 70 guide clusters' },
+  all: { name: 'Teste Wild-v2', detail: '865 de 2.000 consultas retidas (#3106) · juiz gemini-3.8-flash' },
+  short: { name: 'Consultas curtas', detail: '2–5 palavras · 702 consultas de teste, 81% da divisão de teste' },
+  long: { name: 'Consultas longas', detail: '6+ palavras · 159 consultas de teste' },
+  nightly: { name: 'Teste Agent', detail: '494 de 514 consultas de tarefas retidas (#3106) · 70 clusters de guias' },
 };
 
 /** @type {Record<ViewKey, (v: (id: string) => number, m: string) => string>} */
 const VIEW_NOTES = {
-  all: (v, m) => `${m}: the gate cost ${pp(v('v0.0.195') - v('#1853-clean'))} vs. the same cleanup without it; top-10 added ${pp(v('#3048') - v('#2052'))}; #3102 + #3172 + #3089 added ${pp(v('#3089+#3102+meta') - v('#3048'))}.`,
-  short: (v, m) => `${m} on 2–5 word queries: #1853 cleanup ${pp(v('#1853-clean') - v('#824'))}, gate ${pp(v('v0.0.195') - v('#1853-clean'))}, #3089 vs #3048 ${pp(v('#3089+#3102+meta') - v('#3048'))}.`,
-  long: (v, m) => `${m} on 6+ word queries (n=159): #3089 ${v('#3089+#3102+meta').toFixed(1)}% vs #3048 ${v('#3048').toFixed(1)}% (${pp(v('#3089+#3102+meta') - v('#3048'))}).`,
-  nightly: (v, m) => `${m} on held-out agent task queries (#3106, 70 clusters): #3048 ${v('#3048').toFixed(1)}%, #3089 ${v('#3089+#3102+meta').toFixed(1)}% (${pp(v('#3089+#3102+meta') - v('#3048'))}).`,
+  all: (v, m) => `${m}: o filtro custou ${pp(v('v0.0.195') - v('#1853-clean'))} em relação à mesma limpeza sem ele; o top-10 somou ${pp(v('#3048') - v('#2052'))}; #3102 + #3172 + #3089 somaram ${pp(v('#3089+#3102+meta') - v('#3048'))}.`,
+  short: (v, m) => `${m} em consultas de 2–5 palavras: limpeza #1853 ${pp(v('#1853-clean') - v('#824'))}, filtro ${pp(v('v0.0.195') - v('#1853-clean'))}, #3089 vs #3048 ${pp(v('#3089+#3102+meta') - v('#3048'))}.`,
+  long: (v, m) => `${m} em consultas de 6+ palavras (n=159): #3089 ${v('#3089+#3102+meta').toFixed(1)}% vs #3048 ${v('#3048').toFixed(1)}% (${pp(v('#3089+#3102+meta') - v('#3048'))}).`,
+  nightly: (v, m) => `${m} em consultas de tarefas de agentes retidas (#3106, 70 clusters): #3048 ${v('#3048').toFixed(1)}%, #3089 ${v('#3089+#3102+meta').toFixed(1)}% (${pp(v('#3089+#3102+meta') - v('#3048'))}).`,
 };
 
 const PR_URL = 'https://github.com/GoogleChrome/modern-web-guidance-src/pull/';
 /** @type {TableRowDef[]} */
 const TABLE_ROWS = [
-  { name: 'pre-#528', id: 'pre-#528', when: 'through v0.0.26', what: 'One MiniLM-L6-v2 embedding per guide; long guides truncated', output: 'top-5 verbose' },
-  { name: '#528', pr: 528, id: '#528', when: 'Apr 10 · v0.0.27', what: 'Splits guides into chunks; scores each guide by its best chunk', output: 'top-5 verbose' },
-  { name: '#824', pr: 824, id: '#824', when: 'May 14 · v0.0.138', what: 'Prepends each guide’s features list to its chunk embeddings', output: 'top-5 verbose' },
-  { name: '#1718', pr: 1718, same: '#824', when: 'Oct 6 · v0.0.193', what: 'In-tree tokenizer replaces @xenova/transformers', output: 'top-5 verbose' },
-  { name: '#1853 cleanup, no gate', pr: 1853, id: '#1853-clean', when: 'counterfactual', what: 'Drops bare-heading chunks; embeds title + description instead of raw YAML', output: 'top-5 verbose', tone: 'cf' },
-  { name: 'v0.0.195', prs: [1853, 1850], id: 'v0.0.195', when: 'Oct 19', what: 'Adds a strict similarity gate (returns [] below 0.38); SKILL.md asks for 2–5 word queries', output: 'top-5 verbose', tone: 'bad' },
-  { name: 'v0.0.196', prs: [2052, 2130], id: '#2052', when: 'Oct 26 · v0.0.196', what: 'Replaces the gate with BM25 + MiniLM hybrid search (RRF); adds dialog guide', output: 'top-5 verbose' },
-  { name: '#3048', pr: 3048, id: '#3048', when: 'Shipped Nov 2 in v0.0.197', what: 'Returns 10 compact {id, description} results instead of 5 verbose; compacts <code>list</code>', output: 'top-10 compact' },
-  { name: '#3102', pr: 3102, id: '#3048+#3102', when: 'Shipped Nov 2 in v0.0.197', what: 'BM25 plural stemming (EnglishMinimalStemmer) + never return [] when BM25 has matches', output: 'top-10 compact' },
-  { name: '#3172', pr: 3172, id: 'rag-chunk-metadata', when: 'Merged Nov 2 · on main', what: 'Prepends guide title, category, and web-feature IDs to every chunk for MiniLM & BM25', output: 'top-10 compact' },
-  { name: '#3089', pr: 3089, id: '#3089+#3102+meta', when: 'Merged Nov 4 · on main', what: '256-d static query vectors × build-time gemini-embedding-001 chunks on top of #3102 + #3172 (3.2× faster, −58% RAM, −64% tarball; 93.6% Hit / 73.6% nDCG before #3102+#3172)', output: 'top-10 compact', tone: 'current' },
-  { name: '#3103', pr: 3103, unmeasured: true, when: 'Merged · SKILL.md', what: 'SKILL.md: name implied UI components and rephrase once before <code>list</code>', output: '—' },
-  { name: 'gemini-embedding-001', id: 'Gemini 001', when: 'reference', what: 'Online 768-d embedding API per query', output: 'top-10 compact', tone: 'research' },
-  { name: 'gemini-3.8-flash', id: 'Gemini Flash', when: 'reference', what: 'Online LLM ranks top 10 from the 192-guide {id, description} <code>list</code> catalog', output: 'top-10 compact', tone: 'ceiling' },
-  { name: 'Perfect LLM router', oracle: true, when: 'theoretical', what: 'Oracle upper bound: returns only the relevant leaf guides', output: '~1.4 results', tone: 'oracle' },
+  { name: 'pre-#528', id: 'pre-#528', when: 'até v0.0.26', what: 'Um embedding MiniLM-L6-v2 por guia; guias longos truncados', output: 'top-5 detalhado' },
+  { name: '#528', pr: 528, id: '#528', when: '10 abr · v0.0.27', what: 'Divide guias em chunks; pontua cada guia pelo seu melhor chunk', output: 'top-5 detalhado' },
+  { name: '#824', pr: 824, id: '#824', when: '14 mai · v0.0.138', what: 'Prefixa a lista de recursos de cada guia aos embeddings de seus chunks', output: 'top-5 detalhado' },
+  { name: '#1718', pr: 1718, same: '#824', when: '6 out · v0.0.193', what: 'Tokenizador interno substitui @xenova/transformers', output: 'top-5 detalhado' },
+  { name: 'Limpeza #1853, sem filtro', pr: 1853, id: '#1853-clean', when: 'contrafactual', what: 'Remove chunks de cabeçalhos isolados; gera embedding de título + descrição em vez de YAML bruto', output: 'top-5 detalhado', tone: 'cf' },
+  { name: 'v0.0.195', prs: [1853, 1850], id: 'v0.0.195', when: '19 out', what: 'Adiciona um filtro de similaridade rígido (retorna [] abaixo de 0,38); SKILL.md pede consultas de 2–5 palavras', output: 'top-5 detalhado', tone: 'bad' },
+  { name: 'v0.0.196', prs: [2052, 2130], id: '#2052', when: '26 out · v0.0.196', what: 'Substitui o filtro por busca híbrida BM25 + MiniLM (RRF); adiciona o guia dialog', output: 'top-5 detalhado' },
+  { name: '#3048', pr: 3048, id: '#3048', when: 'Distribuído em 2 nov na v0.0.197', what: 'Retorna 10 resultados compactos {id, description} em vez de 5 detalhados; compacta <code>list</code>', output: 'top-10 compacto' },
+  { name: '#3102', pr: 3102, id: '#3048+#3102', when: 'Distribuído em 2 nov na v0.0.197', what: 'Radicalização de plurais no BM25 (EnglishMinimalStemmer) + nunca retornar [] quando o BM25 encontra correspondências', output: 'top-10 compacto' },
+  { name: '#3172', pr: 3172, id: 'rag-chunk-metadata', when: 'Mesclado em 2 nov · na main', what: 'Prefixa título do guia, categoria e IDs de recursos web em cada chunk para MiniLM e BM25', output: 'top-10 compacto' },
+  { name: '#3089', pr: 3089, id: '#3089+#3102+meta', when: 'Mesclado em 4 nov · na main', what: 'Vetores estáticos de consulta 256-d × chunks gemini-embedding-001 gerados no build sobre #3102 + #3172 (3,2× mais rápido, −58% de RAM, −64% de tarball; 93,6% Hit / 73,6% nDCG antes de #3102+#3172)', output: 'top-10 compacto', tone: 'current' },
+  { name: '#3103', pr: 3103, unmeasured: true, when: 'Mesclado · SKILL.md', what: 'SKILL.md: nomear componentes de UI implícitos e reformular uma vez antes de <code>list</code>', output: '—' },
+  { name: 'gemini-embedding-001', id: 'Gemini 001', when: 'referência', what: 'API online de embeddings 768-d por consulta', output: 'top-10 compacto', tone: 'research' },
+  { name: 'gemini-3.8-flash', id: 'Gemini Flash', when: 'referência', what: 'LLM online ranqueia o top 10 a partir do catálogo <code>list</code> {id, description} de 192 guias', output: 'top-10 compacto', tone: 'ceiling' },
+  { name: 'Roteador LLM perfeito', oracle: true, when: 'teórico', what: 'Limite superior oráculo: retorna apenas os guias folha relevantes', output: '~1,4 resultados', tone: 'oracle' },
 ];
 
 const K_SERIES = [
-  { key: 'minilm_verbose', label: '#2052 verbose', sub: '105 tok/result', color: 'var(--nightly)', dash: '5 4' },
-  { key: 'minilm_compact', label: '#3048 compact', sub: '53 tok/result', color: 'var(--warm)', dash: '' },
-  { key: 'static_compact', label: '#3089 static × gemini-emb', sub: '53 tok/result', color: 'var(--accent)', dash: '' },
-  { key: 'gemini_001', label: 'gemini-embedding-001', sub: 'online API', color: 'var(--text)', dash: '2 3' },
+  { key: 'minilm_verbose', label: '#2052 detalhado', sub: '105 tok/resultado', color: 'var(--nightly)', dash: '5 4' },
+  { key: 'minilm_compact', label: '#3048 compacto', sub: '53 tok/resultado', color: 'var(--warm)', dash: '' },
+  { key: 'static_compact', label: '#3089 estático × gemini-emb', sub: '53 tok/resultado', color: 'var(--accent)', dash: '' },
+  { key: 'gemini_001', label: 'gemini-embedding-001', sub: 'API online', color: 'var(--text)', dash: '2 3' },
 ];
 /** @type {Record<MetricKey, 2 | 3 | 4>} */
 const K_COLUMN = { hit: 2, ndcg: 3, snr: 4 };
@@ -226,13 +226,13 @@ const ORACLE = { k: 1.4, tokens: 74 };
 const SYSTEMS = [
   { label: 'v0.0.157', sub: 'npm', quality: '#824', ms: 795, rss: 324, tarball: 22.3, tokens: 507, kind: 'history' },
   { label: 'v0.0.193', sub: 'npm', quality: '#824', ms: 700, rss: 343, tarball: 23.0, tokens: 507, kind: 'history' },
-  { label: 'v0.0.195', sub: 'gate', quality: 'v0.0.195', ms: 685, rss: 342, tarball: 23.1, tokens: 507, tone: 'bad', labelSide: 'left' },
+  { label: 'v0.0.195', sub: 'filtro', quality: 'v0.0.195', ms: 685, rss: 342, tarball: 23.1, tokens: 507, tone: 'bad', labelSide: 'left' },
   { label: '#3048', sub: 'RRF + top-10', quality: '#3048', ms: 770, rss: 346, tarball: 23.4, tokens: 528 },
-  { label: '#3089', sub: 'static', quality: '#3089+#3102+meta', ms: 240, rss: 145, tarball: 8.3, tokens: 528, tone: 'current', labelSide: 'left' },
+  { label: '#3089', sub: 'estático', quality: '#3089+#3102+meta', ms: 240, rss: 145, tarball: 8.3, tokens: 528, tone: 'current', labelSide: 'left' },
 ];
 /** @type {SystemDef[]} */
 const SYSTEMS_REFERENCE = [
-  { label: 'gemini-embedding-001', sub: 'online API', quality: 'Gemini 001', ms: 450, note: 'Measured separately: 450 ms cold (423 ms is the API round trip), 68 MB RSS. Needs network and an API key.' },
+  { label: 'gemini-embedding-001', sub: 'API online', quality: 'Gemini 001', ms: 450, note: 'Medido separadamente: 450 ms a frio (423 ms correspondem à ida e volta na API), 68 MB de RSS. Requer rede e uma chave de API.' },
 ];
 const R_MAX = 20;
 const RESEARCH_R = 7;
@@ -253,7 +253,7 @@ const linear = ([d0, d1], [r0, r1]) => (/** @type {number} */ v) => r0 + ((v - d
 /** @param {number} d */
 const pp = (d) => `${d < 0 ? '−' : '+'}${Math.abs(d).toFixed(1)} pp`;
 /** @param {number} n */
-const num = (n) => n.toLocaleString('en-US');
+const num = (n) => n.toLocaleString('pt-BR');
 /** @param {string} [t] */
 const toneClass = (t) => (t ? `is-${t}` : '');
 
@@ -307,13 +307,13 @@ const research = MILESTONES.findIndex((m) => m.tone === 'research');
 const T_MIN = parseDate(MILESTONES[0].date);
 const T_MAX = parseDate(MILESTONES[research - 1].date);
 const MONTH_TICKS = [
-  { name: 'Apr', date: '2026-04-01' },
-  { name: 'May', date: '2026-05-01' },
+  { name: 'Abr', date: '2026-04-01' },
+  { name: 'Mai', date: '2026-05-01' },
   { name: 'Jun', date: '2026-06-01' },
   { name: 'Jul', date: '2026-07-01' },
-  { name: 'Aug', date: '2026-08-01' },
-  { name: 'Sep', date: '2026-09-01' },
-  { name: 'Oct', date: '2026-10-01' },
+  { name: 'Ago', date: '2026-08-01' },
+  { name: 'Set', date: '2026-09-01' },
+  { name: 'Out', date: '2026-10-01' },
 ];
 
 /**
@@ -363,10 +363,10 @@ function milestoneTip(m, prev) {
 function counterfactualTip(m) {
   const c = m.counterfactual;
   if (!c) return '';
-  return `<div class="tip-title">#1853 cleanup without the gate</div>
+  return `<div class="tip-title">Limpeza #1853 sem o filtro</div>
     <div class="tip-grid">${metricCells(state.view, c.id)}</div>
     <div class="tip-note">${c.note}</div>
-    <div class="tip-meta">Counterfactual · the shipped gate cost ${pp(q(state.view, m.id)[0] - q(state.view, c.id)[0])}</div>`;
+    <div class="tip-meta">Contrafactual · o filtro lançado custou ${pp(q(state.view, m.id)[0] - q(state.view, c.id)[0])}</div>`;
 }
 
 const W = 1000, H = 420, pad = { t: 46, r: 30, b: 90, l: 56 }, inset = 34;
@@ -519,9 +519,9 @@ function renderMilestonesFrame(geom, isFinal, isFirst) {
     const x0 = pad.l, x1 = (geom.ms[research - 1].x + geom.ms[research].x) / 2;
     parts.push(
       `<line class="a-phase-rule" x1="${x0 + 8}" x2="${x1 - 8}" y1="${pad.t - 10}" y2="${pad.t - 10}"/>`,
-      `<text class="a-phase-label" x="${(x0 + x1) / 2}" y="${pad.t - 18}" text-anchor="middle">Mar – Nov 2026 (releases &amp; main)</text>`,
+      `<text class="a-phase-label" x="${(x0 + x1) / 2}" y="${pad.t - 18}" text-anchor="middle">Mar – Nov 2026 (lançamentos e main)</text>`,
       `<line class="a-phase-rule" x1="${x1 + 8}" x2="${W - pad.r - 8}" y1="${pad.t - 10}" y2="${pad.t - 10}"/>`,
-      `<text class="a-phase-label" x="${(x1 + W - pad.r) / 2}" y="${pad.t - 18}" text-anchor="middle">Reference</text>`,
+      `<text class="a-phase-label" x="${(x1 + W - pad.r) / 2}" y="${pad.t - 18}" text-anchor="middle">Referência</text>`,
       `<line class="grid" x1="${x1}" x2="${x1}" y1="${pad.t}" y2="${base}" stroke-dasharray="3,3"/>`
     );
   }
@@ -577,8 +577,8 @@ function renderMilestonesFrame(geom, isFinal, isFirst) {
     const gateVal = geom.ms[gate].val;
     const cfVal = geom.cfVal;
     parts.push(
-      `<text class="a-cf-label halo a-reveal" style="--i:${gate}" x="${geom.cfX}" y="${geom.cfY - 13}" text-anchor="middle">${cfVal.toFixed(1)}% without gate</text>`,
-      `<text class="a-delta halo is-bad a-reveal" style="--i:${gate}" x="${geom.cfX}" y="${gateY + 23}" text-anchor="middle">gate ${pp(gateVal - cfVal)}</text>`
+      `<text class="a-cf-label halo a-reveal" style="--i:${gate}" x="${geom.cfX}" y="${geom.cfY - 13}" text-anchor="middle">${cfVal.toFixed(1)}% sem filtro</text>`,
+      `<text class="a-delta halo is-bad a-reveal" style="--i:${gate}" x="${geom.cfX}" y="${gateY + 23}" text-anchor="middle">filtro ${pp(gateVal - cfVal)}</text>`
     );
 
     MILESTONES.forEach((m, i) => {
@@ -769,9 +769,9 @@ function renderHorizon() {
     parts.push(`<line class="grid" x1="${kpad.l}" x2="${KW - kpad.r}" y1="${y(t)}" y2="${y(t)}"/>`, `<text class="axis" x="${kpad.l - 10}" y="${y(t) + 4}" text-anchor="end">${t}%</text>`);
   }
   for (const k of ks) parts.push(`<text class="axis" x="${x(k)}" y="${kbase + 20}" text-anchor="middle">${k}</text>`);
-  parts.push(`<text class="axis-title" x="${(kpad.l + KW - kpad.r) / 2}" y="${kbase + 42}" text-anchor="middle">Results returned per search (K, log scale)</text>`);
+  parts.push(`<text class="axis-title" x="${(kpad.l + KW - kpad.r) / 2}" y="${kbase + 42}" text-anchor="middle">Resultados retornados por busca (K, escala logarítmica)</text>`);
   /** @type {Array<[number, string]>} */
-  const kGuides = [[5, 'K=5 · through v0.0.196'], [10, 'K=10 · from #3048']];
+  const kGuides = [[5, 'K=5 · até v0.0.196'], [10, 'K=10 · a partir de #3048']];
   for (const [k, label] of kGuides) {
     parts.push(`<line class="k-guide" x1="${x(k)}" x2="${x(k)}" y1="${kpad.t}" y2="${kbase}"/>`, `<text class="k-guide-label" x="${x(k) + 6}" y="${kbase - 8}">${label}</text>`);
   }
@@ -781,20 +781,20 @@ function renderHorizon() {
     parts.push(`<path class="k-line" style="stroke:${sr.color};${sr.dash ? `stroke-dasharray:${sr.dash}` : ''}" d="${rows.map((r, i) => `${i ? 'L' : 'M'}${x(r[0])},${y(r[col])}`).join('')}"/>`);
     for (const r of rows) {
       const isPeak = r === peak;
-      parts.push(`<g ${tip(`<div class="tip-title">${sr.label} · K=${r[0]}</div><div class="tip-grid"><span>Hit@K</span><b>${r[2]}%</b><span>Leaf nDCG</span><b>${r[3]}%</b><span>Signal-to-noise</span><b>${r[4]}%</b><span>Stdout tokens</span><b>${num(r[1])}</b></div>`)}>
+      parts.push(`<g ${tip(`<div class="tip-title">${sr.label} · K=${r[0]}</div><div class="tip-grid"><span>Hit@K</span><b>${r[2]}%</b><span>Leaf nDCG</span><b>${r[3]}%</b><span>Sinal-ruído</span><b>${r[4]}%</b><span>Tokens no stdout</span><b>${num(r[1])}</b></div>`)}>
         <circle class="hit" cx="${x(r[0])}" cy="${y(r[col])}" r="9"/>
         ${isPeak ? `<circle class="k-peak" style="stroke:${sr.color}" cx="${x(r[0])}" cy="${y(r[col])}" r="7"/>` : ''}
         <circle class="k-dot" style="fill:${sr.color}" cx="${x(r[0])}" cy="${y(r[col])}" r="${isPeak ? 3.5 : 2.5}"/></g>`);
     }
   }
   const ox = x(ORACLE.k), oy = y(100);
-  parts.push(`<g ${tip(`<div class="tip-title">Perfect LLM router (oracle)</div><div class="tip-note">A generative router, such as an LLM reading the guide catalog, that returns only the right leaf guides: ${ORACLE.k} per query on average (≈${ORACLE.tokens} tokens). Every metric is 100% by definition. A theoretical bound, not a measured system.</div>`)}><rect class="k-oracle" x="${ox - 5}" y="${oy - 5}" width="10" height="10" transform="rotate(45 ${ox} ${oy})"/></g>`,
-    `<text class="k-oracle-label" x="${ox + 12}" y="${oy + 4}">Perfect LLM router (oracle) · ${ORACLE.k} guides ≈ ${ORACLE.tokens} tok · 100% by definition</text>`);
+  parts.push(`<g ${tip(`<div class="tip-title">Roteador LLM perfeito (oráculo)</div><div class="tip-note">Um roteador generativo, como um LLM lendo o catálogo de guias, que retorna apenas os guias folha corretos: ${ORACLE.k} por consulta em média (≈${ORACLE.tokens} tokens). Todas as métricas são 100% por definição. Um limite teórico, não um sistema medido.</div>`)}><rect class="k-oracle" x="${ox - 5}" y="${oy - 5}" width="10" height="10" transform="rotate(45 ${ox} ${oy})"/></g>`,
+    `<text class="k-oracle-label" x="${ox + 12}" y="${oy + 4}">Roteador LLM perfeito (oráculo) · ${ORACLE.k} guias ≈ ${ORACLE.tokens} tok · 100% por definição</text>`);
   svg.innerHTML = parts.join('');
-  svg.setAttribute('aria-label', `${METRICS[state.kMetric].name} by K. ${K_SERIES.map((sr) => { const p = K_CURVES[sr.key].reduce((b, r) => (r[col] > b[col] ? r : b)); return `${sr.label} peaks at K=${p[0]} with ${p[col]}%`; }).join('; ')}.`);
+  svg.setAttribute('aria-label', `${METRICS[state.kMetric].name} por K. ${K_SERIES.map((sr) => { const p = K_CURVES[sr.key].reduce((b, r) => (r[col] > b[col] ? r : b)); return `${sr.label} atinge o pico em K=${p[0]} com ${p[col]}%`; }).join('; ')}.`);
   $('k-legend').innerHTML = K_SERIES.map((sr) => {
     const p = K_CURVES[sr.key].reduce((b, r) => (r[col] > b[col] ? r : b));
-    return `<li style="--c:${sr.color}" class="${sr.dash ? 'is-dashed' : ''}">${sr.label} <small>${sr.sub} · peak K=${p[0]}, ${p[col]}%</small></li>`;
+    return `<li style="--c:${sr.color}" class="${sr.dash ? 'is-dashed' : ''}">${sr.label} <small>${sr.sub} · pico K=${p[0]}, ${p[col]}%</small></li>`;
   }).join('');
 }
 
@@ -807,8 +807,8 @@ function renderTable() {
   /** @param {TableRowDef} r */
   const cells = (r) => {
     if (r.oracle) return '<td class="n">100%</td><td class="n">100%</td><td class="n">100%</td>';
-    if (r.same) return `<td class="n same" colspan="3">same as ${r.same}</td>`;
-    if (r.unmeasured) return '<td class="n same" colspan="3">not measurable offline</td>';
+    if (r.same) return `<td class="n same" colspan="3">igual a ${r.same}</td>`;
+    if (r.unmeasured) return '<td class="n same" colspan="3">não mensurável offline</td>';
     const rowId = r.id ?? '';
     /** @type {MetricKey[]} */
     const cols = ['hit', 'ndcg', 'snr'];
@@ -824,10 +824,10 @@ function renderTable() {
 /** @param {SystemDef} p */
 function systemTip(p) {
   const qv = QUALITY.all[p.quality];
-  const sizes = p.rss && p.tarball !== undefined ? `<span>Peak RSS</span><b>${p.rss} MB</b><span>npm tarball</span><b>${p.tarball.toFixed(1)} MB</b><span>Tokens / search</span><b>${p.tokens ?? ''}</b>` : '';
+  const sizes = p.rss && p.tarball !== undefined ? `<span>Peak RSS</span><b>${p.rss} MB</b><span>Tarball npm</span><b>${p.tarball.toFixed(1)} MB</b><span>Tokens / busca</span><b>${p.tokens ?? ''}</b>` : '';
   return `<div class="tip-title">${p.label} · ${p.sub}</div>
-    <div class="tip-grid"><span>Cold search</span><b>${p.ms} ms</b>${sizes}<span>Hit@K</span><b>${qv.hit[0]}%</b><span>Signal-to-noise</span><b>${qv.snr[0]}%</b></div>
-    ${p.note ? `<div class="tip-note">${p.note}</div>` : ''}${p.kind === 'history' ? `<div class="tip-meta">Ships #824 search</div>` : ''}`;
+    <div class="tip-grid"><span>Busca a frio</span><b>${p.ms} ms</b>${sizes}<span>Hit@K</span><b>${qv.hit[0]}%</b><span>Sinal-ruído</span><b>${qv.snr[0]}%</b></div>
+    ${p.note ? `<div class="tip-note">${p.note}</div>` : ''}${p.kind === 'history' ? `<div class="tip-meta">Usa a busca do #824</div>` : ''}`;
 }
 
 function renderSystems() {
@@ -847,8 +847,8 @@ function renderSystems() {
   for (let ms = 0; ms <= 1000; ms += 250) {
     parts.push(`<line class="grid" x1="${x(ms)}" x2="${x(ms)}" y1="${bpad.t}" y2="${bbase}"/>`, `<text class="axis" x="${x(ms)}" y="${bbase + 20}" text-anchor="middle">${ms}</text>`);
   }
-  parts.push(`<text class="axis-title" x="${(bpad.l + BW - bpad.r) / 2}" y="${bbase + 44}" text-anchor="middle">Cold search latency (ms)</text>`,
-    `<text class="b-better" x="${bpad.l + 10}" y="${bpad.t + 16}">↖ better</text>`);
+  parts.push(`<text class="axis-title" x="${(bpad.l + BW - bpad.r) / 2}" y="${bbase + 44}" text-anchor="middle">Latência de busca a frio (ms)</text>`,
+    `<text class="b-better" x="${bpad.l + 10}" y="${bpad.t + 16}">↖ melhor</text>`);
 
   const history = SYSTEMS.filter((p) => p.kind === 'history');
   const hx = history.map((p) => x(p.ms)), hy = y(val(history[0]));
@@ -863,9 +863,9 @@ function renderSystems() {
   const len = Math.hypot(cx - bx, cy - by), gap = R_MAX + 6;
   parts.push(`<path class="b-path" d="M${gx},${gy}L${bx},${by}"/>`,
     `<path class="b-path" d="M${bx + ((cx - bx) / len) * gap},${by + ((cy - by) / len) * gap}L${cx + ((bx - cx) / len) * gap},${cy + ((by - cy) / len) * gap}" marker-end="url(#b-arrow)"/>`,
-    `<text class="b-anno" x="${(bx + cx) / 2}" y="${(by + cy) / 2 + 26}" text-anchor="middle">${(best.ms / current.ms).toFixed(1)}× faster</text>`,
+    `<text class="b-anno" x="${(bx + cx) / 2}" y="${(by + cy) / 2 + 26}" text-anchor="middle">${(best.ms / current.ms).toFixed(1)}× mais rápida</text>`,
     `<text class="b-anno" x="${Math.min(gx, bx) - R_MAX - 14}" y="${(gy + by) / 2}" text-anchor="end">${pp(val(best) - val(gateSys))}</text>`,
-    `<text class="b-anno-sub" x="${Math.min(gx, bx) - R_MAX - 14}" y="${(gy + by) / 2 + 15}" text-anchor="end">same TF.js runtime</text>`);
+    `<text class="b-anno-sub" x="${Math.min(gx, bx) - R_MAX - 14}" y="${(gy + by) / 2 + 15}" text-anchor="end">mesmo runtime TF.js</text>`);
   const maxRss = Math.max(...bubbles.map((p) => p.rss ?? 1));
   bubbles.forEach((p) => {
     const [px, py] = pt(p), r = (R_MAX * Math.sqrt((p.rss ?? 1) / maxRss)).toFixed(2);
@@ -883,7 +883,7 @@ function renderSystems() {
         : `<text class="b-sub" x="${px}" y="${py - 13}" text-anchor="middle">${p.label} · ${val(p).toFixed(1)}%</text>`);
   }
   svg.innerHTML = parts.join('');
-  svg.setAttribute('aria-label', `${METRICS[metric].name} against cold search latency: ${all.map((p) => `${p.label} ${val(p)}% at ${p.ms} ms`).join(', ')}.`);
+  svg.setAttribute('aria-label', `${METRICS[metric].name} versus latência de busca a frio: ${all.map((p) => `${p.label} ${val(p)}% em ${p.ms} ms`).join(', ')}.`);
 }
 
 /* ───── Boot ───── */

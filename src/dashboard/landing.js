@@ -284,7 +284,7 @@ function setupScrollRegion() {
     if (!(wrap instanceof HTMLElement)) return;
     wrap.setAttribute('tabindex', '0');
     wrap.setAttribute('role', 'region');
-    wrap.setAttribute('aria-label', 'All jobs table (scrolls horizontally)');
+    wrap.setAttribute('aria-label', 'Tabela de todas as execuções (rola horizontalmente)');
     setupBarbellTooltip();
     if ('ResizeObserver' in window) {
         const ro = new ResizeObserver(entries => {
@@ -679,14 +679,14 @@ function updateJobsFilterDatalist() {
     }
     for (const [level, count] of effortCounts.entries()) {
         const desc = level === 'default'
-            ? 'Reasoning effort: default (CLI built-in default)'
-            : `Reasoning effort: ${level}`;
+            ? 'Esforço de raciocínio: padrão (padrão nativo da CLI)'
+            : `Esforço de raciocínio: ${level}`;
         suggestions.set(`effort:${level}`, { count, label: desc });
     }
     datalist.innerHTML = Array.from(suggestions.entries())
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([val, { count, label }]) => {
-            const countText = `${count} ${count === 1 ? 'job' : 'jobs'}`;
+            const countText = `${count} ${count === 1 ? 'execução' : 'execuções'}`;
             const optionLabel = label ? `${label} · ${countText}` : countText;
             return `<option value="${escapeHtml(val)}" label="${escapeHtml(optionLabel)}"></option>`;
         })
@@ -696,7 +696,7 @@ function updateJobsFilterDatalist() {
 function updateSourceFilterOptions() {
     const group = document.querySelector('#filter-source optgroup');
     if (!group) return;
-    const sourceLabels = { local: 'Local', remote: 'Remote', static: 'Static', public: 'Public' };
+    const sourceLabels = { local: 'Local', remote: 'Remota', static: 'Estática', public: 'Pública' };
     const values = /** @type {Array<import('./data-source.js').DataSource>} */ (
         [...new Set(Object.values(allJobData).map(t => t.source).filter(Boolean))].sort()
     );
@@ -807,7 +807,7 @@ function getFilteredKeys({ ignoreModelFilter = false } = {}) {
         if (textQuery) {
             const { label, ldap } = formatJobLabel(t);
             const agentDisplay = agentDisplayNames[t.agent] || t.agent || '';
-            const curatedKeywords = t.curated ? '1.0 baseline curated' : '';
+            const curatedKeywords = t.curated ? '1.0 baseline curated linha de base' : '';
             const haystack = `${t.testId || ''} ${t.model || ''} ${t.agent || ''} ${agentDisplay} ${label} ${ldap} ${curatedKeywords}`.toLowerCase();
             if (!haystack.includes(textQuery)) return false;
         }
@@ -876,7 +876,7 @@ function sortJobKeys(keys) {
 function renderRateComparison(uRate, gRate, delta, label, uErr = 0, gErr = 0) {
     const fmtRate = (/** @type {number | null} */ r) => r === null ? '—' : `${r}%`;
     const deltaHtml = delta === null
-        ? '<span class="delta flat">(—)<span class="visually-hidden"> change not available</span></span>'
+        ? '<span class="delta flat">(—)<span class="visually-hidden"> variação não disponível</span></span>'
         : `<span class="${delta > 0 ? 'delta up' : (delta < 0 ? 'delta down' : 'delta flat')}">(${delta > 0 ? '+' : ''}${delta} pp)</span>`;
     const regressedCls = uRate !== null && gRate !== null && gRate < uRate ? ' regressed' : '';
     const uErrBand = uRate !== null && uErr > 0 ? `<div class="variance-band unguided" style="left: ${(uRate * (1 - uErr / 100)).toFixed(1)}%; width: ${uErr}%;"></div>` : '';
@@ -884,24 +884,24 @@ function renderRateComparison(uRate, gRate, delta, label, uErr = 0, gErr = 0) {
     const connector = uRate !== null && gRate !== null ? `<div class="connector${regressedCls}" style="left: ${Math.min(uRate, gRate)}%; width: ${Math.abs(gRate - uRate)}%;"></div>` : '';
     const uDot = uRate !== null ? `<div class="dot unguided" style="left: ${uRate}%;"></div>` : '';
     const gDot = gRate !== null ? `<div class="dot guided" style="left: ${gRate}%;"></div>` : '';
-    return `<div class="suite-dumbbell-track" aria-hidden="true"> ${uErrBand} ${gErrBand} ${connector} ${uDot} ${gDot} </div> <div class="rate-text"> <span class="visually-hidden">${escapeHtml(label)}: unguided </span><span class="rate-u">${fmtRate(uRate)}</span> <span class="rate-arrow" aria-hidden="true">→</span><span class="visually-hidden">, guided </span> <span class="rate-g">${fmtRate(gRate)}</span> ${deltaHtml} </div>`;
+    return `<div class="suite-dumbbell-track" aria-hidden="true"> ${uErrBand} ${gErrBand} ${connector} ${uDot} ${gDot} </div> <div class="rate-text"> <span class="visually-hidden">${escapeHtml(label)}: sem guia </span><span class="rate-u">${fmtRate(uRate)}</span> <span class="rate-arrow" aria-hidden="true">→</span><span class="visually-hidden">, guiado </span> <span class="rate-g">${fmtRate(gRate)}</span> ${deltaHtml} </div>`;
 }
 /** @param {number | null} uRate rounded unguided rate, or null when no unguided checks ran
  * @param {number | null} gRate rounded guided rate, or null when no guided checks ran
  * @param {number | null} delta percentage-point change, computed from rounded endpoint rates; null unless both sides ran */
 function renderA11yCompact(uRate, gRate, delta) {
     const fmtRate = (/** @type {number | null} */ r) =>
-        r === null ? '<span aria-hidden="true">—</span><span class="visually-hidden">not available</span>' : `${r}%`;
+        r === null ? '<span aria-hidden="true">—</span><span class="visually-hidden">não disponível</span>' : `${r}%`;
     let pillCls = 'eff-pill muted';
     let pillText = '<span aria-hidden="true">—</span>';
-    let pillSr = '<span class="visually-hidden"> change not available</span>';
+    let pillSr = '<span class="visually-hidden"> variação não disponível</span>';
     if (delta !== null) {
         if (delta > 0) pillCls = 'eff-pill neutral';
         else if (delta < 0) pillCls = 'eff-pill cost';
         pillText = `${delta > 0 ? '+' : ''}${delta} pp`;
         pillSr = '';
     }
-    return `<div class="a11y-delta-stack"><span class="visually-hidden">Automated accessibility checks: </span><span class="${pillCls}">${pillText}${pillSr}</span><span class="a11y-delta-sub"><span class="visually-hidden">, unguided </span><span>${fmtRate(uRate)}</span><span class="rate-arrow" aria-hidden="true">→</span><span class="visually-hidden">, guided </span><span>${fmtRate(gRate)}</span></span></div>`;
+    return `<div class="a11y-delta-stack"><span class="visually-hidden">Verificações automáticas de acessibilidade: </span><span class="${pillCls}">${pillText}${pillSr}</span><span class="a11y-delta-sub"><span class="visually-hidden">, sem guia </span><span>${fmtRate(uRate)}</span><span class="rate-arrow" aria-hidden="true">→</span><span class="visually-hidden">, guiado </span><span>${fmtRate(gRate)}</span></span></div>`;
 }
 /** @param {number} deltaPct
  * @param {{ less: string, more: string, noun: string }} words */
@@ -910,13 +910,13 @@ function renderDeltaPill(deltaPct, words) {
         return `<span class="eff-pill metric-delta positive" title="${Math.abs(deltaPct)}% ${escapeHtml(words.less)}"><span aria-hidden="true">▼ </span>${Math.abs(deltaPct)}%<span class="visually-hidden"> ${escapeHtml(words.less)} (${escapeHtml(words.noun)})</span></span>`;
     }
     if (deltaPct === 0) {
-        return `<span class="eff-pill metric-delta neutral" title="No change (${escapeHtml(words.noun)})">±0%<span class="visually-hidden"> ${escapeHtml(words.noun)}, no change</span></span>`;
+        return `<span class="eff-pill metric-delta neutral" title="Sem alteração (${escapeHtml(words.noun)})">±0%<span class="visually-hidden"> ${escapeHtml(words.noun)}, sem alteração</span></span>`;
     }
     return `<span class="eff-pill metric-delta muted" title="${deltaPct}% ${escapeHtml(words.more)}"><span aria-hidden="true">▲ </span>${deltaPct}%<span class="visually-hidden"> ${escapeHtml(words.more)} (${escapeHtml(words.noun)})</span></span>`;
 }
 /** @param {string} what */
 function renderNotAvailable(what) {
-    return `<span class="not-available" aria-hidden="true">—</span><span class="visually-hidden">${escapeHtml(what)} not available</span>`;
+    return `<span class="not-available" aria-hidden="true">—</span><span class="visually-hidden">${escapeHtml(what)} não disponível</span>`;
 }
 function renderJobs() {
     const container = document.getElementById('suites-list');
@@ -955,10 +955,11 @@ function renderJobs() {
 
     if (visibleKeys.length === 0) {
         const anyData = Object.keys(allJobData).length > 0;
-        container.innerHTML = `<tr class="suites-empty-row"> <td colspan="${colCount}">${anyData ? 'No jobs match the current filters.' : 'Loading jobs…'}</td> </tr>`;
+        container.innerHTML = `<tr class="suites-empty-row"> <td colspan="${colCount}">${anyData ? 'Nenhuma execução corresponde aos filtros atuais.' : 'Carregando execuções…'}</td> </tr>`;
         return;
     }
 
+    const sourceDisplayLabels = /** @type {Record<string, string>} */ ({ local: 'Local', remote: 'Remota', static: 'Estática', public: 'Pública' });
     let html = '';
     visibleKeys.forEach(compoundKey => {
         const jobInfo = allJobData[compoundKey];
@@ -991,17 +992,17 @@ function renderJobs() {
         const curated = Boolean(jobInfo.curated);
         const { label, ldap } = formatJobLabel(jobInfo);
         const agentDisplay = agentDisplayNames[jobInfo.agent] || jobInfo.agent;
-        const dateDisplay = formatJobDate(dateInfo, { month: 'short', day: 'numeric', year: 'numeric' });
+        const dateDisplay = formatJobDate(dateInfo, { month: 'short', day: 'numeric', year: 'numeric' }, 'pt-BR');
         const jobBarbellTitle = (scheduled || curated)
             ? `${dateDisplay} · ${agentDisplay}`
             : `${label || testId}${jobInfo.agent && jobInfo.agent !== 'unknown' ? ` · ${agentDisplay}` : ''}`;
         const modelPart = jobInfo.model && jobInfo.model !== 'unknown' ? jobInfo.model : '';
-        const overallScope = taskCount > 0 ? `${taskCount} ${taskCount === 1 ? 'task' : 'tasks'}${maxTrials > 1 ? ` ×${maxTrials}` : ''}` : 'single job';
-        const overallSub = ['Pass rate', modelPart, overallScope].filter(Boolean).join(' · ');
+        const overallScope = taskCount > 0 ? `${taskCount} ${taskCount === 1 ? 'tarefa' : 'tarefas'}${maxTrials > 1 ? ` ×${maxTrials}` : ''}` : 'execução única';
+        const overallSub = ['Taxa de aprovação', modelPart, overallScope].filter(Boolean).join(' · ');
         const uTotal = jobInfo.unguidedStats?.total || 0;
         const gTotal = jobInfo.guidedStats?.total || 0;
-        const uDetail = uTotal > 0 ? `${(jobInfo.unguidedStats?.passed || 0).toLocaleString('en-US')}/${uTotal.toLocaleString('en-US')} checks` : '';
-        const gDetail = gTotal > 0 ? `${(jobInfo.guidedStats?.passed || 0).toLocaleString('en-US')}/${gTotal.toLocaleString('en-US')} checks` : '';
+        const uDetail = uTotal > 0 ? `${(jobInfo.unguidedStats?.passed || 0).toLocaleString('pt-BR')}/${uTotal.toLocaleString('pt-BR')} verificações` : '';
+        const gDetail = gTotal > 0 ? `${(jobInfo.guidedStats?.passed || 0).toLocaleString('pt-BR')}/${gTotal.toLocaleString('pt-BR')} verificações` : '';
         const overallErrAttr = uErr > 0 || gErr > 0 ? '1' : '';
         let a11yCellAttrs = '';
         let a11yCellHtml = '';
@@ -1011,30 +1012,30 @@ function renderJobs() {
             const a11yPp = upliftPp(a11y.u, a11y.g);
             const a11yGuideCount = jobInfo.a11yStats?.guideCount || 0;
             const a11yScope = a11yGuideCount > 0
-                ? `${a11yGuideCount} ${a11yGuideCount === 1 ? 'guide' : 'guides'}`
+                ? `${a11yGuideCount} ${a11yGuideCount === 1 ? 'guia' : 'guias'}`
                 : overallScope;
-            const a11ySub = ['Automated accessibility checks', modelPart, a11yScope].filter(Boolean).join(' · ');
-            const a11yUDetail = a11y.u.total > 0 ? `${a11y.u.passed.toLocaleString('en-US')}/${a11y.u.total.toLocaleString('en-US')} checks` : '';
-            const a11yGDetail = a11y.g.total > 0 ? `${a11y.g.passed.toLocaleString('en-US')}/${a11y.g.total.toLocaleString('en-US')} checks` : '';
+            const a11ySub = ['Verificações automáticas de acessibilidade', modelPart, a11yScope].filter(Boolean).join(' · ');
+            const a11yUDetail = a11y.u.total > 0 ? `${a11y.u.passed.toLocaleString('pt-BR')}/${a11y.u.total.toLocaleString('pt-BR')} verificações` : '';
+            const a11yGDetail = a11y.g.total > 0 ? `${a11y.g.passed.toLocaleString('pt-BR')}/${a11y.g.total.toLocaleString('pt-BR')} verificações` : '';
             a11yCellAttrs = ` data-barbell-title="${escapeHtml(jobBarbellTitle)}" data-barbell-sub="${escapeHtml(a11ySub)}" data-barbell-kind="suite-a11y" data-barbell-u="${a11yURate ?? ''}" data-barbell-g="${a11yGRate ?? ''}" data-barbell-uplift="${a11yPp ?? ''}" data-barbell-u-detail="${escapeHtml(a11yUDetail)}" data-barbell-g-detail="${escapeHtml(a11yGDetail)}"`;
-            a11yCellHtml = ` <a href="${a11yLink}" class="a11y-link" interestfor="barbell-tooltip"> ${renderA11yCompact(a11yURate, a11yGRate, a11yPp)} <span class="visually-hidden"> (open accessibility check results)</span> </a> `;
-        } else { a11yCellHtml = renderNotAvailable('Automated accessibility checks'); }
+            a11yCellHtml = ` <a href="${a11yLink}" class="a11y-link" interestfor="barbell-tooltip"> ${renderA11yCompact(a11yURate, a11yGRate, a11yPp)} <span class="visually-hidden"> (abrir resultados das verificações de acessibilidade)</span> </a> `;
+        } else { a11yCellHtml = renderNotAvailable('Verificações automáticas de acessibilidade'); }
 
         const timeCellHtml = hasRuntime && rt
-            ? `<div class="eff-cell-main"><div class="task-metric-stack"><span class="metric-before"><span class="visually-hidden">Median duration: unguided </span>${formatDuration(rt.unguidedMedianMs)}</span><span class="metric-after"><span class="visually-hidden">, guided </span>${formatDuration(rt.guidedMedianMs)}</span></div>${renderDeltaPill(rt.medianDeltaPct, { less: 'faster', more: 'slower', noun: 'median duration' })}</div>`
-            : renderNotAvailable('Median duration');
+            ? `<div class="eff-cell-main"><div class="task-metric-stack"><span class="metric-before"><span class="visually-hidden">Duração mediana: sem guia </span>${formatDuration(rt.unguidedMedianMs)}</span><span class="metric-after"><span class="visually-hidden">, guiado </span>${formatDuration(rt.guidedMedianMs)}</span></div>${renderDeltaPill(rt.medianDeltaPct, { less: 'mais rápida', more: 'mais lenta', noun: 'duração mediana' })}</div>`
+            : renderNotAvailable('Duração mediana');
         const tokenCellHtml = hasTokens && tok
-            ? `<div class="eff-cell-main"><div class="task-metric-stack"><span class="metric-before"><span class="visually-hidden">Median uncached tokens: unguided </span>${formatTokens(tok.unguidedUncachedMedian)}</span><span class="metric-after"><span class="visually-hidden">, guided </span>${formatTokens(tok.guidedUncachedMedian)}</span></div>${renderDeltaPill(tok.uncachedMedianDeltaPct, { less: 'fewer', more: 'more', noun: 'uncached tokens' })}</div>`
-            : renderNotAvailable('Median uncached tokens');
+            ? `<div class="eff-cell-main"><div class="task-metric-stack"><span class="metric-before"><span class="visually-hidden">Tokens sem cache (mediana): sem guia </span>${formatTokens(tok.unguidedUncachedMedian)}</span><span class="metric-after"><span class="visually-hidden">, guiado </span>${formatTokens(tok.guidedUncachedMedian)}</span></div>${renderDeltaPill(tok.uncachedMedianDeltaPct, { less: 'a menos', more: 'a mais', noun: 'tokens sem cache' })}</div>`
+            : renderNotAvailable('Tokens sem cache (mediana)');
 
         const badges = [
-            curated ? '<span class="run-kind-badge curated">1.0 baseline</span>' : (!scheduled ? '<span class="run-kind-badge">ad hoc</span>' : ''),
-            isFaulty ? '<span class="run-kind-badge faulty">all trials had infra errors</span>' : ''
+            curated ? '<span class="run-kind-badge curated">linha de base 1.0</span>' : (!scheduled ? '<span class="run-kind-badge">avulsa</span>' : ''),
+            isFaulty ? '<span class="run-kind-badge faulty">todos os testes tiveram erros de infra</span>' : ''
         ].join('');
         const adhocLabelHtml = (!scheduled && !curated && label) ? `<span class="suite-adhoc-name">${escapeHtml(label)}</span>` : '';
 
         const metaParts = [
-            taskCount > 0 ? `<span class="nowrap">${taskCount} tasks${maxTrials > 1 ? ` ×${maxTrials}` : ''}${infraErrorRate > 0 ? ` (${infraErrorRate}% err)` : ''}${unguidedLeakRate > 0 ? ` (${unguidedLeakRate}% leak)` : ''}</span>` : '',
+            taskCount > 0 ? `<span class="nowrap">${taskCount} ${taskCount === 1 ? 'tarefa' : 'tarefas'}${maxTrials > 1 ? ` ×${maxTrials}` : ''}${infraErrorRate > 0 ? ` (${infraErrorRate}% erro)` : ''}${unguidedLeakRate > 0 ? ` (${unguidedLeakRate}% vazam.)` : ''}</span>` : '',
             `<span class="nowrap">${escapeHtml(timeAgo(date))}</span>`,
             ldap ? `<span class="nowrap">${escapeHtml(ldap)}</span>` : ''
         ].filter(Boolean).join(' · ');
@@ -1052,14 +1053,14 @@ function renderJobs() {
                 <td class="model-cell"><span class="model-cell-inner"><span class="model-name">${escapeHtml(jobInfo.model || '')}</span>${jobInfo.model ? renderEffortChip(jobInfo.reasoningEffort, { separator: false }) : ''}</span></td>
                 <td class="uplift-cell metric-cell" data-compound-key="${escapeHtml(compoundKey)}" data-barbell-title="${escapeHtml(jobBarbellTitle)}" data-barbell-sub="${escapeHtml(overallSub)}" data-barbell-kind="suite-overall" data-barbell-u="${uRate ?? ''}" data-barbell-g="${gRate ?? ''}" data-barbell-uplift="${overallPp ?? ''}" data-barbell-u-detail="${escapeHtml(uDetail)}" data-barbell-g-detail="${escapeHtml(gDetail)}" data-barbell-err="${overallErrAttr}">
                     <a href="${localLink}" class="uplift-link" interestfor="barbell-tooltip">
-                        ${renderRateComparison(uRate, gRate, overallPp, 'Pass rate', uErr, gErr)}
-                        <span class="visually-hidden"> (open per-guide results)</span>
+                        ${renderRateComparison(uRate, gRate, overallPp, 'Taxa de aprovação', uErr, gErr)}
+                        <span class="visually-hidden"> (abrir resultados por guia)</span>
                     </a>
                 </td>
                 <td class="a11y-cell metric-cell"${a11yCellAttrs}>${a11yCellHtml}</td>
                 <td class="metric-cell">${timeCellHtml}</td>
                 <td class="metric-cell tokens-cell">${tokenCellHtml}</td>
-                <td class="source-cell">${escapeHtml(jobInfo.source)}</td>
+                <td class="source-cell">${escapeHtml(sourceDisplayLabels[jobInfo.source] || jobInfo.source)}</td>
             </tr>
         `;
     });
@@ -1097,18 +1098,18 @@ function renderJobsCount(shown, matching, hiddenAdHoc, paged, pageSize = DESKTOP
     el.innerHTML = '';
     if (total === 0) return;
     const visibleNow = paged ? Math.min(pageSize, shown) : shown;
-    const parts = [`Showing ${visibleNow} of ${total} job${total === 1 ? '' : 's'}`];
+    const parts = [`Exibindo ${visibleNow} de ${total} ${total === 1 ? 'execução' : 'execuções'}`];
     if (!isPublicView() && hiddenAdHoc > 0) {
-        parts.push(`${hiddenAdHoc} ad-hoc job${hiddenAdHoc === 1 ? '' : 's'} hidden by "Scheduled only"`);
+        parts.push(`${hiddenAdHoc} ${hiddenAdHoc === 1 ? 'execução avulsa oculta' : 'execuções avulsas ocultas'} por "Apenas agendadas"`);
     } else if (matching < total) {
-        parts.push(`${total - matching} filtered out`);
+        parts.push(`${total - matching} ${total - matching === 1 ? 'filtrada' : 'filtradas'}`);
     }
     el.append(document.createTextNode(parts.join(' · ')));
     if (paged) {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'text-btn show-all-rows-btn';
-        btn.textContent = `Show all ${shown} jobs`;
+        btn.textContent = `Mostrar todas as ${shown} execuções`;
         btn.addEventListener('click', () => {
             showAllStacked = true;
             renderJobs();
@@ -1229,7 +1230,7 @@ function setBarbellAnchor(trigger) {
 function renderBarbellTooltipContent(cell) {
     const title = cell.dataset.barbellTitle || '';
     const kind = cell.dataset.barbellKind || 'guide';
-    const metric = cell.dataset.barbellMetric || 'Pass rate';
+    const metric = cell.dataset.barbellMetric || 'Taxa de aprovação';
     const jobCount = parseInt(cell.dataset.barbellRuns || '0') || 0;
     // Empty attributes mean that side (or the comparison) has no data.
     const parseOrNull = (/** @type {string | undefined} */ v) => (v === undefined || v === '') ? null : (parseInt(v) || 0);
@@ -1243,39 +1244,39 @@ function renderBarbellTooltipContent(cell) {
     const hasErr = cell.dataset.barbellErr === '1';
     const liftCls = uplift !== null && uplift > 0 ? 'up' : (uplift !== null && uplift < 0 ? 'down' : 'flat');
     const liftText = uplift === null ? '—' : `${uplift > 0 ? '+' : ''}${uplift} pp`;
-    const jobsText = `${jobCount} ${jobCount === 1 ? 'job' : 'jobs'}`;
-    const subText = cell.dataset.barbellSub || `${metric} · median across ${jobsText}`;
+    const jobsText = `${jobCount} ${jobCount === 1 ? 'execução' : 'execuções'}`;
+    const subText = cell.dataset.barbellSub || `${metric} · mediana em ${jobsText}`;
     const effortNote = cell.dataset.barbellEffort || '';
     const effortHtml = effortNote ? ` <div class="barbell-tooltip-effort">${escapeHtml(effortNote)}</div>` : '';
     const uExtraHtml = uDetail !== ''
         ? ` <span class="barbell-tooltip-sd">(${escapeHtml(uDetail)})</span>`
-        : (uSd !== '' ? ` <span class="barbell-tooltip-sd">(±${escapeHtml(uSd)} pp SD)</span>` : '');
+        : (uSd !== '' ? ` <span class="barbell-tooltip-sd">(±${escapeHtml(uSd)} pp DP)</span>` : '');
     const gExtraHtml = gDetail !== ''
         ? ` <span class="barbell-tooltip-sd">(${escapeHtml(gDetail)})</span>`
-        : (gSd !== '' ? ` <span class="barbell-tooltip-sd">(±${escapeHtml(gSd)} pp SD)</span>` : '');
-    let liftLabel = 'Median lift';
+        : (gSd !== '' ? ` <span class="barbell-tooltip-sd">(±${escapeHtml(gSd)} pp DP)</span>` : '');
+    let liftLabel = 'Ganho mediano';
     let note = '';
     if (kind === 'suite-overall') {
-        liftLabel = 'Pass-rate lift';
-        note = `Vertical ticks mark checks passed without MWG and with MWG in this job; the horizontal bar spans the pass-rate lift.${hasErr ? ' Shaded bands indicate uncertainty from trials with infra errors before grading.' : ''}`;
+        liftLabel = 'Ganho na taxa de aprovação';
+        note = `Traços verticais marcam verificações aprovadas sem MWG e com MWG nesta execução; a barra horizontal mostra o ganho na taxa de aprovação.${hasErr ? ' Faixas sombreadas indicam incerteza de testes com erros de infra antes da avaliação.' : ''}`;
     } else if (kind === 'suite-a11y') {
-        liftLabel = 'Accessibility lift';
-        note = 'Automated accessibility checks passed without MWG and with MWG in this job; lift is the percentage-point difference.';
+        liftLabel = 'Ganho em acessibilidade';
+        note = 'Verificações automáticas de acessibilidade aprovadas sem MWG e com MWG nesta execução; o ganho é a diferença em pontos percentuais.';
     } else if (kind === 'agent-overall') {
-        liftLabel = 'Pass-rate lift';
-        note = 'Checks passed without MWG and with MWG across the selected job(s); lift is the percentage-point difference.';
+        liftLabel = 'Ganho na taxa de aprovação';
+        note = 'Verificações aprovadas sem MWG e com MWG nas execuções selecionadas; o ganho é a diferença em pontos percentuais.';
     } else if (kind === 'agent-a11y') {
-        liftLabel = 'Accessibility lift';
-        note = 'Accessibility checks passed without MWG and with MWG across the selected job(s); lift is the percentage-point difference.';
+        liftLabel = 'Ganho em acessibilidade';
+        note = 'Verificações de acessibilidade aprovadas sem MWG e com MWG nas execuções selecionadas; o ganho é a diferença em pontos percentuais.';
     } else if (kind === 'guide') {
-        note = `Vertical ticks mark the median ${metric.toLowerCase()} without MWG and with MWG across ${jobsText} in this date window; the horizontal bar spans the median lift.${jobCount > 1 ? ' Shaded bands show ±1 standard deviation across jobs.' : ''}`;
+        note = `Traços verticais marcam a mediana de ${metric.toLowerCase()} sem MWG e com MWG em ${jobsText} nesta janela de datas; a barra horizontal mostra o ganho mediano.${jobCount > 1 ? ' Faixas sombreadas mostram ±1 desvio padrão entre execuções.' : ''}`;
     } else if (kind === 'dimension') {
-        note = `Vertical ticks mark the median accessibility pass rate without MWG and with MWG across ${jobsText} for this dimension; the horizontal bar spans the median lift.`;
+        note = `Traços verticais marcam a taxa mediana de aprovação em acessibilidade sem MWG e com MWG em ${jobsText} para esta dimensão; a barra horizontal mostra o ganho mediano.`;
     } else {
-        note = `Vertical ticks mark this model’s median job ${metric.toLowerCase()} without MWG and with MWG across ${jobsText}; the horizontal bar spans the median lift.${hasErr ? ' Shaded bands indicate uncertainty from trials with infra errors before grading.' : ''}`;
+        note = `Traços verticais marcam a mediana de ${metric.toLowerCase()} deste modelo sem MWG e com MWG em ${jobsText}; a barra horizontal mostra o ganho mediano.${hasErr ? ' Faixas sombreadas indicam incerteza de testes com erros de infra antes da avaliação.' : ''}`;
     }
 
-    return `<div class="barbell-tooltip-title">${escapeHtml(title)}</div> <div class="barbell-tooltip-sub">${escapeHtml(subText)}</div>${effortHtml} <div class="barbell-tooltip-rows"> <div class="barbell-tooltip-row"> <span class="barbell-tooltip-label"><span class="legend-dot unguided" aria-hidden="true"></span>Without MWG</span> <strong>${uRate === null ? '—' : `${uRate}%`}${uExtraHtml}</strong> </div> <div class="barbell-tooltip-row"> <span class="barbell-tooltip-label"><span class="legend-dot guided" aria-hidden="true"></span>With MWG</span> <strong class="rate-g">${gRate === null ? '—' : `${gRate}%`}${gExtraHtml}</strong> </div> <div class="barbell-tooltip-row barbell-tooltip-lift"> <span>${escapeHtml(liftLabel)}</span> <strong class="delta ${liftCls}">${liftText}</strong> </div> </div> <p class="barbell-tooltip-note">${escapeHtml(note)}</p>`;
+    return `<div class="barbell-tooltip-title">${escapeHtml(title)}</div> <div class="barbell-tooltip-sub">${escapeHtml(subText)}</div>${effortHtml} <div class="barbell-tooltip-rows"> <div class="barbell-tooltip-row"> <span class="barbell-tooltip-label"><span class="legend-dot unguided" aria-hidden="true"></span>Sem MWG</span> <strong>${uRate === null ? '—' : `${uRate}%`}${uExtraHtml}</strong> </div> <div class="barbell-tooltip-row"> <span class="barbell-tooltip-label"><span class="legend-dot guided" aria-hidden="true"></span>Com MWG</span> <strong class="rate-g">${gRate === null ? '—' : `${gRate}%`}${gExtraHtml}</strong> </div> <div class="barbell-tooltip-row barbell-tooltip-lift"> <span>${escapeHtml(liftLabel)}</span> <strong class="delta ${liftCls}">${liftText}</strong> </div> </div> <p class="barbell-tooltip-note">${escapeHtml(note)}</p>`;
 }
 
 function hideBarbellTooltip() {
@@ -1479,7 +1480,7 @@ function renderPivotInsights() {
      */
     const renderPivotTable = (groupObj, filterKey) => {
         const keys = Object.keys(groupObj);
-        if (keys.length === 0) { return '<p class="pivot-empty">No data for the current selection.</p>'; }
+        if (keys.length === 0) { return '<p class="pivot-empty">Sem dados para a seleção atual.</p>'; }
         const showVariance = filterKey === 'guide';
         /** @type {Record<string, { medianItem: { uRate: number, gRate: number, uplift: number }, uSD: number, gSD: number }>} */
         const statsByKey = {};
@@ -1552,8 +1553,8 @@ function renderPivotInsights() {
             });
         }
 
-        const metricName = onlyA11y ? 'Accessibility checks' : 'Pass rate';
-        const captionNoun = filterKey === 'guide' ? 'guide' : (filterKey === 'dimension' ? 'accessibility dimension' : 'model');
+        const metricName = onlyA11y ? 'Verificações de acessibilidade' : 'Taxa de aprovação';
+        const captionNoun = filterKey === 'guide' ? 'guia' : (filterKey === 'dimension' ? 'dimensão de acessibilidade' : 'modelo');
 
         let rowsHtml = '';
         keys.forEach(key => {
@@ -1595,7 +1596,7 @@ function renderPivotInsights() {
                 const modeQuery = onlyA11y ? '&mode=a11y' : '';
                 const sourceQuery = `&source=${encodeURIComponent(activeDataSource())}`;
                 nameHtml = `<a class="pivot-link" href="guide.html?guide=${encodeURIComponent(key)}${modeQuery}${sourceQuery}" interestfor="barbell-tooltip">${escapeHtml(key)}</a>`;
-                effSummary = `<span class="pivot-trials">${items.length} ${items.length === 1 ? 'job' : 'jobs'}</span>`;
+                effSummary = `<span class="pivot-trials">${items.length} ${items.length === 1 ? 'execução' : 'execuções'}</span>`;
             } else if (filterKey === 'dimension') {
                 const subMeta = A11Y_SUBCATEGORIES.find(s => s.id === key);
                 const label = subMeta ? subMeta.label : key;
@@ -1616,8 +1617,8 @@ function renderPivotInsights() {
                 const tokMed = getMedianNumber(/** @type {number[]} */ (items.map(i => i.tokDeltaPct).filter(v => typeof v === 'number')));
                 const fmtSignedPct = (/** @type {number} */ v) => v > 0 ? `+${v}%` : (v < 0 ? `−${Math.abs(v)}%` : '0%');
                 const parts = [
-                    `${items.length} ${items.length === 1 ? 'job' : 'jobs'}`,
-                    rtMed !== null ? `duration ${fmtSignedPct(rtMed)}` : '',
+                    `${items.length} ${items.length === 1 ? 'execução' : 'execuções'}`,
+                    rtMed !== null ? `duração ${fmtSignedPct(rtMed)}` : '',
                     tokMed !== null ? `tokens ${fmtSignedPct(tokMed)}` : ''
                 ].filter(Boolean);
                 effSummary = `<span class="pivot-trials">${escapeHtml(parts.join(' · '))}</span>`;
@@ -1630,9 +1631,9 @@ function renderPivotInsights() {
             const errAttr = filterKey === 'model' && (avgUErr > 0 || avgGErr > 0) ? '1' : '';
             const staticRowCls = filterKey === 'dimension' ? ' is-static' : '';
             const barbellTrackHtml = `<span class="insight-dumbbell-track" aria-hidden="true"> ${uBandHtml} ${gBandHtml} <span class="connector${regressedCls}" style="left: ${Math.min(uRate, gRate)}%; width: ${Math.abs(gRate - uRate)}%;"></span> <span class="dot unguided" style="left: ${uRate}%;"></span> <span class="dot guided" style="left: ${gRate}%;"></span> </span>`;
-            const rateTextHtml = `<span class="rate-text"> <span class="visually-hidden">Median unguided </span>${uRate}% <span class="rate-arrow" aria-hidden="true">→</span><span class="visually-hidden">, guided </span><span class="rate-g">${gRate}%</span> <span class="delta ${medUplift > 0 ? 'up' : (medUplift < 0 ? 'down' : 'flat')}">(${sign}${medUplift} pp)</span> </span>`;
+            const rateTextHtml = `<span class="rate-text"> <span class="visually-hidden">Mediana sem guia </span>${uRate}% <span class="rate-arrow" aria-hidden="true">→</span><span class="visually-hidden">, guiado </span><span class="rate-g">${gRate}%</span> <span class="delta ${medUplift > 0 ? 'up' : (medUplift < 0 ? 'down' : 'flat')}">(${sign}${medUplift} pp)</span> </span>`;
             const barbellCellHtml = filterKey === 'dimension'
-                ? `<button type="button" class="pivot-barbell-btn" interestfor="barbell-tooltip" aria-label="${escapeHtml(`${displayTitle}: median unguided ${uRate}%, guided ${gRate}% (${sign}${medUplift} pp)`)}">${barbellTrackHtml}${rateTextHtml} </button>`
+                ? `<button type="button" class="pivot-barbell-btn" interestfor="barbell-tooltip" aria-label="${escapeHtml(`${displayTitle}: mediana sem guia ${uRate}%, guiado ${gRate}% (${sign}${medUplift} pp)`)}">${barbellTrackHtml}${rateTextHtml} </button>`
                 : `${barbellTrackHtml}${rateTextHtml}`;
             rowsHtml += `
                 <tr class="pivot-row${isActive ? ' active-filter' : ''}${staticRowCls}">
@@ -1657,7 +1658,7 @@ function renderPivotInsights() {
             `;
         });
 
-        const colHeader = filterKey === 'guide' ? 'Guide' : (filterKey === 'dimension' ? 'Dimension' : 'Model');
+        const colHeader = filterKey === 'guide' ? 'Guia' : (filterKey === 'dimension' ? 'Dimensão' : 'Modelo');
         let firstColAriaSort = '';
         let secondColAriaSort = '';
         if (filterKey === 'guide') {
@@ -1669,10 +1670,10 @@ function renderPivotInsights() {
             if (pSort === 'alpha') firstColAriaSort = ' aria-sort="ascending"';
             else secondColAriaSort = ` aria-sort="${pSort === 'uplift-asc' ? 'ascending' : 'descending'}"`;
         }
-        const table = `<table class="insights-table"> <caption class="visually-hidden">Median ${metricName.toLowerCase()} by ${captionNoun}, unguided vs. guided${showVariance ? ' (bands show one standard deviation across jobs)' : ''}</caption> <thead class="visually-hidden"><tr><th scope="col"${firstColAriaSort}>${escapeHtml(colHeader)}</th><th scope="col"${secondColAriaSort}>${escapeHtml(metricName)} <span class="pivot-head-note">unguided → guided (median)</span></th></tr></thead> <tbody>${rowsHtml}</tbody> </table>`;
+        const table = `<table class="insights-table"> <caption class="visually-hidden">Mediana de ${metricName.toLowerCase()} por ${captionNoun}, sem guia vs. guiado${showVariance ? ' (faixas mostram um desvio padrão entre execuções)' : ''}</caption> <thead class="visually-hidden"><tr><th scope="col"${firstColAriaSort}>${escapeHtml(colHeader)}</th><th scope="col"${secondColAriaSort}>${escapeHtml(metricName)} <span class="pivot-head-note">sem guia → guiado (mediana)</span></th></tr></thead> <tbody>${rowsHtml}</tbody> </table>`;
         const isExpanded = Boolean(expandedPanels[filterKey]);
         const scrollCls = `insights-table-scroll${filterKey === 'guide' ? ' pivot-scroll' : ''}${isExpanded ? ' is-expanded' : ''}`;
-        const label = filterKey === 'guide' ? 'By guide table (scrolls vertically)' : `By ${captionNoun} table (scrolls vertically)`;
+        const label = filterKey === 'guide' ? 'Tabela por guia (rola verticalmente)' : `Tabela por ${captionNoun} (rola verticalmente)`;
         return `<div class="${scrollCls}" data-scroll-section="${filterKey}" tabindex="0" role="region" aria-label="${label}">${table}</div>`;
     };
 
@@ -1683,23 +1684,23 @@ function renderPivotInsights() {
         const isSorted = sortMode === 'uplift-desc' || sortMode === 'uplift-asc';
         const arrow = sortMode === 'uplift-desc' ? '↓' : (sortMode === 'uplift-asc' ? '↑' : '↕');
         const sortStateLabel = sortMode === 'uplift-desc'
-            ? ' (sorted high to low)'
-            : (sortMode === 'uplift-asc' ? ' (sorted low to high)' : '');
-        const panelNoun = panelKey === 'dimension' ? 'accessibility dimensions' : 'models';
+            ? ' (ordenado do maior para o menor)'
+            : (sortMode === 'uplift-asc' ? ' (ordenado do menor para o maior)' : '');
+        const panelNoun = panelKey === 'dimension' ? 'dimensões de acessibilidade' : 'modelos';
         const upliftHintText = sortMode === 'alpha'
-            ? `Sort ${panelNoun} by uplift (high to low)`
+            ? `Ordenar ${panelNoun} por ganho (maior para menor)`
             : (sortMode === 'uplift-desc'
-                ? `Sorted by uplift (high to low) — click to sort low to high`
-                : `Sorted by uplift (low to high) — click to reset to alphabetical sort`);
+                ? `Ordenado por ganho (maior para menor) — clique para ordenar do menor para o maior`
+                : `Ordenado por ganho (menor para maior) — clique para voltar à ordem alfabética`);
         const alphaHintId = `hint-sort-alpha-${panelKey}`;
         const upliftHintId = `hint-sort-uplift-${panelKey}`;
         const effortSplitBtnHtml = panelKey === 'model'
-            ? `<button type="button" class="insights-effort-split-btn anchor-hint-split-effort-model${splitModelByEffort ? ' is-active' : ''}" data-model-effort-split aria-pressed="${splitModelByEffort}" interestfor="hint-split-effort-model">By effort</button>`
+            ? `<button type="button" class="insights-effort-split-btn anchor-hint-split-effort-model${splitModelByEffort ? ' is-active' : ''}" data-model-effort-split aria-pressed="${splitModelByEffort}" interestfor="hint-split-effort-model">Por esforço</button>`
             : '';
         const effortSplitHintHtml = panelKey === 'model'
-            ? `<div id="hint-split-effort-model" popover="hint" class="hint-popover">${splitModelByEffort ? 'Showing models split by reasoning effort — click to combine' : 'Split model rows by reasoning effort level'}</div>`
+            ? `<div id="hint-split-effort-model" popover="hint" class="hint-popover">${splitModelByEffort ? 'Mostrando modelos separados por nível de esforço de raciocínio — clique para combinar' : 'Separar linhas de modelo por nível de esforço de raciocínio'}</div>`
             : '';
-        return `<div class="insights-panel-header"> <h3 class="insights-panel-title"> <button type="button" class="insights-panel-title-btn anchor-${alphaHintId}" data-panel-title-sort="${panelKey}" aria-pressed="${sortMode === 'alpha'}" interestfor="${alphaHintId}">${titleHtml}</button> </h3> <div class="insights-panel-actions"> ${effortSplitBtnHtml} <button type="button" class="insights-uplift-sort-btn anchor-${upliftHintId}${isSorted ? ' is-sorted' : ''}" data-panel-uplift-sort="${panelKey}" aria-pressed="${isSorted}" interestfor="${upliftHintId}"> <span>Uplift<span class="visually-hidden">${sortStateLabel}</span></span> <span class="insights-uplift-sort-arrow" aria-hidden="true">${arrow}</span> </button> </div> <div id="${alphaHintId}" popover="hint" class="hint-popover">Sort ${panelNoun} alphabetically</div> ${effortSplitHintHtml} <div id="${upliftHintId}" popover="hint" class="hint-popover">${upliftHintText}</div> </div>`;
+        return `<div class="insights-panel-header"> <h3 class="insights-panel-title"> <button type="button" class="insights-panel-title-btn anchor-${alphaHintId}" data-panel-title-sort="${panelKey}" aria-pressed="${sortMode === 'alpha'}" interestfor="${alphaHintId}">${titleHtml}</button> </h3> <div class="insights-panel-actions"> ${effortSplitBtnHtml} <button type="button" class="insights-uplift-sort-btn anchor-${upliftHintId}${isSorted ? ' is-sorted' : ''}" data-panel-uplift-sort="${panelKey}" aria-pressed="${isSorted}" interestfor="${upliftHintId}"> <span>Ganho<span class="visually-hidden">${sortStateLabel}</span></span> <span class="insights-uplift-sort-arrow" aria-hidden="true">${arrow}</span> </button> </div> <div id="${alphaHintId}" popover="hint" class="hint-popover">Ordenar ${panelNoun} em ordem alfabética</div> ${effortSplitHintHtml} <div id="${upliftHintId}" popover="hint" class="hint-popover">${upliftHintText}</div> </div>`;
     };
 
     const COLLAPSED_ROW_THRESHOLD = 6;
@@ -1708,19 +1709,19 @@ function renderPivotInsights() {
     const renderExpandRow = (panelKey, rowCount) => {
         const isExpanded = Boolean(expandedPanels[panelKey]);
         if (rowCount <= COLLAPSED_ROW_THRESHOLD && !isExpanded) return '';
-        return ` <div class="insights-expand-row"> <button type="button" class="insights-expand-btn${isExpanded ? ' is-expanded' : ''}" data-expand-panel="${panelKey}" aria-expanded="${isExpanded}"> <span>${isExpanded ? 'Collapse' : `Show all ${rowCount}`}</span> <svg class="insights-expand-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"> <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/> </svg> </button>
+        return ` <div class="insights-expand-row"> <button type="button" class="insights-expand-btn${isExpanded ? ' is-expanded' : ''}" data-expand-panel="${panelKey}" aria-expanded="${isExpanded}"> <span>${isExpanded ? 'Recolher' : `Mostrar todos (${rowCount})`}</span> <svg class="insights-expand-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"> <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/> </svg> </button>
             </div>
         `;
     };
     const sortOptions = [
-        { value: 'alphabetic', label: 'Alphabetic' },
-        { value: 'uplift', label: 'Uplift' },
-        { value: 'unguided', label: 'Unguided rate' },
-        { value: 'guided', label: 'Guided rate' },
-        { value: 'variance', label: 'Variance' }
+        { value: 'alphabetic', label: 'Alfabética' },
+        { value: 'uplift', label: 'Ganho' },
+        { value: 'unguided', label: 'Taxa sem guia' },
+        { value: 'guided', label: 'Taxa guiada' },
+        { value: 'variance', label: 'Variância' }
     ];
     const sortOptionsHtml = sortOptions.map(opt => `<option value="${opt.value}" ${currentGuideSort === opt.value ? 'selected' : ''}>${opt.label}</option>`).join('');
-    const dirLabel = currentGuideSortDir === 'asc' ? 'ascending' : 'descending';
+    const dirLabel = currentGuideSortDir === 'asc' ? 'crescente' : 'decrescente';
     const dirArrow = currentGuideSortDir === 'asc' ? '↑' : '↓';
     const dimensionCount = Object.keys(grouped.dimension).length;
     const modelCount = Object.keys(grouped.model).length;
@@ -1728,44 +1729,44 @@ function renderPivotInsights() {
     const runCount = keys.length;
     const dimensionPanelHtml = onlyA11y && dimensionCount > 0 ? `
         <div class="insights-panel insights-dimension-panel" data-panel="dimension">
-            ${renderPanelHeader('dimension', `By accessibility dimension (${dimensionCount})`)}
+            ${renderPanelHeader('dimension', `Por dimensão de acessibilidade (${dimensionCount})`)}
             ${renderPivotTable(grouped.dimension, 'dimension')}
             ${renderExpandRow('dimension', dimensionCount)}
         </div>`
         : '';
     const a11yScopeNoteHtml = onlyA11y ? `
-        <p class="insights-a11y-note">Automated Playwright checks covering 5 programmable dimensions (keyboard, focus &amp; <code>inert</code>, ARIA &amp; live regions, motion &amp; contrast preferences, form labeling). Does not measure full WCAG compliance or replace manual and assistive-technology testing.</p>`
+        <p class="insights-a11y-note">Verificações automáticas do Playwright cobrindo 5 dimensões programáveis (teclado, foco e <code>inert</code>, ARIA e regiões dinâmicas, preferências de movimento e contraste, rótulos de formulário). Não mede conformidade completa com a WCAG nem substitui testes manuais e com tecnologias assistivas.</p>`
         : '';
     container.innerHTML = `
         <div class="insights-scope-bar">
-            <p class="insights-scope">${runCount} ${runCount === 1 ? 'job' : 'jobs'} · medians across jobs</p>
+            <p class="insights-scope">${runCount} ${runCount === 1 ? 'execução' : 'execuções'} · medianas entre execuções</p>
             <div class="guide-legend">
                 <span class="guide-legend-item">
                     <span class="guide-legend-swatch unguided"><span class="guide-legend-tick"></span></span>
-                    <span class="guide-legend-label-u">Unguided</span>
+                    <span class="guide-legend-label-u">Sem guia</span>
                 </span>
                 <span class="guide-legend-vs" aria-hidden="true">→</span>
                 <span class="guide-legend-item">
                     <span class="guide-legend-swatch guided"><span class="guide-legend-tick"></span></span>
-                    <strong>Guided</strong>
+                    <strong>Guiado</strong>
                 </span>
-                <button type="button" class="info-hint-btn anchor-hint-guide-legend" interestfor="hint-guide-legend" aria-label="About the bands and ticks">?</button>
-                <div id="hint-guide-legend" popover="hint" class="hint-popover">Shaded band shows ±1 standard deviation across jobs; the vertical tick mark shows the median rate.</div>
+                <button type="button" class="info-hint-btn anchor-hint-guide-legend" interestfor="hint-guide-legend" aria-label="Sobre as faixas e os traços">?</button>
+                <div id="hint-guide-legend" popover="hint" class="hint-popover">A faixa sombreada mostra ±1 desvio padrão entre execuções; o traço vertical indica a taxa mediana.</div>
             </div>
         </div>
         ${a11yScopeNoteHtml}
         ${dimensionPanelHtml}
         <div class="insights-panel" data-panel="model">
-            ${renderPanelHeader('model', `By model (${modelCount})`)}
+            ${renderPanelHeader('model', `Por modelo (${modelCount})`)}
             ${renderPivotTable(grouped.model, 'model')}
             ${renderExpandRow('model', modelCount)}
         </div>
         <div class="insights-panel insights-panel-full insights-guide-drawer" data-panel="guide">
             <div class="insights-guide-body">
                 <div class="insights-panel-header">
-                    <h3 class="insights-panel-title" tabindex="-1">By guide (${guideCount})</h3>
+                    <h3 class="insights-panel-title" tabindex="-1">Por guia (${guideCount})</h3>
                     <div class="guide-sort-controls">
-                        <label for="guide-sort-select" class="sort-label">Sort</label>
+                        <label for="guide-sort-select" class="sort-label">Ordenar</label>
                         <div class="sort-combined-control">
                             <div class="sort-select-pill">
                                 <select id="guide-sort-select" class="sort-select">${sortOptionsHtml}</select>
@@ -1774,7 +1775,7 @@ function renderPivotInsights() {
                                 </svg>
                             </div>
                             <span class="sort-combined-divider" aria-hidden="true"></span>
-                            <button id="guide-sort-dir-btn" class="sort-direction-btn" type="button" aria-label="Sort direction: ${dirLabel}. Toggle." aria-pressed="${currentGuideSortDir === 'desc'}">
+                            <button id="guide-sort-dir-btn" class="sort-direction-btn" type="button" aria-label="Direção da ordenação: ${dirLabel}. Alternar." aria-pressed="${currentGuideSortDir === 'desc'}">
                                 <span class="sort-dir-arrow" aria-hidden="true">${dirArrow}</span>
                             </button>
                         </div>

@@ -59,7 +59,7 @@ const featureFilter = /** @type {HTMLInputElement} */ ($('#feature-filter'));
 const noResults = $('#no-results');
 
 const resp = await fetch('../demos.gen.json');
-if (!resp.ok) throw new Error(`Failed to load demos.gen.json: ${resp.status}`);
+if (!resp.ok) throw new Error(`Falha ao carregar demos.gen.json: ${resp.status}`);
 /** @type {{ guides: DemoGuide[]; features: string[] }} */
 const { guides, features } = await resp.json();
 
@@ -77,17 +77,17 @@ function renderCard(guide) {
     h('div', { class: 'card-header', 'data-action': 'expand' },
       h('div', { class: 'card-header-top' },
         h('button', { type: 'button', class: 'guide-id', 'data-action': 'expand', 'aria-expanded': 'false', 'aria-label': `${guide.id}: ${guide.title}` }, guide.id),
-        unsetDemo && h('div', { class: 'toggle-group', role: 'group', 'aria-label': 'Demo variant' },
+        unsetDemo && h('div', { class: 'toggle-group', role: 'group', 'aria-label': 'Variante do demo' },
           h('button', { type: 'button', class: 'toggle-btn active', 'data-action': 'variant', 'data-src': src, 'aria-pressed': 'true' }, 'demo'),
-          h('button', { type: 'button', class: 'toggle-btn unset', 'data-action': 'variant', 'data-src': `../${unsetDemo.path}`, 'aria-pressed': 'false' }, 'unset'),
+          h('button', { type: 'button', class: 'toggle-btn unset', 'data-action': 'variant', 'data-src': `../${unsetDemo.path}`, 'aria-pressed': 'false' }, 'sem recurso'),
         ),
         h('a', { class: 'open-link', href: src, target: '_blank', rel: 'noopener' },
           openInNewIcon.cloneNode(true),
-          h('span', { class: 'visually-hidden' }, `Open ${guide.id} in a new tab`),
+          h('span', { class: 'visually-hidden' }, `Abrir ${guide.id} em uma nova aba`),
         ),
       ),
       h('div', { class: 'card-desc' }, guide.description),
-      h('div', { class: 'card-features', role: 'group', 'aria-label': 'Filter by web feature' },
+      h('div', { class: 'card-features', role: 'group', 'aria-label': 'Filtrar por recurso web' },
         guide.features.map(f => h('button', { type: 'button', class: 'feature-tag', 'data-action': 'feature' }, f)),
       ),
     ),
@@ -120,7 +120,7 @@ main.append(...categories.map(c => c.section));
 tocGrid.append(...categories.map(c => c.tocCol));
 $('#features-datalist').append(...features.map(feat => {
   const count = guides.filter(g => g.features.includes(feat)).length;
-  return h('option', { value: feat, label: `${count} ${count === 1 ? 'guide' : 'guides'}` });
+  return h('option', { value: feat, label: `${count} ${count === 1 ? 'guia' : 'guias'}` });
 }));
 
 let hoveredIframe = /** @type {HTMLIFrameElement | null} */ (null);
@@ -133,7 +133,7 @@ function mountIframe(card) {
   const wanted = /** @type {string} */ (card.dataset.src);
   let iframe = container.querySelector('iframe');
   if (!iframe) {
-    iframe = h('iframe', { sandbox: SANDBOX, title: `${card.id} demo`, src: wanted });
+    iframe = h('iframe', { sandbox: SANDBOX, title: `Demo de ${card.id}`, src: wanted });
     container.append(iframe);
   } else if (iframe.getAttribute('src') !== wanted) {
     iframe.src = wanted;

@@ -168,24 +168,24 @@ function renderPending({ loading = false } = {}) {
     renderAgentPills(null, null);
     const promptEl = document.getElementById('ab-prompt-text');
     if (promptEl) {
-        promptEl.textContent = loading ? 'Loading task prompt…' : 'Numbers appear once results are loaded.';
+        promptEl.textContent = loading ? 'Carregando prompt da tarefa…' : 'Os números aparecem assim que os resultados forem carregados.';
     }
     const metaEl = document.getElementById('ab-run-provenance');
-    if (metaEl) metaEl.innerHTML = '<span class="ab-prov-item">Nightly evaluations</span>';
-    const naScore = '<span class="ab-score-pct mid"><span aria-hidden="true">—</span><span class="visually-hidden">not available</span></span>';
+    if (metaEl) metaEl.innerHTML = '<span class="ab-prov-item">Avaliações noturnas</span>';
+    const naScore = '<span class="ab-score-pct mid"><span aria-hidden="true">—</span><span class="visually-hidden">não disponível</span></span>';
     const uEl = document.getElementById('ab-score-unguided');
     const gEl = document.getElementById('ab-score-guided');
     if (uEl) {
-        uEl.innerHTML = ` <div class="ab-score-header"> <div class="ab-score-header-main"> <span class="ab-mode-badge unguided"><span class="legend-dot unguided" aria-hidden="true"></span>Without MWG</span> ${naScore} </div> </div> <div class="ab-check-meter" aria-hidden="true"></div> `;
+        uEl.innerHTML = ` <div class="ab-score-header"> <div class="ab-score-header-main"> <span class="ab-mode-badge unguided"><span class="legend-dot unguided" aria-hidden="true"></span>Sem MWG</span> ${naScore} </div> </div> <div class="ab-check-meter" aria-hidden="true"></div> `;
     }
     if (gEl) {
-        gEl.innerHTML = ` <div class="ab-score-header"> <div class="ab-score-header-main"> <span class="ab-mode-badge guided"><span class="legend-dot guided" aria-hidden="true"></span>With MWG</span> ${naScore} </div> </div> <div class="ab-check-meter" aria-hidden="true"></div> `;
+        gEl.innerHTML = ` <div class="ab-score-header"> <div class="ab-score-header-main"> <span class="ab-mode-badge guided"><span class="legend-dot guided" aria-hidden="true"></span>Com MWG</span> ${naScore} </div> </div> <div class="ab-check-meter" aria-hidden="true"></div> `;
     }
     const checksEl = document.getElementById('ab-checks-content');
     if (checksEl) {
-        const naCell = '<span aria-hidden="true">—</span><span class="visually-hidden">not available</span>';
-        const rowMsg = loading ? 'Loading…' : 'No data loaded';
-        checksEl.innerHTML = ` <div id="ab-checks-table-wrap" class="ab-checks-table-wrap" tabindex="0" role="region" aria-label="Deterministic grader checks"> <table class="ab-checks-table"> <caption class="visually-hidden">Playwright grader checks comparing unguided and guided trials</caption> <thead> <tr> <th scope="col" class="ab-col-num">#</th> <th scope="col">Grader check</th> <th scope="col" class="ab-col-status">Without MWG</th> <th scope="col" class="ab-col-status">With MWG</th> </tr> </thead> <tbody> <tr class="ab-check-row"> <td class="ab-check-num">—</td> <th scope="row" class="ab-check-msg">${rowMsg}</th> <td class="ab-check-cell" data-label="Without MWG">${naCell}</td> <td class="ab-check-cell" data-label="With MWG">${naCell}</td> </tr> </tbody> </table> </div> `;
+        const naCell = '<span aria-hidden="true">—</span><span class="visually-hidden">não disponível</span>';
+        const rowMsg = loading ? 'Carregando…' : 'Nenhum dado carregado';
+        checksEl.innerHTML = ` <div id="ab-checks-table-wrap" class="ab-checks-table-wrap" tabindex="0" role="region" aria-label="Verificações determinísticas do avaliador"> <table class="ab-checks-table"> <caption class="visually-hidden">Verificações do avaliador Playwright comparando testes sem guia e guiados</caption> <thead> <tr> <th scope="col" class="ab-col-num">#</th> <th scope="col">Verificação do avaliador</th> <th scope="col" class="ab-col-status">Sem MWG</th> <th scope="col" class="ab-col-status">Com MWG</th> </tr> </thead> <tbody> <tr class="ab-check-row"> <td class="ab-check-num">—</td> <th scope="row" class="ab-check-msg">${rowMsg}</th> <td class="ab-check-cell" data-label="Without MWG">${naCell}</td> <td class="ab-check-cell" data-label="With MWG">${naCell}</td> </tr> </tbody> </table> </div> `;
     }
 }
 /** @param {HTMLElement} container */
@@ -204,7 +204,7 @@ function renderTaskPills(currentTask) {
     const sameTasks = existingPills.length === list.length &&
         existingPills.every((el, idx) => el.getAttribute('data-task-id') === list[idx].id);
     if (!sameTasks) {
-        container.innerHTML = `<legend class="visually-hidden">Select evaluation task</legend><div class="ab-task-pills-track">` + list.map(t => {
+        container.innerHTML = `<legend class="visually-hidden">Selecionar tarefa de avaliação</legend><div class="ab-task-pills-track">` + list.map(t => {
             return `<label class="ab-task-pill" data-task-id="${escapeHtml(t.id)}"><input type="radio" name="ab-task" value="${escapeHtml(t.id)}"><span>${escapeHtml(t.label)}</span><span class="ab-task-delta-slot"></span></label>`;
         }).join('') + `</div>`;
     }
@@ -220,7 +220,7 @@ function renderTaskPills(currentTask) {
             const bothGraded = Boolean(pair && !pair.unguided.earlyFailure && !pair.guided.earlyFailure);
             const deltaChecks = (pair && bothGraded) ? pair.guided.passed - pair.unguided.passed : 0;
             deltaSlot.innerHTML = (isCurrent && deltaChecks > 0)
-                ? `<span class="ab-task-delta"><span aria-hidden="true">+${deltaChecks}</span><span class="visually-hidden">, ${deltaChecks} more passing ${deltaChecks === 1 ? 'check' : 'checks'} with MWG</span></span>`
+                ? `<span class="ab-task-delta"><span aria-hidden="true">+${deltaChecks}</span><span class="visually-hidden">, mais ${deltaChecks} ${deltaChecks === 1 ? 'verificação aprovada' : 'verificações aprovadas'} com MWG</span></span>`
                 : '';
         }
     });
@@ -265,7 +265,7 @@ function renderAgentPills(currentTask, currentPair) {
     const sameAgents = existingPills.length === orderedFamilies.length &&
         existingPills.every((el, idx) => el.getAttribute('data-agent-id') === orderedFamilies[idx].id);
     if (!sameAgents) {
-        container.innerHTML = `<legend class="visually-hidden">Select coding agent</legend>` + orderedFamilies.map(f => {
+        container.innerHTML = `<legend class="visually-hidden">Selecionar agente de código</legend>` + orderedFamilies.map(f => {
             return `<label class="ab-agent-pill" data-agent-id="${escapeHtml(f.id)}"><input type="radio" name="ab-agent" value="${escapeHtml(f.id)}">${getAgentBadge(f.id)}${escapeHtml(f.label)}</label>`;
         }).join('');
     }
@@ -290,7 +290,7 @@ function renderPromptBar(task, pair) {
     const promptEl = document.getElementById('ab-prompt-text');
     const metaEl = document.getElementById('ab-run-provenance');
     if (promptEl) {
-        promptEl.textContent = task.prompt ? `“${task.prompt}”` : 'Task prompt unavailable.';
+        promptEl.textContent = task.prompt ? `“${task.prompt}”` : 'Prompt da tarefa indisponível.';
     }
     if (metaEl) {
         const sourceQuery = linkSource ? `&source=${encodeURIComponent(linkSource)}` : '';
@@ -303,12 +303,12 @@ function renderPromptBar(task, pair) {
             const ghHref = `https://github.com/theobarros22/modern-web-guidance-src/blob/main/guides/${encodeURIComponent(cat)}/${encodeURIComponent(slug)}/guide.md`;
             return `<a class="ab-prov-link" href="${ghHref}" target="_blank" rel="noopener">${escapeHtml(slug)}</a>`;
         }).join(', ');
-        const guidePrefix = cleanGuides.length > 1 ? 'Guides:' : 'Guide:';
+        const guidePrefix = cleanGuides.length > 1 ? 'Guias:' : 'Guia:';
         const effortChipHtml = pair.model
             ? renderEffortChip(pair.reasoningEffort)
             : '';
-        const jobTypeLabel = pair.curated ? '1.0 baseline job' : 'nightly job';
-        metaEl.innerHTML = `<span class="ab-prov-item">${escapeHtml(pair.date)} ${jobTypeLabel} (<span class="ab-prov-model">${escapeHtml(pair.model)}${effortChipHtml}</span>)</span> <span class="ab-prov-sep" aria-hidden="true">·</span> <a class="ab-prov-link" href="${jobHref}">Inspect job</a> <span class="ab-prov-sep" aria-hidden="true">·</span> <a class="ab-prov-link" href="${trendHref}">Guide trend</a> <span class="ab-prov-sep" aria-hidden="true">·</span> <span class="ab-prov-item">${guidePrefix} ${guideLinksHtml}</span>`;
+        const jobTypeLabel = pair.curated ? 'execução linha de base 1.0' : 'execução noturna';
+        metaEl.innerHTML = `<span class="ab-prov-item">${escapeHtml(pair.date)} · ${jobTypeLabel} (<span class="ab-prov-model">${escapeHtml(pair.model)}${effortChipHtml}</span>)</span> <span class="ab-prov-sep" aria-hidden="true">·</span> <a class="ab-prov-link" href="${jobHref}">Inspecionar execução</a> <span class="ab-prov-sep" aria-hidden="true">·</span> <a class="ab-prov-link" href="${trendHref}">Tendência do guia</a> <span class="ab-prov-sep" aria-hidden="true">·</span> <span class="ab-prov-item">${guidePrefix} ${guideLinksHtml}</span>`;
     }
 }
 /** @param {string} msg
@@ -340,7 +340,7 @@ function renderScorecard(task, pair) {
     const bothGraded = !u.earlyFailure && !g.earlyFailure;
     const deltaChecks = g.passed - u.passed;
     const deltaSign = deltaChecks > 0 ? `+${deltaChecks}` : (deltaChecks < 0 ? `−${Math.abs(deltaChecks)}` : '0');
-    const deltaWord = Math.abs(deltaChecks) === 1 ? 'check' : 'checks';
+    const deltaWord = Math.abs(deltaChecks) === 1 ? 'verificação' : 'verificações';
     const deltaTone = deltaChecks > 0 ? 'good' : (deltaChecks < 0 ? 'cost' : 'flat');
     const deltaGlyph = deltaChecks > 0 ? '▲' : (deltaChecks < 0 ? '▼' : '•');
     const deltaBadgeHtml = bothGraded
@@ -357,15 +357,15 @@ function renderScorecard(task, pair) {
     const uTone = u.earlyFailure ? 'low' : scoreTone(u.rate);
     const gTone = g.earlyFailure ? 'low' : scoreTone(g.rate);
     const uFailed = u.total - u.passed;
-    const a11yActionHtml = '<span class="visually-hidden">: show accessibility checks</span>';
+    const a11yActionHtml = '<span class="visually-hidden">: mostrar verificações de acessibilidade</span>';
     const uA11yHtml = u.a11yTotal > 0
         ? `<button type="button" class="ab-score-a11y ${u.a11yPassed < u.a11yTotal ? 'fail' : 'pass'}">A11y ${u.a11yPassed}/${u.a11yTotal}${a11yActionHtml}</button>`
         : '';
     const gA11yHtml = g.a11yTotal > 0
         ? `<button type="button" class="ab-score-a11y ${g.a11yPassed === g.a11yTotal ? 'pass' : 'fail'}">A11y ${g.a11yPassed}/${g.a11yTotal}${a11yActionHtml}</button>`
         : '';
-    uEl.innerHTML = ` <div class="ab-score-header"> <div class="ab-score-header-main"> <span class="ab-mode-badge unguided"><span class="legend-dot unguided" aria-hidden="true"></span>Without MWG</span> <span class="ab-score-pct ${uTone}">${u.passed}<span class="ab-score-denom">/${u.total}</span></span> <span class="ab-pass-summary">${u.earlyFailure ? 'infra error before grading' : (uFailed > 0 ? `${uFailed} failed` : 'all passed')}</span> ${uA11yHtml} </div> <span class="ab-score-secondary">${formatDuration(u.runtimeMs)} · ${formatTokens(u.uncachedTokens)} tokens</span> </div> <div class="ab-check-meter" role="img" aria-label="${u.passed} of ${u.total} grader checks passed">${uMeterSegs}</div> `;
-    gEl.innerHTML = ` <div class="ab-score-header"> <div class="ab-score-header-main"> <span class="ab-mode-badge guided"><span class="legend-dot guided" aria-hidden="true"></span>With MWG</span> <span class="ab-score-pct ${gTone}">${g.passed}<span class="ab-score-denom">/${g.total}</span></span> ${deltaBadgeHtml} ${g.earlyFailure ? '<span class="ab-pass-summary">infra error before grading</span>' : ''} ${gA11yHtml} </div> <span class="ab-score-secondary">${formatDuration(g.runtimeMs)} · ${formatTokens(g.uncachedTokens)} tokens</span> </div> <div class="ab-check-meter" role="img" aria-label="${g.passed} of ${g.total} grader checks passed">${gMeterSegs}</div> `;
+    uEl.innerHTML = ` <div class="ab-score-header"> <div class="ab-score-header-main"> <span class="ab-mode-badge unguided"><span class="legend-dot unguided" aria-hidden="true"></span>Sem MWG</span> <span class="ab-score-pct ${uTone}">${u.passed}<span class="ab-score-denom">/${u.total}</span></span> <span class="ab-pass-summary">${u.earlyFailure ? 'erro de infra antes da avaliação' : (uFailed > 0 ? `${uFailed} ${uFailed === 1 ? 'falhou' : 'falharam'}` : 'todas aprovadas')}</span> ${uA11yHtml} </div> <span class="ab-score-secondary">${formatDuration(u.runtimeMs)} · ${formatTokens(u.uncachedTokens)} tokens</span> </div> <div class="ab-check-meter" role="img" aria-label="${u.passed} de ${u.total} verificações do avaliador aprovadas">${uMeterSegs}</div> `;
+    gEl.innerHTML = ` <div class="ab-score-header"> <div class="ab-score-header-main"> <span class="ab-mode-badge guided"><span class="legend-dot guided" aria-hidden="true"></span>Com MWG</span> <span class="ab-score-pct ${gTone}">${g.passed}<span class="ab-score-denom">/${g.total}</span></span> ${deltaBadgeHtml} ${g.earlyFailure ? '<span class="ab-pass-summary">erro de infra antes da avaliação</span>' : ''} ${gA11yHtml} </div> <span class="ab-score-secondary">${formatDuration(g.runtimeMs)} · ${formatTokens(g.uncachedTokens)} tokens</span> </div> <div class="ab-check-meter" role="img" aria-label="${g.passed} de ${g.total} verificações do avaliador aprovadas">${gMeterSegs}</div> `;
     rootEl?.querySelectorAll('.ab-score-a11y').forEach(btn => { btn.addEventListener('click', () => expandAndFocusA11yChecks(task, pair)); });
 }
 /** @param {ShowcaseTask} task
@@ -378,28 +378,28 @@ function renderChecks(task, pair) {
     const canCollapse = totalChecks > previewCount;
     const collapsed = canCollapse && !checksExpanded;
     const a11yTotal = pair.checks.filter(c => c.isA11y).length || pair.guided.a11yTotal || 0;
-    const ungradedCell = '<span aria-hidden="true">—</span><span class="visually-hidden">not graded</span>';
+    const ungradedCell = '<span aria-hidden="true">—</span><span class="visually-hidden">não avaliado</span>';
     const rowsHtml = totalChecks > 0 ? pair.checks.map(c => {
         const uBadge = pair.unguided.earlyFailure
             ? ungradedCell
             : (c.unguidedPassed
-                ? '<span class="ab-check-status pass"><span class="ab-status-glyph" aria-hidden="true">✓</span>Pass</span>'
-                : '<span class="ab-check-status fail"><span class="ab-status-glyph" aria-hidden="true">✗</span>Fail</span>');
+                ? '<span class="ab-check-status pass"><span class="ab-status-glyph" aria-hidden="true">✓</span>Aprovado</span>'
+                : '<span class="ab-check-status fail"><span class="ab-status-glyph" aria-hidden="true">✗</span>Falhou</span>');
         const gBadge = pair.guided.earlyFailure
             ? ungradedCell
             : (c.guidedPassed
-                ? `<span class="ab-check-status pass${c.flipped ? ' is-flipped' : ''}"><span class="ab-status-glyph" aria-hidden="true">✓</span>Pass</span>`
-                : '<span class="ab-check-status fail"><span class="ab-status-glyph" aria-hidden="true">✗</span>Fail</span>');
-        const a11yTag = c.isA11y ? `<span class="ab-a11y-tag">A11y · ${escapeHtml(c.a11yLabel || 'Accessibility')}</span>` : '';
+                ? `<span class="ab-check-status pass${c.flipped ? ' is-flipped' : ''}"><span class="ab-status-glyph" aria-hidden="true">✓</span>Aprovado</span>`
+                : '<span class="ab-check-status fail"><span class="ab-status-glyph" aria-hidden="true">✗</span>Falhou</span>');
+        const a11yTag = c.isA11y ? `<span class="ab-a11y-tag">A11y · ${escapeHtml(c.a11yLabel || 'Acessibilidade')}</span>` : '';
         return ` <tr class="ab-check-row${c.flipped ? ' is-flipped' : ''}"${c.isA11y ? ' data-a11y="true"' : ''}> <td class="ab-check-num">${c.index}</td> <th scope="row" class="ab-check-msg"> <span>${escapeHtml(cleanCheckMessage(c.message))}</span> ${a11yTag} </th> <td class="ab-check-cell" data-label="Without MWG">${uBadge}</td> <td class="ab-check-cell" data-label="With MWG">${gBadge}</td> </tr>`;
-    }).join('') : ` <tr class="ab-check-row"> <td class="ab-check-num">—</td> <th scope="row" class="ab-check-msg">Infra error before grading</th> <td class="ab-check-cell" data-label="Without MWG">${ungradedCell}</td> <td class="ab-check-cell" data-label="With MWG">${ungradedCell}</td> </tr>`;
+    }).join('') : ` <tr class="ab-check-row"> <td class="ab-check-num">—</td> <th scope="row" class="ab-check-msg">Erro de infra antes da avaliação</th> <td class="ab-check-cell" data-label="Without MWG">${ungradedCell}</td> <td class="ab-check-cell" data-label="With MWG">${ungradedCell}</td> </tr>`;
     const collapsedLabel = a11yTotal > 0
-        ? `Show all ${totalChecks} checks (${a11yTotal} a11y)`
-        : `Show all ${totalChecks} checks`;
+        ? `Mostrar todas as ${totalChecks} verificações (${a11yTotal} a11y)`
+        : `Mostrar todas as ${totalChecks} verificações`;
     const toggleHtml = canCollapse
-        ? `<div class="ab-checks-toggle-bar"> <button type="button" id="ab-checks-toggle" class="ab-checks-toggle" aria-expanded="${checksExpanded}" aria-controls="ab-checks-table-wrap"> ${checksExpanded ? 'Show fewer checks' : collapsedLabel} </button> </div>`
+        ? `<div class="ab-checks-toggle-bar"> <button type="button" id="ab-checks-toggle" class="ab-checks-toggle" aria-expanded="${checksExpanded}" aria-controls="ab-checks-table-wrap"> ${checksExpanded ? 'Mostrar menos verificações' : collapsedLabel} </button> </div>`
         : '';
-    container.innerHTML = ` <div id="ab-checks-table-wrap" class="ab-checks-table-wrap${collapsed ? ' is-collapsed' : ''}" tabindex="0" role="region" aria-label="Deterministic grader checks for ${escapeHtml(task.label)}"> <table class="ab-checks-table"> <caption class="visually-hidden">Playwright grader checks comparing unguided and guided trials for ${escapeHtml(task.label)} on ${escapeHtml(pair.agentLabel)}</caption> <thead> <tr> <th scope="col" class="ab-col-num">#</th> <th scope="col">Grader check</th> <th scope="col" class="ab-col-status">Without MWG</th> <th scope="col" class="ab-col-status">With MWG</th> </tr> </thead> <tbody>${rowsHtml}</tbody> </table> </div> ${toggleHtml} `;
+    container.innerHTML = ` <div id="ab-checks-table-wrap" class="ab-checks-table-wrap${collapsed ? ' is-collapsed' : ''}" tabindex="0" role="region" aria-label="Verificações determinísticas do avaliador para ${escapeHtml(task.label)}"> <table class="ab-checks-table"> <caption class="visually-hidden">Verificações do avaliador Playwright comparando testes sem guia e guiados para ${escapeHtml(task.label)} em ${escapeHtml(pair.agentLabel)}</caption> <thead> <tr> <th scope="col" class="ab-col-num">#</th> <th scope="col">Verificação do avaliador</th> <th scope="col" class="ab-col-status">Sem MWG</th> <th scope="col" class="ab-col-status">Com MWG</th> </tr> </thead> <tbody>${rowsHtml}</tbody> </table> </div> ${toggleHtml} `;
     const toggleBtn = document.getElementById('ab-checks-toggle');
     toggleBtn?.addEventListener('click', () => { checksExpanded = !checksExpanded; renderChecks(task, pair); document.getElementById('ab-checks-toggle')?.focus(); });
 }
@@ -410,5 +410,5 @@ function announceSelection() {
     const { task, pair } = sel;
     const delta = pair.guided.passed - pair.unguided.passed;
     const sign = delta > 0 ? `+${delta}` : String(delta);
-    liveEl.textContent = `Showing ${task.label} on ${pair.agentLabel}: unguided ${pair.unguided.passed} of ${pair.unguided.total} checks passed, guided ${pair.guided.passed} of ${pair.guided.total} passed (${sign} checks).`;
+    liveEl.textContent = `Exibindo ${task.label} em ${pair.agentLabel}: sem guia ${pair.unguided.passed} de ${pair.unguided.total} verificações aprovadas, guiado ${pair.guided.passed} de ${pair.guided.total} aprovadas (${sign} verificações).`;
 }

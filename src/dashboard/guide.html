@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,22 +8,22 @@
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#f8f9fa" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#111418" media="(prefers-color-scheme: dark)">
-  <meta name="description" content="Modern Web Guidance evaluation trend for a single guide: guided vs. unguided pass rate over time by agent and model.">
-  <meta property="og:site_name" content="Modern Web Guidance Evals">
+  <meta name="description" content="Tendência de avaliação do Modern Web Guidance para um guia específico: taxa de aprovação guiado vs. sem guia ao longo do tempo por agente e modelo.">
+  <meta property="og:site_name" content="Avaliações Modern Web Guidance">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Guide Performance Trend — Modern Web Guidance Evals">
-  <meta property="og:description" content="Modern Web Guidance evaluation trend for a single guide: guided vs. unguided pass rate over time by agent and model.">
+  <meta property="og:title" content="Tendência de Desempenho do Guia — Avaliações Modern Web Guidance">
+  <meta property="og:description" content="Tendência de avaliação do Modern Web Guidance para um guia específico: taxa de aprovação guiado vs. sem guia ao longo do tempo por agente e modelo.">
   <meta property="og:image" content="https://theobarros22.github.io/modern-web-guidance-src/og-image.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="2400">
   <meta property="og:image:height" content="1260">
-  <meta property="og:image:alt" content="Modern Web Guidance Evals: Lantern logo beside a dumbbell chart illustrating paired A/B pass-rate lift with Modern Web Guidance across Claude Code, Codex CLI, and Antigravity CLI.">
+  <meta property="og:image:alt" content="Avaliações Modern Web Guidance: logotipo de lanterna ao lado de um gráfico de halteres ilustrando o ganho pareado A/B na taxa de aprovação com Modern Web Guidance no Claude Code, Codex CLI e Antigravity CLI.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Guide Performance Trend — Modern Web Guidance Evals">
-  <meta name="twitter:description" content="Modern Web Guidance evaluation trend for a single guide: guided vs. unguided pass rate over time by agent and model.">
+  <meta name="twitter:title" content="Tendência de Desempenho do Guia — Avaliações Modern Web Guidance">
+  <meta name="twitter:description" content="Tendência de avaliação do Modern Web Guidance para um guia específico: taxa de aprovação guiado vs. sem guia ao longo do tempo por agente e modelo.">
   <meta name="twitter:image" content="https://theobarros22.github.io/modern-web-guidance-src/og-image.png">
-  <meta name="twitter:image:alt" content="Modern Web Guidance Evals: Lantern logo beside a dumbbell chart illustrating paired A/B pass-rate lift with Modern Web Guidance across Claude Code, Codex CLI, and Antigravity CLI.">
-  <title>Guide Performance Trend</title>
+  <meta name="twitter:image:alt" content="Avaliações Modern Web Guidance: logotipo de lanterna ao lado de um gráfico de halteres ilustrando o ganho pareado A/B na taxa de aprovação com Modern Web Guidance no Claude Code, Codex CLI e Antigravity CLI.">
+  <title>Tendência de Desempenho do Guia</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://storage.googleapis.com" crossorigin>
   <link rel="stylesheet" href="dashboard.css">
@@ -114,41 +114,41 @@
   </style>
 </head>
 <body>
-  <a href="#main-content" class="skip-link visually-hidden">Skip to main content</a>
+  <a href="#main-content" class="skip-link visually-hidden">Pular para o conteúdo principal</a>
   <div class="container">
     <header class="guide-header">
       <div>
-        <h1>Guide: <span id="guide-name-header">...</span></h1>
-        <nav class="guide-nav-controls" aria-label="Guide navigation">
-          <button id="prev-guide-btn" class="secondary-btn" type="button" aria-label="Previous guide"><span aria-hidden="true">←</span></button>
-          <button id="next-guide-btn" class="secondary-btn" type="button" aria-label="Next guide"><span aria-hidden="true">→</span></button>
+        <h1>Guia: <span id="guide-name-header">...</span></h1>
+        <nav class="guide-nav-controls" aria-label="Navegação entre guias">
+          <button id="prev-guide-btn" class="secondary-btn" type="button" aria-label="Guia anterior"><span aria-hidden="true">←</span></button>
+          <button id="next-guide-btn" class="secondary-btn" type="button" aria-label="Próximo guia"><span aria-hidden="true">→</span></button>
           <div class="guide-search-wrap">
-            <label for="guide-search" class="visually-hidden">Search guides</label>
-            <input type="text" id="guide-search" class="guide-search" placeholder="Search guides..." autocomplete="off"
+            <label for="guide-search" class="visually-hidden">Pesquisar guias</label>
+            <input type="text" id="guide-search" class="guide-search" placeholder="Pesquisar guias..." autocomplete="off"
                    role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="autocomplete-list">
-            <div id="autocomplete-list" class="autocomplete-list" popover="auto" role="listbox" aria-label="Matching guides"></div>
+            <div id="autocomplete-list" class="autocomplete-list" popover="auto" role="listbox" aria-label="Guias correspondentes"></div>
             <p id="autocomplete-status" class="visually-hidden" role="status" aria-live="polite"></p>
           </div>
-          <button id="go-guide-btn" class="secondary-btn" type="button">Go</button>
+          <button id="go-guide-btn" class="secondary-btn" type="button">Ir</button>
         </nav>
 
-        <p class="guide-subtitle">Guided vs. unguided pass rate over time, by agent and model combination</p>
+        <p class="guide-subtitle">Taxa de aprovação guiado vs. sem guia ao longo do tempo, por combinação de agente e modelo</p>
 
         <div class="timeline-filter-controls">
-          <label for="timeline-limit-input">Show last</label>
+          <label for="timeline-limit-input">Mostrar últimos</label>
           <input type="number" id="timeline-limit-input" value="30" min="1" max="365">
-          <span>days</span>
+          <span>dias</span>
           <label class="toggle-label" for="timeline-show-all-check">
             <input type="checkbox" id="timeline-show-all-check">
-            Show all
+            Mostrar tudo
           </label>
         </div>
       </div>
       <div class="guide-header-actions">
-        <a href="demos/" class="secondary-btn">Browse Demos</a>
-        <a href="./" class="secondary-btn">← Back to results</a>
+        <a href="demos/" class="secondary-btn">Explorar demos</a>
+        <a href="./" class="secondary-btn">← Voltar aos resultados</a>
         <button id="auth-btn" class="secondary-btn" type="button" style="display: none;">
-          Sign in with Google
+          Entrar com Google
         </button>
       </div>
     </header>
@@ -158,15 +158,15 @@
       </div>
 
       <div id="empty-state" class="empty-state" hidden>
-        <p>No historical jobs found for this guide.</p>
+        <p>Nenhuma execução histórica encontrada para este guia.</p>
       </div>
     </main>
 
     <footer class="site-legal-footer">
-      <nav aria-label="Legal and privacy links" class="site-legal-nav">
-        <a href="https://policies.google.com/privacy" class="site-legal-link" rel="noopener">Privacy</a>
+      <nav aria-label="Links legais e de privacidade" class="site-legal-nav">
+        <a href="https://policies.google.com/privacy" class="site-legal-link" rel="noopener">Privacidade</a>
         <span class="site-legal-sep" aria-hidden="true">·</span>
-        <a href="https://policies.google.com/terms" class="site-legal-link" rel="noopener">Terms</a>
+        <a href="https://policies.google.com/terms" class="site-legal-link" rel="noopener">Termos</a>
       </nav>
     </footer>
   </div>

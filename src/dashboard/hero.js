@@ -100,7 +100,7 @@ function syncWindowToggle(maxJobsPerFamily) {
     if (!canToggle) return;
     const multiN = Math.min(MAX_MULTI_NIGHTS, maxJobsPerFamily);
     if (multiRadio instanceof HTMLInputElement) multiRadio.value = String(multiN);
-    if (multiLabel) multiLabel.textContent = `Last ${multiN} jobs per model`;
+    if (multiLabel) multiLabel.textContent = `Últimas ${multiN} execuções por modelo`;
     const activeVal = currentRecentN > 1 ? String(multiN) : '1';
     toggle.querySelectorAll('input[name="agents-window"]').forEach(el => {
         if (el instanceof HTMLInputElement) el.checked = el.value === activeVal;
@@ -120,9 +120,9 @@ function setStatus(kind) {
     // can reach internal jobs, unless a token is already held (clicking it would sign out).
     btn.hidden = kind === 'empty' || Boolean(getAccessToken()) || !isSignInEnabled();
     const messages = {
-        'auth': 'Results live in a private bucket. Sign in with Google to load the latest numbers.',
-        'empty': 'No evaluation jobs were found for this data source yet.',
-        'public-empty': 'No published results yet. Googlers can sign in to see internal jobs.'
+        'auth': 'Os resultados estão em um bucket privado. Entre com Google para carregar os números mais recentes.',
+        'empty': 'Nenhuma execução de avaliação foi encontrada para esta fonte de dados ainda.',
+        'public-empty': 'Nenhum resultado publicado ainda. Googlers podem entrar para ver execuções internas.'
     };
     text.textContent = messages[kind];
     announce(text.textContent);
@@ -161,25 +161,25 @@ function renderHero(insights) {
     const el = document.getElementById('method-recent-n');
     const recentN = insights.options.perAgentRecentN;
     if (el) {
-        el.textContent = recentN === 1 ? 'latest job per model' : `most recent ${recentN} jobs per model`;
+        el.textContent = recentN === 1 ? 'a última execução por modelo' : `as ${recentN} execuções mais recentes por modelo`;
     }
     const overallUplift = displayedUpliftPp(insights.pooled?.overall);
-    announce(overallUplift !== null ? `Latest results loaded: ${signed(overallUplift, 0)} percentage points more checks passed with MWG.` : 'Latest results loaded.');
+    announce(overallUplift !== null ? `Resultados mais recentes carregados: ${signed(overallUplift, 0)} pontos percentuais a mais de verificações aprovadas com MWG.` : 'Resultados mais recentes carregados.');
 }
 function renderPending() {
     const list = document.getElementById('hero-takeaways');
     if (list) {
         list.innerHTML = [
-            pendingCard('overall', 'Best-practice pass rate', 'pass-rate lift', true),
-            pendingCard('a11y', 'Automated accessibility checks', 'Not a full WCAG audit', false)
+            pendingCard('overall', 'Taxa de aprovação em boas práticas', 'ganho na taxa de aprovação', true),
+            pendingCard('a11y', 'Verificações automáticas de acessibilidade', 'Não é uma auditoria WCAG completa', false)
         ].join('');
     }
     const body = document.getElementById('agent-table-body');
     if (body) {
-        body.innerHTML = `<tr><th scope="row">No data loaded</th><td data-label="Pass rate">${naCell()}</td><td data-label="Accessibility">${naCell()}</td><td data-label="Sample">${naCell()}</td></tr>`;
+        body.innerHTML = `<tr><th scope="row">Nenhum dado carregado</th><td data-label="Pass rate">${naCell()}</td><td data-label="Accessibility">${naCell()}</td><td data-label="Sample">${naCell()}</td></tr>`;
     }
     const eyebrow = document.getElementById('hero-eyebrow');
-    if (eyebrow) eyebrow.textContent = 'Latest jobs per model (last 7 days; nightly or 1.0 baseline)';
+    if (eyebrow) eyebrow.textContent = 'Últimas execuções por modelo (últimos 7 dias; noturna ou linha de base 1.0)';
 }
 /** @param {HeadlineInsights} insights */
 function renderEyebrow(insights) {
@@ -194,7 +194,7 @@ function renderEyebrow(insights) {
     if (!el) return;
     const latest = latestDateOf(insights);
     const recentN = insights.options.perAgentRecentN;
-    const label = recentN === 1 ? 'Latest job per model (last 7 days; nightly or 1.0 baseline)' : `Most recent ${recentN} jobs per model`;
+    const label = recentN === 1 ? 'Última execução por modelo (últimos 7 dias; noturna ou linha de base 1.0)' : `${recentN} execuções mais recentes por modelo`;
     el.innerHTML = `<span class="hero-live-dot" aria-hidden="true"></span>${escapeHtml(label)}${latest ? ` · <span class="nowrap">${escapeHtml(formatDate(latest))}</span>` : ''}`;
 }
 /** @param {number | null} uRate @param {number | null} gRate */
@@ -207,7 +207,7 @@ function renderTakeawayDumbbell(uRate, gRate) {
     const regressedCls = g < u ? ' regressed' : '';
     const uAlignCls = u <= g ? ' align-start' : ' align-end';
     const gAlignCls = g >= u ? ' align-end' : ' align-start';
-    return ` <div class="takeaway-dumbbell${compactCls}" aria-hidden="true"> <div class="takeaway-dumbbell-endpoints"> <div class="takeaway-endpoint unguided${uAlignCls}" style="--pos: ${u};"> <span class="endpoint-rate">${u}%</span> <span class="endpoint-name">without MWG</span> </div> <div class="takeaway-endpoint guided${gAlignCls}" style="--pos: ${g};"> <strong class="endpoint-rate">${g}%</strong> <span class="endpoint-name">with MWG</span> </div> </div> <div class="suite-dumbbell-track takeaway-track"> <div class="connector${regressedCls}" style="left: ${lo}%; width: ${span}%;"></div> <div class="dot unguided" style="left: ${u}%;"></div> <div class="dot guided" style="left: ${g}%;"></div> </div> <div class="takeaway-dumbbell-scale"> <span>0%</span> <span>50%</span> <span>100%</span> </div> </div>`;
+    return ` <div class="takeaway-dumbbell${compactCls}" aria-hidden="true"> <div class="takeaway-dumbbell-endpoints"> <div class="takeaway-endpoint unguided${uAlignCls}" style="--pos: ${u};"> <span class="endpoint-rate">${u}%</span> <span class="endpoint-name">sem MWG</span> </div> <div class="takeaway-endpoint guided${gAlignCls}" style="--pos: ${g};"> <strong class="endpoint-rate">${g}%</strong> <span class="endpoint-name">com MWG</span> </div> </div> <div class="suite-dumbbell-track takeaway-track"> <div class="connector${regressedCls}" style="left: ${lo}%; width: ${span}%;"></div> <div class="dot unguided" style="left: ${u}%;"></div> <div class="dot guided" style="left: ${g}%;"></div> </div> <div class="takeaway-dumbbell-scale"> <span>0%</span> <span>50%</span> <span>100%</span> </div> </div>`;
 }
 /** @param {HeadlineInsights} insights */
 function renderTakeaways(insights) {
@@ -224,34 +224,34 @@ function renderTakeaways(insights) {
         const recentN = insights.options.perAgentRecentN;
         const mAgents = pooled.familyCount || insights.families.length;
         const statement = taskStatement(insights, recentN);
-        const jobsSuffix = recentN > 1 || pooled.jobCount > mAgents ? ` · ${pooled.jobCount} ${pooled.jobCount === 1 ? 'job' : 'jobs'}` : '';
-        const overallShortText = `~${fmtCompact(Math.min(o.unguidedTotal, o.guidedTotal))} checks · ${mAgents} ${mAgents === 1 ? 'agent' : 'agents'}${jobsSuffix}`;
+        const jobsSuffix = recentN > 1 || pooled.jobCount > mAgents ? ` · ${pooled.jobCount} ${pooled.jobCount === 1 ? 'execução' : 'execuções'}` : '';
+        const overallShortText = `~${fmtCompact(Math.min(o.unguidedTotal, o.guidedTotal))} verificações · ${mAgents} ${mAgents === 1 ? 'agente' : 'agentes'}${jobsSuffix}`;
         cards.push(takeawayCard({
             metric: 'overall',
             primary: true,
-            label: 'Best-practice pass rate',
+            label: 'Taxa de aprovação em boas práticas',
             figure: `<span class="figure-val">${signed(overallUplift, 0)}</span><span class="unit"> pp</span>`,
-            figureText: `${signed(overallUplift, 0)} percentage points`,
+            figureText: `${signed(overallUplift, 0)} pontos percentuais`,
             statement,
             visual: renderTakeawayDumbbell(uRate, gRate),
             short: `<span class="visually-hidden">${fmtPct(uRate)} → ${fmtPct(gRate)} · </span><a href="#all-guides" class="takeaway-action-link" data-open-guides="all">${overallShortText} <span aria-hidden="true">→</span></a>`
         }));
     } else {
-        cards.push(pendingCard('overall', 'Best-practice pass rate', 'pass-rate lift', true));
+        cards.push(pendingCard('overall', 'Taxa de aprovação em boas práticas', 'ganho na taxa de aprovação', true));
     }
     const a11yUplift = displayedUpliftPp(pooled?.a11y);
-    if (!pooled?.a11y || a11yUplift === null) { cards.push(pendingCard('a11y', 'Automated accessibility checks', 'Not a full WCAG audit', false)); } else {
+    if (!pooled?.a11y || a11yUplift === null) { cards.push(pendingCard('a11y', 'Verificações automáticas de acessibilidade', 'Não é uma auditoria WCAG completa', false)); } else {
         const a = pooled.a11y;
         const uRate = roundedRate(a, 'unguided');
         const gRate = roundedRate(a, 'guided');
-        const a11yShortText = `~${fmtCompact(Math.min(a.unguidedTotal, a.guidedTotal))} checks${a.guideCount ? ` · ${a.guideCount} ${a.guideCount === 1 ? 'guide' : 'guides'}` : ''} · 5 dimensions`;
+        const a11yShortText = `~${fmtCompact(Math.min(a.unguidedTotal, a.guidedTotal))} verificações${a.guideCount ? ` · ${a.guideCount} ${a.guideCount === 1 ? 'guia' : 'guias'}` : ''} · 5 dimensões`;
         cards.push(takeawayCard({
             metric: 'a11y',
             primary: false,
-            label: 'Automated accessibility checks',
+            label: 'Verificações automáticas de acessibilidade',
             figure: `<span class="figure-val">${signed(a11yUplift, 0)}</span><span class="unit"> pp</span> <span class="secondary-pair">(${fmtPct(uRate)} → <strong>${fmtPct(gRate)}</strong>)</span>`,
-            figureText: `${signed(a11yUplift, 0)} percentage points (${fmtPct(uRate)} to ${fmtPct(gRate)})`,
-            statement: 'Not a full WCAG audit',
+            figureText: `${signed(a11yUplift, 0)} pontos percentuais (${fmtPct(uRate)} para ${fmtPct(gRate)})`,
+            statement: 'Não é uma auditoria WCAG completa',
             short: `<a href="#a11y-guides" class="takeaway-action-link" data-open-guides="a11y">${a11yShortText} <span aria-hidden="true">→</span></a>`
         }));
     }
@@ -267,9 +267,9 @@ function pendingCard(metric, label, statement, primary = false) {
         primary,
         label,
         figure: '<span class="unit">—</span>',
-        figureText: 'not loaded',
+        figureText: 'não carregado',
         statement,
-        short: 'Numbers appear once results are loaded.'
+        short: 'Os números aparecem assim que os resultados forem carregados.'
     });
 }
 /** @param {{ metric: string, primary?: boolean, label: string, figure: string, figureText: string, statement?: string, visual?: string, short: string }} c */
@@ -281,15 +281,15 @@ function takeawayCard(c) {
 /** @param {HeadlineInsights} insights @param {number} recentN */
 function taskStatement(insights, recentN) {
     const counts = insights.families.map(f => f.sample.pairedTasks).filter(n => n > 0);
-    if (counts.length === 0) return 'pass-rate lift';
+    if (counts.length === 0) return 'ganho na taxa de aprovação';
     const total = counts.reduce((sum, n) => sum + n, 0);
     if (recentN > 1 || (insights.pooled?.jobCount || 0) > insights.families.length) {
-        return `lift across ${fmtInt(total)} ${total === 1 ? 'task' : 'tasks'}`;
+        return `ganho em ${fmtInt(total)} ${total === 1 ? 'tarefa' : 'tarefas'}`;
     }
     const min = Math.min(...counts);
     const max = Math.max(...counts);
-    if (min !== max) return `lift across ${fmtInt(min)}–${fmtInt(max)} tasks`;
-    return `lift across ${fmtInt(max)} ${max === 1 ? 'task' : 'tasks'}`;
+    if (min !== max) return `ganho em ${fmtInt(min)}–${fmtInt(max)} tarefas`;
+    return `ganho em ${fmtInt(max)} ${max === 1 ? 'tarefa' : 'tarefas'}`;
 }
 /** @param {HeadlineInsights} insights */
 function renderAgentTable(insights) {
@@ -300,13 +300,13 @@ function renderAgentTable(insights) {
     const n = insights.options.perAgentRecentN;
     if (caption) {
         caption.textContent = n === 1
-            ? 'Latest job per model (last 7 days; nightly or 1.0 baseline) by agent family. Unguided → guided; change in percentage points (pp).'
-            : `Most recent ${n} jobs per model by agent family, pooled. Unguided → guided; change in percentage points (pp).`;
+            ? 'Última execução por modelo (últimos 7 dias; noturna ou linha de base 1.0) por família de agente. Sem guia → guiado; variação em pontos percentuais (pp).'
+            : `${n} execuções mais recentes por modelo por família de agente, agrupadas. Sem guia → guiado; variação em pontos percentuais (pp).`;
     }
     if (windowNote) {
         windowNote.textContent = n === 1
-            ? 'Latest job per model (models run in the last 7 days; nightly or 1.0 baseline).'
-            : `Last ${n} jobs per model pooled.`;
+            ? 'Última execução por modelo (modelos executados nos últimos 7 dias; noturna ou linha de base 1.0).'
+            : `Últimas ${n} execuções por modelo agrupadas.`;
     }
     body.innerHTML = insights.families.map(f => {
         const overall = rateCell(f, f.overall, false);
@@ -325,8 +325,8 @@ function checksCountText(r) {
     const u = r.unguidedTotal || 0;
     const g = r.guidedTotal || 0;
     if (u === 0 && g === 0) return '';
-    if (u === g) return `${fmtInt(g)} ${g === 1 ? 'check' : 'checks'}`;
-    return `${fmtInt(u)} / ${fmtInt(g)} checks`;
+    if (u === g) return `${fmtInt(g)} ${g === 1 ? 'verificação' : 'verificações'}`;
+    return `${fmtInt(u)} / ${fmtInt(g)} verificações`;
 }
 /** @param {FamilyInsight} f @param {RateComparison | null} r @param {boolean} isA11y
  * @returns {{ attrs: string, html: string }} */
@@ -339,10 +339,10 @@ function rateCell(f, r, isA11y) {
     const stackHtml = ` <div class="agent-cell-stack"> <div class="metric-main"> <span class="metric-pair">${fmtPct(uRate)} → <strong>${fmtPct(gRate)}</strong></span> ${uplift === null ? naCell() : deltaChip(uplift)} </div> <span class="metric-sub">${escapeHtml(checksText)}</span> </div>`;
     const href = singleJobHref(f, isA11y);
     const subParts = isA11y
-        ? ['Automated accessibility checks', f.a11y?.guideCount ? `${f.a11y.guideCount} ${f.a11y.guideCount === 1 ? 'guide' : 'guides'}` : '']
-        : ['Pass rate', sampleSummaryText(f)];
-    const uDetail = r.unguidedTotal > 0 ? `${fmtInt(r.unguidedPassed)}/${fmtInt(r.unguidedTotal)} checks` : '';
-    const gDetail = r.guidedTotal > 0 ? `${fmtInt(r.guidedPassed)}/${fmtInt(r.guidedTotal)} checks` : '';
+        ? ['Verificações automáticas de acessibilidade', f.a11y?.guideCount ? `${f.a11y.guideCount} ${f.a11y.guideCount === 1 ? 'guia' : 'guias'}` : '']
+        : ['Taxa de aprovação', sampleSummaryText(f)];
+    const uDetail = r.unguidedTotal > 0 ? `${fmtInt(r.unguidedPassed)}/${fmtInt(r.unguidedTotal)} verificações` : '';
+    const gDetail = r.guidedTotal > 0 ? `${fmtInt(r.guidedPassed)}/${fmtInt(r.guidedTotal)} verificações` : '';
     const upliftRounded = uplift === null ? '' : String(uplift);
     const attrs = ` data-barbell-title="${escapeHtml(f.label)}" data-barbell-sub="${escapeHtml(subParts.filter(Boolean).join(' · '))}" data-barbell-kind="${isA11y ? 'agent-a11y' : 'agent-overall'}" data-barbell-u="${uRate === null ? '' : uRate}" data-barbell-g="${gRate === null ? '' : gRate}" data-barbell-uplift="${upliftRounded}" data-barbell-u-detail="${escapeHtml(uDetail)}" data-barbell-g-detail="${escapeHtml(gDetail)}"`;
     const html = href
@@ -353,21 +353,21 @@ function rateCell(f, r, isA11y) {
 /** @param {FamilyInsight} f */
 function sampleTasksLabel(f) {
     const s = f.sample;
-    if (s.excludedTasks > 0) return `${fmtInt(s.pairedTasks)}/${fmtInt(s.attemptedTasks)} tasks`;
-    if (s.pairedTasks > 0) return `${fmtInt(s.pairedTasks)} ${s.pairedTasks === 1 ? 'task' : 'tasks'}`;
+    if (s.excludedTasks > 0) return `${fmtInt(s.pairedTasks)}/${fmtInt(s.attemptedTasks)} tarefas`;
+    if (s.pairedTasks > 0) return `${fmtInt(s.pairedTasks)} ${s.pairedTasks === 1 ? 'tarefa' : 'tarefas'}`;
     return '';
 }
 /** @param {FamilyInsight} f */
 function sampleTrialsPerTaskLabel(f) {
     const s = f.sample;
     if (s.pairedTasks === 0 && s.attemptedTasks === 0) return '';
-    return s.minTrialsPerTask === s.maxTrialsPerTask ? `×${s.maxTrialsPerTask}/task` : `×${s.minTrialsPerTask}–${s.maxTrialsPerTask}/task`;
+    return s.minTrialsPerTask === s.maxTrialsPerTask ? `×${s.maxTrialsPerTask}/tarefa` : `×${s.minTrialsPerTask}–${s.maxTrialsPerTask}/tarefa`;
 }
 /** @param {FamilyInsight} f */
 function sampleSummaryText(f) {
     const allNightly = f.models.length <= 1 && f.jobs.every(s => !s.curated && s.testId.startsWith('nightly-'));
     return [
-        f.jobCount > 1 ? `${f.jobCount} ${allNightly ? 'nights' : 'jobs'}` : '',
+        f.jobCount > 1 ? `${f.jobCount} ${allNightly ? 'noites' : 'execuções'}` : '',
         sampleTasksLabel(f),
         sampleTrialsPerTaskLabel(f)
     ].filter(Boolean).join(' · ');
@@ -376,29 +376,29 @@ function sampleSummaryText(f) {
 function sampleCell(f) {
     const s = f.sample;
     const allNightly = f.models.length <= 1 && f.jobs.every(job => !job.curated && job.testId.startsWith('nightly-'));
-    const countNoun = allNightly ? (f.jobCount === 1 ? 'night' : 'nights') : (f.jobCount === 1 ? 'job' : 'jobs');
+    const countNoun = allNightly ? (f.jobCount === 1 ? 'noite' : 'noites') : (f.jobCount === 1 ? 'execução' : 'execuções');
     const primaryParts = [
         f.jobCount > 1 ? `<span class="sample-nights">${f.jobCount} ${countNoun}</span>` : '',
         escapeHtml(sampleTasksLabel(f)),
         escapeHtml(sampleTrialsPerTaskLabel(f)),
         s.infraErrorCount !== null && s.infraErrorCount > 0
-            ? `<span class="sample-warn">${escapeHtml(`${fmtInt(s.infraErrorCount)} err`)}</span>`
-            : (s.infraErrorRate > 0 ? `<span class="sample-warn">${escapeHtml(`${s.infraErrorRate}% err`)}</span>` : ''),
-        s.pageLoadFailed > 0 ? `<span class="sample-warn">${escapeHtml(`${fmtInt(s.pageLoadFailed)} page-load`)}</span>` : '',
-        s.unguidedLeakRate > 0 ? `<span class="sample-leak">${escapeHtml(`${s.unguidedLeakRate}% leak`)}</span>` : ''
+            ? `<span class="sample-warn">${escapeHtml(`${fmtInt(s.infraErrorCount)} ${s.infraErrorCount === 1 ? 'erro' : 'erros'}`)}</span>`
+            : (s.infraErrorRate > 0 ? `<span class="sample-warn">${escapeHtml(`${s.infraErrorRate}% erro`)}</span>` : ''),
+        s.pageLoadFailed > 0 ? `<span class="sample-warn">${escapeHtml(`${fmtInt(s.pageLoadFailed)} falha de carga`)}</span>` : '',
+        s.unguidedLeakRate > 0 ? `<span class="sample-leak">${escapeHtml(`${s.unguidedLeakRate}% vazam.`)}</span>` : ''
     ].filter(Boolean);
     const jobsListHtml = f.jobs.map(job => {
         const model = shortModelName(job.model);
         const effort = job.reasoningEffort?.level ? ` (${job.reasoningEffort.level})` : '';
         const date = formatDateShort(job.timestamp);
-        const badge = job.curated ? ' <span class="run-kind-badge curated">1.0 baseline</span>' : '';
+        const badge = job.curated ? ' <span class="run-kind-badge curated">linha de base 1.0</span>' : '';
         return `<span class="sample-run-pill">${escapeHtml(model)}${escapeHtml(effort)} · <time>${escapeHtml(date)}</time>${badge}</span>`;
     }).join(' · ');
     return ` <div class="agent-cell-stack"> <span class="agent-sample-main">${primaryParts.join(' · ')}</span> ${jobsListHtml ? `<span class="metric-sub">${jobsListHtml}</span>` : ''} </div>`;
 }
 /** @param {number} v */
-function fmtInt(v) { return Math.round(v || 0).toLocaleString('en-US'); }
-function naCell() { return '<span class="na"><span aria-hidden="true">—</span><span class="visually-hidden">not available</span></span>'; }
+function fmtInt(v) { return Math.round(v || 0).toLocaleString('pt-BR'); }
+function naCell() { return '<span class="na"><span aria-hidden="true">—</span><span class="visually-hidden">não disponível</span></span>'; }
 /** @param {number} value */
 function deltaChip(value) {
     const rounded = Math.sign(value) * Math.round(Math.abs(value || 0));
@@ -407,7 +407,7 @@ function deltaChip(value) {
     const cls = isFlat ? 'flat' : (isGood ? 'good' : 'cost');
     const glyph = isFlat ? '•' : (rounded > 0 ? '▲' : '▼');
     const visible = `${signed(rounded, 0)} pp`;
-    const sr = isFlat ? 'no change' : `${rounded > 0 ? 'up' : 'down'} ${Math.abs(rounded)} percentage points${isGood ? ', better' : ', worse'}`;
+    const sr = isFlat ? 'sem alteração' : `${rounded > 0 ? 'aumento de' : 'queda de'} ${Math.abs(rounded)} pontos percentuais${isGood ? ', melhor' : ', pior'}`;
     return `<span class="delta ${cls}"><span class="glyph" aria-hidden="true">${glyph}</span><span aria-hidden="true">${visible}</span><span class="visually-hidden">${sr}</span></span>`;
 }
 /** @param {HeadlineInsights} insights */
@@ -416,18 +416,18 @@ function latestDateOf(insights) { return insights.latestTimestamp || ''; }
 function shortModelName(model) { return (model || '').replace(/^(claude-|gemini-)/i, ''); }
 /** @param {string} iso */
 function formatDateShort(iso) {
-    const formatted = formatJobDate(iso, { month: 'short', day: 'numeric' });
+    const formatted = formatJobDate(iso, { month: 'short', day: 'numeric' }, 'pt-BR');
     return formatted === '-' ? iso : formatted;
 }
 /** @param {number} v */
 function fmtCompact(v) {
-    return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(Math.round(v || 0)).toLowerCase();
+    return new Intl.NumberFormat('pt-BR', { notation: 'compact', maximumFractionDigits: 1 }).format(Math.round(v || 0)).toLowerCase();
 }
 /** @param {string[]} names */
 function joinNames(names) {
     if (names.length <= 1) return names.join('');
-    if (names.length === 2) return `${names[0]} and ${names[1]}`;
-    return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
+    if (names.length === 2) return `${names[0]} e ${names[1]}`;
+    return `${names.slice(0, -1).join(', ')} e ${names[names.length - 1]}`;
 }
 /** @param {number | null} v @param {number} digits */
 function signed(v, digits) {
@@ -444,6 +444,6 @@ function fmtPct(v) {
 }
 /** @param {string} iso */
 function formatDate(iso) {
-    const formatted = formatJobDate(iso, { month: 'short', day: 'numeric', year: 'numeric' });
+    const formatted = formatJobDate(iso, { month: 'short', day: 'numeric', year: 'numeric' }, 'pt-BR');
     return formatted === '-' ? iso : formatted;
 }

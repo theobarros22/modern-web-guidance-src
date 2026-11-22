@@ -82,14 +82,14 @@ test('public dashboard entry points declare Open Graph and Twitter social card m
     const width = String(pngHeader.readUInt32BE(16));
     const height = String(pngHeader.readUInt32BE(20));
 
-    const expectedOgImageUrl = 'https://googlechrome.github.io/modern-web-guidance-src/og-image.png';
+    const expectedOgImageUrl = 'https://theobarros22.github.io/modern-web-guidance-src/og-image.png';
     const pages: Array<[string, string | undefined]> = [
-        ['index.html', 'https://googlechrome.github.io/modern-web-guidance-src/'],
+        ['index.html', 'https://theobarros22.github.io/modern-web-guidance-src/'],
         // Query-parameterized templates (?testId=, ?guide=) omit static og:url so unfurlers preserve deep links.
         ['dashboard.html', undefined],
         ['guide.html', undefined],
-        ['search/index.html', 'https://googlechrome.github.io/modern-web-guidance-src/search/'],
-        ['demos/index.html', 'https://googlechrome.github.io/modern-web-guidance-src/demos/'],
+        ['search/index.html', 'https://theobarros22.github.io/modern-web-guidance-src/search/'],
+        ['demos/index.html', 'https://theobarros22.github.io/modern-web-guidance-src/demos/'],
     ];
 
     for (const [relPath, expectedUrl] of pages) {
@@ -98,7 +98,7 @@ test('public dashboard entry points declare Open Graph and Twitter social card m
             html.match(new RegExp(`<meta\\s+${attr}="${key}"\\s+content="([^"]+)"`))?.[1];
 
         assert.equal(getMeta('property', 'og:type'), 'website', `${relPath} og:type`);
-        assert.equal(getMeta('property', 'og:site_name'), 'Modern Web Guidance Evals', `${relPath} og:site_name`);
+        assert.equal(getMeta('property', 'og:site_name'), 'Avaliações Modern Web Guidance', `${relPath} og:site_name`);
         assert.equal(getMeta('property', 'og:url'), expectedUrl, `${relPath} og:url`);
         assert.equal(getMeta('property', 'og:image'), expectedOgImageUrl, `${relPath} og:image`);
         assert.equal(getMeta('property', 'og:image:type'), 'image/png', `${relPath} og:image:type`);
