@@ -303,9 +303,9 @@ export class DumbbellChart {
         }
 
         // Use guideId (guide name) for lookup in featuresMap, fallback to guideId if no feature found, and finally taskName
-        let featureName = guideId || taskName || 'Uncategorized';
+        let featureName = guideId || taskName || 'Sem categoria';
         if (featuresMap[guideId] && featuresMap[guideId].length > 0) {
-            featureName = featuresMap[guideId][0] || 'Uncategorized';
+            featureName = featuresMap[guideId][0] || 'Sem categoria';
         }
 
         const uVal = unguidedSet.data[i] || 0;
@@ -410,7 +410,7 @@ export class DumbbellChart {
       uText.setAttribute("x", "13");
       uText.setAttribute("fill", "var(--color-on-surface)");
       uText.setAttribute("font-size", "0.75rem");
-      uText.textContent = "Unguided";
+      uText.textContent = "Sem guia";
       
       const guidedTick = document.createElementNS("http://www.w3.org/2000/svg", "line");
       guidedTick.setAttribute("x1", "80");
@@ -424,7 +424,7 @@ export class DumbbellChart {
       gText.setAttribute("x", "88");
       gText.setAttribute("fill", "var(--color-on-surface)");
       gText.setAttribute("font-size", "0.75rem");
-      gText.textContent = "Guided";
+      gText.textContent = "Guiado";
 
       legendG.appendChild(unguidedTick);
       legendG.appendChild(uText);
@@ -599,8 +599,8 @@ export class DumbbellChart {
               hitArea.setAttribute("class", "dc-hit");
               hitArea.setAttribute("href", this.options.itemHref ? this.options.itemHref(item) : `#guide-${encodeURIComponent(item.guideId || featureName)}`);
               hitArea.setAttribute("interestfor", "dumbbell-tooltip");
-              const failedNote = (item.uFailed || item.gFailed) ? ', at least one trial had an infra error before grading' : '';
-              hitArea.setAttribute("aria-label", `${item.guideId || featureName} (${item.taskName}): open task${failedNote}`);
+              const failedNote = (item.uFailed || item.gFailed) ? ', pelo menos um teste teve erro de infraestrutura antes da avaliação' : '';
+              hitArea.setAttribute("aria-label", `${item.guideId || featureName} (${item.taskName}): abrir tarefa${failedNote}`);
               hitArea.appendChild(hitRect);
               scrollSvgLinkIntoViewOnFocus(hitArea, hitRect);
           }
@@ -625,18 +625,18 @@ export class DumbbellChart {
             const runtimeDeltaSign = runtimeDeltaPct > 0 ? "+" : "";
             const runtimeDeltaCls = runtimeDeltaPct <= 0 ? "text-success" : "";
             const fmtTime = (/** @type {number} */ ms) => (ms && ms > 0) ? formatDuration(ms) : '-';
-            tip.innerHTML = ` <div class="dumbbell-tooltip"> <div class="dumbbell-tooltip-left"> <div class="dumbbell-tooltip-title${item.uFailed || item.gFailed ? ' text-warning' : ''}">${escapeHtml(item.guideId)} (${escapeHtml(item.taskName)})</div> <div class="dumbbell-tooltip-feature">feature: ${escapeHtml(featureName)}</div> ${(uRuntimeMs > 0 || gRuntimeMs > 0 || uTokens > 0 || gTokens > 0) ? `
+            tip.innerHTML = ` <div class="dumbbell-tooltip"> <div class="dumbbell-tooltip-left"> <div class="dumbbell-tooltip-title${item.uFailed || item.gFailed ? ' text-warning' : ''}">${escapeHtml(item.guideId)} (${escapeHtml(item.taskName)})</div> <div class="dumbbell-tooltip-feature">recurso: ${escapeHtml(featureName)}</div> ${(uRuntimeMs > 0 || gRuntimeMs > 0 || uTokens > 0 || gTokens > 0) ? `
                          <div class="dumbbell-tooltip-metrics">
-                            ${(uRuntimeMs > 0 || gRuntimeMs > 0) ? `<div>Duration (U → G): <strong>${fmtTime(uRuntimeMs)} → ${fmtTime(gRuntimeMs)}</strong> <span class="${runtimeDeltaCls}">(${runtimeDeltaSign}${runtimeDeltaPct}%)</span></div>` : ''}
-                            ${(uUncached > 0 || gUncached > 0) ? `<div>Uncached Tokens: <strong>${uUncached.toLocaleString()} → ${gUncached.toLocaleString()}</strong> <span class="${uncachedDeltaCls}">(${uncachedDeltaSign}${uncachedDeltaPct}%)</span></div>` : ''}
-                            ${(uTokens > 0 || gTokens > 0) ? ` <div>Total Tokens: <strong>${uTokens.toLocaleString()} → ${gTokens.toLocaleString()}</strong>${gCachedPct > 0 ? ` <span>(${gCachedPct}% cached)</span>` : ''}</div> ` : ''}
+                            ${(uRuntimeMs > 0 || gRuntimeMs > 0) ? `<div>Duração (Sem guia → Guiado): <strong>${fmtTime(uRuntimeMs)} → ${fmtTime(gRuntimeMs)}</strong> <span class="${runtimeDeltaCls}">(${runtimeDeltaSign}${runtimeDeltaPct}%)</span></div>` : ''}
+                            ${(uUncached > 0 || gUncached > 0) ? `<div>Tokens sem cache: <strong>${uUncached.toLocaleString('pt-BR')} → ${gUncached.toLocaleString('pt-BR')}</strong> <span class="${uncachedDeltaCls}">(${uncachedDeltaSign}${uncachedDeltaPct}%)</span></div>` : ''}
+                            ${(uTokens > 0 || gTokens > 0) ? ` <div>Total de tokens: <strong>${uTokens.toLocaleString('pt-BR')} → ${gTokens.toLocaleString('pt-BR')}</strong>${gCachedPct > 0 ? ` <span>(${gCachedPct}% em cache)</span>` : ''}</div> ` : ''}
                          </div>
                          ` : ''}
                     </div>
                     <div class="dumbbell-tooltip-right">
-                         <div class="dumbbell-tooltip-uplift ${delta >= 0 ? 'positive' : 'negative'}">Uplift: ${deltaSign}${delta} pp</div>
-                         <div class="dumbbell-tooltip-rate${item.gFailed ? ' text-warning' : ''}">Guided: ${Math.round(gVal)}% ${item.gErr > 0 ? `(${Math.round(gVal * (1 - item.gErr / 100))}%–${Math.round(gVal * (1 - item.gErr / 100) + item.gErr)}%, ${item.gErr}% err)` : (item.gFailed ? '(Infra Error excluded)' : '')}</div>
-                         <div class="dumbbell-tooltip-rate${item.uFailed ? ' text-warning' : ''}">Unguided: ${Math.round(uVal)}% ${item.uErr > 0 ? `(${Math.round(uVal * (1 - item.uErr / 100))}%–${Math.round(uVal * (1 - item.uErr / 100) + item.uErr)}%, ${item.uErr}% err)` : (item.uFailed ? '(Infra Error excluded)' : '')}</div>
+                         <div class="dumbbell-tooltip-uplift ${delta >= 0 ? 'positive' : 'negative'}">Ganho: ${deltaSign}${delta} pp</div>
+                         <div class="dumbbell-tooltip-rate${item.gFailed ? ' text-warning' : ''}">Guiado: ${Math.round(gVal)}% ${item.gErr > 0 ? `(${Math.round(gVal * (1 - item.gErr / 100))}%–${Math.round(gVal * (1 - item.gErr / 100) + item.gErr)}%, ${item.gErr}% erro)` : (item.gFailed ? '(Erro de infra excluído)' : '')}</div>
+                         <div class="dumbbell-tooltip-rate${item.uFailed ? ' text-warning' : ''}">Sem guia: ${Math.round(uVal)}% ${item.uErr > 0 ? `(${Math.round(uVal * (1 - item.uErr / 100))}%–${Math.round(uVal * (1 - item.uErr / 100) + item.uErr)}%, ${item.uErr}% erro)` : (item.uFailed ? '(Erro de infra excluído)' : '')}</div>
                      </div>
                 </div>
             `;

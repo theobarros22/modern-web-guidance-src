@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const subtitleEl = document.querySelector('.guide-subtitle');
     if (subtitleEl) {
         if (isA11yMode) {
-            subtitleEl.innerHTML = 'Guided vs. unguided <strong>automated accessibility check pass rate</strong> over time, by agent and model combination <span class="mode-badge-inline">Accessibility checks</span>';
-        } else { subtitleEl.textContent = 'Guided vs. unguided pass rate over time, by agent and model combination'; }
+            subtitleEl.innerHTML = 'Taxa de aprovação em <strong>verificações automáticas de acessibilidade</strong> (guiado vs. sem guia) ao longo do tempo, por combinação de agente e modelo <span class="mode-badge-inline">Verificações de acessibilidade</span>';
+        } else { subtitleEl.textContent = 'Taxa de aprovação guiado vs. sem guia ao longo do tempo, por combinação de agente e modelo'; }
     }
     setupEffortTooltip();
     setupTimelineFilterControls(guideName);
@@ -283,14 +283,14 @@ function setupNavigationControls(currentGuide) {
         const matches = allGuides.filter(g => g.toLowerCase().includes(val)).slice(0, 10);
         if (matches.length === 0) {
             closeList();
-            if (statusEl) statusEl.textContent = 'No matching guides';
+            if (statusEl) statusEl.textContent = 'Nenhum guia correspondente';
             return;
         }
 
         openList();
         searchInput.setAttribute('aria-expanded', 'true');
         if (statusEl) {
-            statusEl.textContent = `${matches.length} option${matches.length === 1 ? '' : 's'} available`;
+            statusEl.textContent = `${matches.length} ${matches.length === 1 ? 'opção disponível' : 'opções disponíveis'}`;
         }
         matches.forEach((match, i) => {
             const div = document.createElement('div');
@@ -462,7 +462,7 @@ function renderGraphs(guideName) {
         jobs.forEach(job => {
             const dateKey = getDateKey(job.timestamp);
             if (!globalDatesMap.has(dateKey)) {
-                const shortDate = formatJobDate(job.timestamp, { month: 'short', day: 'numeric' });
+                const shortDate = formatJobDate(job.timestamp, { month: 'short', day: 'numeric' }, 'pt-BR');
                 globalDatesMap.set(dateKey, {
                     dateKey: dateKey,
                     shortDate: shortDate === '-' ? dateKey : shortDate
@@ -531,10 +531,10 @@ function renderGraphs(guideName) {
         const header = document.createElement('div');
         header.innerHTML = `
             <h2 class="guide-card-title">
-                ${escapeHtml(agent)} <span class="guide-card-title-on">on</span> <span class="guide-card-model-row">${escapeHtml(model)}${renderEffortChip(cardReasoningEffort)}</span>
+                ${escapeHtml(agent)} <span class="guide-card-title-on">em</span> <span class="guide-card-model-row">${escapeHtml(model)}${renderEffortChip(cardReasoningEffort)}</span>
             </h2>
             <div class="guide-card-subtitle">
-                ${jobs.length} chronological jobs${isA11yMode ? ' · Accessibility checks' : ''}
+                ${jobs.length} ${jobs.length === 1 ? 'execução cronológica' : 'execuções cronológicas'}${isA11yMode ? ' · Verificações de acessibilidade' : ''}
             </div>
         `;
         card.appendChild(header);
@@ -543,7 +543,7 @@ function renderGraphs(guideName) {
         chartWrapper.className = 'guide-chart-wrapper';
         chartWrapper.setAttribute('tabindex', '0');
         chartWrapper.setAttribute('role', 'region');
-        chartWrapper.setAttribute('aria-label', `${agent} on ${model} (${effortLevel} effort) pass rate timeline`);
+        chartWrapper.setAttribute('aria-label', `Linha do tempo da taxa de aprovação de ${agent} em ${model} (esforço ${effortLevel})`);
 
         const height = 230;
         const paddingX = 46;
@@ -607,7 +607,7 @@ function renderGraphs(guideName) {
                     `;
                 }
 
-                const pointLabel = `${dayEntry.shortDate}: open job`;
+                const pointLabel = `${dayEntry.shortDate}: abrir execução`;
                 const taskParam = activeTask ? `&task=${encodeURIComponent(activeTask)}` : '';
                 const modeParam = isA11yMode ? '&mode=a11y' : '';
                 const jobHref = `dashboard.html?testId=${encodeURIComponent(job.testId)}&source=${encodeURIComponent(job.source)}${taskParam}${modeParam}#guide-${encodeURIComponent(guideName)}`;
@@ -670,7 +670,7 @@ function renderGraphs(guideName) {
         if (!jobData) return false;
         const stats = getStats(jobData);
         if (!stats) return false;
-        const formatted = formatJobDate(jobData.timestamp, { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        const formatted = formatJobDate(jobData.timestamp, { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }, 'pt-BR');
         const formattedDate = formatted === '-' ? String(jobData.timestamp || '') : formatted;
         $('#tooltip-header').innerHTML = `<div class="guide-tooltip-title"> ${escapeHtml(jobData.testId)} </div>`;
 
@@ -679,7 +679,7 @@ function renderGraphs(guideName) {
         const uPassed = stats.unguidedPassed || 0;
         const uTotal = stats.unguidedTotal || 0;
         const uplift = (gTotal > 0 && uTotal > 0) ? (stats.guidedRate - stats.unguidedRate) : null;
-        $('#tooltip-content').innerHTML = `<div class="guide-tooltip-date">${escapeHtml(formattedDate)}</div> <div class="guide-tooltip-rows"> <div class="guide-tooltip-row"> <span>Reasoning Effort:</span> ${renderEffortChip(jobData.reasoningEffort, { interactive: false, separator: false })} </div> <div class="guide-tooltip-row"> <span>${isA11yMode ? 'Guided A11y Rate:' : 'Guided Pass Rate:'}</span> <span class="guide-tooltip-guided">${stats.guidedRate}% (${gPassed}/${gTotal})</span> </div> <div class="guide-tooltip-row"> <span>${isA11yMode ? 'Unguided A11y Rate:' : 'Unguided Pass Rate:'}</span> <span class="guide-tooltip-unguided">${stats.unguidedRate}% (${uPassed}/${uTotal})</span> </div> <div class="guide-tooltip-uplift-row"> <span>Uplift:</span> <span class="guide-tooltip-uplift ${uplift == null ? '' : (uplift > 0 ? 'positive' : (uplift < 0 ? 'negative' : ''))}"> ${uplift == null ? '—' : `${uplift > 0 ? '+' : ''}${uplift} pp`} </span> </div> </div>`;
+        $('#tooltip-content').innerHTML = `<div class="guide-tooltip-date">${escapeHtml(formattedDate)}</div> <div class="guide-tooltip-rows"> <div class="guide-tooltip-row"> <span>Esforço de raciocínio:</span> ${renderEffortChip(jobData.reasoningEffort, { interactive: false, separator: false })} </div> <div class="guide-tooltip-row"> <span>${isA11yMode ? 'Taxa de A11y (Guiado):' : 'Taxa de aprovação (Guiado):'}</span> <span class="guide-tooltip-guided">${stats.guidedRate}% (${gPassed}/${gTotal})</span> </div> <div class="guide-tooltip-row"> <span>${isA11yMode ? 'Taxa de A11y (Sem guia):' : 'Taxa de aprovação (Sem guia):'}</span> <span class="guide-tooltip-unguided">${stats.unguidedRate}% (${uPassed}/${uTotal})</span> </div> <div class="guide-tooltip-uplift-row"> <span>Ganho:</span> <span class="guide-tooltip-uplift ${uplift == null ? '' : (uplift > 0 ? 'positive' : (uplift < 0 ? 'negative' : ''))}"> ${uplift == null ? '—' : `${uplift > 0 ? '+' : ''}${uplift} pp`} </span> </div> </div>`;
         return true;
     };
 }

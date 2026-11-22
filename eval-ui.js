@@ -78,14 +78,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     ];
     spans.forEach(span => {
       if (span) {
-        span.textContent = count > 0 ? `Start Evaluation (${count} tasks)` : 'Start Evaluation';
+        span.textContent = count > 0 ? `Iniciar avaliação (${count} ${count === 1 ? 'tarefa' : 'tarefas'})` : 'Iniciar avaliação';
       }
     });
 
     const guideHeader = document.getElementById('guide-header');
 
     if (guideHeader) {
-      guideHeader.textContent = guideCount > 0 ? `Guide Tasks (${guideCount} selected)` : 'Guide Tasks';
+      guideHeader.textContent = guideCount > 0 ? `Tarefas de guias (${guideCount} ${guideCount === 1 ? 'selecionada' : 'selecionadas'})` : 'Tarefas de guias';
     }
     if (count > 0) {
       const formError = document.getElementById('form-error');
@@ -169,11 +169,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const headersRow = document.getElementById('table-headers');
     if (!headersRow) return;
-    let headerHtml = `<th>Guide</th>`;
+    let headerHtml = `<th>Guia</th>`;
     headers.forEach(h => {
       const isSelected = h === 'task';
       const safeH = escapeHtml(h);
-      const headerLabel = h === 'task' ? 'Select all default tasks' : `Select all ${safeH} tasks`;
+      const headerLabel = h === 'task' ? 'Selecionar todas as tarefas padrão' : `Selecionar todas as tarefas ${safeH}`;
       headerHtml += `<th class="checkbox-header">
         <label class="custom-checkbox">
           <input type="checkbox" class="header-check" data-task="${safeH}" aria-label="${headerLabel}" ${isSelected ? 'checked' : ''}>
@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           tc.checked = allDefaultState;
         }
       });
-      target.innerText = allDefaultState ? 'De-select All task.md' : 'Select All task.md';
+      target.innerText = allDefaultState ? 'Desmarcar todas task.md' : 'Selecionar todas task.md';
     } else if (target.id === 'action-all-negative') {
       allNegativeState = !allNegativeState;
       document.querySelectorAll('.task-check').forEach(tc => {
@@ -312,7 +312,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           tc.checked = allNegativeState;
         }
       });
-      target.innerText = allNegativeState ? 'De-select All negative' : 'Select All negative';
+      target.innerText = allNegativeState ? 'Desmarcar todas negative' : 'Selecionar todas negative';
     } else if (target.id === 'action-clear') {
       document.querySelectorAll('input[type="checkbox"]').forEach(c => {
         if (c instanceof HTMLInputElement) c.checked = false;
@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (selectedTasks.length === 0) {
       const formError = document.getElementById('form-error');
       if (formError) {
-        formError.textContent = 'Please select at least one task to run.';
+        formError.textContent = 'Selecione pelo menos uma tarefa para executar.';
         formError.hidden = false;
         formError.scrollIntoView({ block: 'nearest' });
       }
@@ -374,7 +374,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     [runBtn, headerBtn].forEach(btn => {
       if (btn instanceof HTMLButtonElement) {
         btn.disabled = true;
-        btn.innerHTML = '<span>⏳ Launching...</span>';
+        btn.innerHTML = '<span>⏳ Iniciando…</span>';
       }
     });
 
@@ -390,7 +390,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         [runBtn, headerBtn].forEach(btn => {
           if (btn instanceof HTMLButtonElement) {
             btn.style.background = 'linear-gradient(135deg, #047857 0%, #065f46 100%)';
-            btn.innerHTML = '<span>🚀 Started! Closing...</span>';
+            btn.innerHTML = '<span>🚀 Iniciada! Fechando…</span>';
           }
         });
         
@@ -398,15 +398,15 @@ document.addEventListener('DOMContentLoaded', async () => {
           window.close();
         }, 1000);
       } else {
-        throw new Error(data.error || 'Server rejected request');
+        throw new Error(data.error || 'O servidor rejeitou a solicitação');
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      alert(`Launch failed: ${message}`);
+      alert(`Falha ao iniciar: ${message}`);
       [runBtn, headerBtn].forEach(btn => {
         if (btn instanceof HTMLButtonElement) {
           btn.disabled = false;
-          btn.innerHTML = '<span>Start Evaluation</span>';
+          btn.innerHTML = '<span>Iniciar avaliação</span>';
         }
       });
     }

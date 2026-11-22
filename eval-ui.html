@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="text-scale" content="scale">
     <meta name="color-scheme" content="dark">
     <meta name="theme-color" content="#0d0f17">
-    <title>Modern Web Guidance Eval Runner</title>
+    <title>Executor de Avaliações — Modern Web Guidance</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="eval-ui.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,11 +20,11 @@
     <div class="dashboard-container">
         <header class="fancy-header">
             <div class="header-text">
-                <div class="logo">Modern Web Guidance <span>Eval Runner</span></div>
-                <p>Set configurations, interactively select tasks, and run an evaluation.</p>
+                <div class="logo">Modern Web Guidance <span>Executor de Avaliações</span></div>
+                <p>Defina as configurações, selecione as tarefas interativamente e execute uma avaliação.</p>
             </div>
             <button type="submit" class="btn-primary" id="launch-btn-header" form="launch-form">
-                <span>Start Evaluation</span>
+                <span>Iniciar avaliação</span>
                 <svg class="run-icon" viewBox="0 0 24 24">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
@@ -34,22 +34,22 @@
         <form id="launch-form">
             <section class="config-grid">
                 <div class="glass-panel">
-                    <h3>Job Configuration</h3>
+                    <h3>Configuração da execução</h3>
                     <div class="input-group">
-                        <label for="name">Job Name (Optional)</label>
-                        <input type="text" id="name" placeholder="Leave empty for auto-generated name">
+                        <label for="name">Nome da execução (opcional)</label>
+                        <input type="text" id="name" placeholder="Deixe vazio para nome gerado automaticamente">
                     </div>
                     <div class="row">
                         <div class="input-group" style="flex: 0 0 auto;">
-                            <label for="numRuns">Trials per condition</label>
+                            <label for="numRuns">Tentativas por condição</label>
                             <input type="number" id="numRuns" value="1" min="1">
                         </div>
                         <div class="input-group" style="flex: 0 0 auto;">
-                            <label for="workerCount">Worker Count</label>
+                            <label for="workerCount">Número de workers</label>
                             <input type="number" id="workerCount" placeholder="Auto" min="1">
                         </div>
                         <fieldset class="input-group">
-                            <legend>Agent</legend>
+                            <legend>Agente</legend>
                             <div class="btn-toggle-group" id="agent-group">
                                 <label class="btn-toggle"><input type="radio" name="agent" value="antigravity_cli" checked>Antigravity CLI</label>
                                 <label class="btn-toggle"><input type="radio" name="agent" value="jetski_cli">Jetski CLI</label>
@@ -61,7 +61,7 @@
                     
                     <div class="row" style="margin-top: 1.5rem; align-items: flex-start;">
                         <fieldset class="input-group" style="flex: 1;">
-                            <legend>Skills to Enable</legend>
+                            <legend>Skills a ativar</legend>
                             <div class="skills-container" id="skills-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem;">
                             </div>
                         </fieldset>
@@ -70,15 +70,15 @@
             </section>
 
             <div class="panel-header">
-                <h3>Task Selector</h3>
+                <h3>Seletor de tarefas</h3>
             </div>
 
             <section class="tasks-section" style="margin-top: 0;">
                 <div class="glass-panel">
                     <div class="panel-header">
-                        <h3 id="guide-header">Guide Tasks</h3>
+                        <h3 id="guide-header">Tarefas de guias</h3>
                         <div class="quick-actions">
-                            <button type="button" class="btn-secondary" id="action-clear-guides">Clear All</button>
+                            <button type="button" class="btn-secondary" id="action-clear-guides">Limpar tudo</button>
                         </div>
                     </div>
 
@@ -86,7 +86,7 @@
                         <table id="tasks-table">
                             <thead>
                                 <tr id="table-headers">
-                                    <th>Guide</th>
+                                    <th>Guia</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -100,7 +100,7 @@
             <div class="footer-actions">
                 <p id="form-error" class="form-error" role="alert" hidden></p>
                 <button type="submit" class="btn-primary" id="launch-btn">
-                    <span>Start Evaluation</span>
+                    <span>Iniciar avaliação</span>
                     <svg class="run-icon" viewBox="0 0 24 24">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>

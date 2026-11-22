@@ -509,7 +509,7 @@ export function formatTokens(tokens) {
  */
 export function timeAgo(date) {
     const diff = Math.floor((new Date().getTime() - new Date(date).getTime()) / 1000);
-    const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+    const rtf = new Intl.RelativeTimeFormat('pt-BR', { numeric: 'auto' });
     const units = [
         { name: 'year', s: 31536000 }, { name: 'month', s: 2592000 },
         { name: 'day', s: 86400 }, { name: 'hour', s: 3600 },
@@ -787,9 +787,9 @@ export function initGoogleAuth(onAuthSuccess) {
  */
 function renderAuthButton(authBtn) {
     authBtn.style.display = (accessToken || isSignInEnabled()) ? 'block' : 'none';
-    authBtn.innerHTML = accessToken ? 'Sign out' : 'Sign in<span class="auth-btn-long"> with Google</span>';
-    authBtn.setAttribute('aria-label', accessToken ? 'Sign out' : 'Sign in with Google');
-    authBtn.title = accessToken ? 'Forget the Google token and show the public view' : 'Sign in to read the private bucket';
+    authBtn.innerHTML = accessToken ? 'Sair' : 'Entrar<span class="auth-btn-long"> com Google</span>';
+    authBtn.setAttribute('aria-label', accessToken ? 'Sair' : 'Entrar com Google');
+    authBtn.title = accessToken ? 'Esquecer o token do Google e mostrar a visualização pública' : 'Entrar para ler o bucket privado';
 }
 
 /**

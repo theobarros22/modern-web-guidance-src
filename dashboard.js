@@ -58,25 +58,25 @@ const collapsedCategories = new Set();
 
 /** @type {Record<string, string>} */
 const CATEGORY_LABELS = {
-    discipline: 'Discipline',
+    discipline: 'Disciplina',
     css: 'CSS',
     html: 'HTML',
     js: 'JavaScript',
     javascript: 'JavaScript',
-    accessibility: 'Accessibility',
-    performance: 'Performance',
-    security: 'Security',
-    'built-in-ai': 'Built-in AI',
+    accessibility: 'Acessibilidade',
+    performance: 'Desempenho',
+    security: 'Segurança',
+    'built-in-ai': 'IA integrada',
     'web-apis': 'Web APIs',
-    'ui-atoms': 'UI Atoms',
-    'ui-components': 'UI Components',
-    'ui-behaviors': 'UI Behaviors',
+    'ui-atoms': 'Átomos de UI',
+    'ui-components': 'Componentes de UI',
+    'ui-behaviors': 'Comportamentos de UI',
     pwa: 'PWA',
     wasm: 'WebAssembly',
     webmcp: 'WebMCP',
-    media: 'Media',
-    privacy: 'Privacy',
-    other: 'Other',
+    media: 'Mídia',
+    privacy: 'Privacidade',
+    other: 'Outros',
 };
 
 /** @param {string} cat */
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         endLoadingReservations();
         const main = document.getElementById('main-content');
-        if (main) { main.innerHTML = `<div class="error-message">Error: No testId provided in query string.</div>`; }
+        if (main) { main.innerHTML = `<div class="error-message">Erro: nenhum testId informado na query string.</div>`; }
     }
 });
 
@@ -283,7 +283,7 @@ async function loadDashboardData(testId) {
             endLoadingReservations();
             const main = document.getElementById('main-content');
             if (main) {
-                main.innerHTML = `<div class="error-message">Error: Failed to load evaluation data for ${escapeHtml(testId)}.</div>`;
+                main.innerHTML = `<div class="error-message">Erro: falha ao carregar os dados de avaliação para ${escapeHtml(testId)}.</div>`;
             }
             return;
         }
@@ -408,13 +408,13 @@ async function loadDashboardData(testId) {
 
         const message = (error instanceof Error) ? error.message : String(error);
 
-        let errorHtml = `<div class="error-banner"> <h2>Error loading dashboard data</h2>
+        let errorHtml = `<div class="error-banner"> <h2>Erro ao carregar os dados do painel</h2>
             <p>${escapeHtml(message)}</p>
         </div>`;
 
         if (api && api.source === 'remote') {
             errorHtml += `<div class="error-subtext">
-                <p>If your session has expired, please use the <strong>Sign in with Google</strong> button above to re-authenticate.</p>
+                <p>Se sua sessão expirou, use o botão <strong>Entrar com Google</strong> acima para autenticar novamente.</p>
             </div>`;
         }
 
@@ -503,8 +503,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             const title = $('#modal-title');
                             const body = $('#modal-body');
 
-                            title.textContent = 'Job Log';
-                            body.innerHTML = '<div class="modal-status-msg">Loading log...</div>';
+                            title.textContent = 'Log da Execução';
+                            body.innerHTML = '<div class="modal-status-msg">Carregando log…</div>';
                             modal.dataset.view = 'log';
                             modal.showModal();
 
@@ -513,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 body.innerHTML = `<div class="log-content" tabindex="0">${escapeHtml(text)}</div>`;
                             } catch (e) {
                                 const msg = (e instanceof Error) ? e.message : String(e);
-                                body.innerHTML = `<div class="modal-error-msg">Error loading log: ${escapeHtml(msg)}</div>`;
+                                body.innerHTML = `<div class="modal-error-msg">Erro ao carregar o log: ${escapeHtml(msg)}</div>`;
                             }
                         };
                     }
@@ -590,14 +590,14 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderTestHeader(testId, jetskiVersion, timestamp, data) {
     const container = $('#test-header');
     if (container) {
-        const timeStr = formatJobDate(timestamp || data?.timestamp || '', testId);
+        const timeStr = formatJobDate(timestamp || data?.timestamp || '', testId, 'pt-BR');
 
-        let agent = 'unknown';
-        let model = 'unknown';
+        let agent = 'desconhecido';
+        let model = 'desconhecido';
 
         if (data) {
-            agent = data.agent || 'unknown';
-            model = data.model || 'unknown';
+            agent = data.agent || 'desconhecido';
+            model = data.model || 'desconhecido';
         }
 
         container.removeAttribute('aria-busy');
@@ -607,29 +607,29 @@ function renderTestHeader(testId, jetskiVersion, timestamp, data) {
             <div class="header-meta-grid">
                 <div class="header-meta-item">
                     <span class="meta-value">${escapeHtml(timeStr)}</span>
-                    <span class="meta-label">Action Date</span>
+                    <span class="meta-label">Data da execução</span>
                 </div>
                 ${data.totalRuntime ?
                 `<div class="header-meta-item">
                     <span class="meta-value">${formatDuration(data.totalRuntime)}</span>
-                    <span class="meta-label">Total Runtime</span>
+                    <span class="meta-label">Duração total</span>
                 </div>` : ''}
                 <div class="header-meta-item">
                     <span class="meta-value meta-value-model">${escapeHtml(model)}${renderEffortChip(data?.reasoningEffort)}</span>
                     <span class="meta-value">${escapeHtml(agent)}</span>
-                    <span class="meta-label">Model &times; Agent</span>
+                    <span class="meta-label">Modelo &times; Agente</span>
                 </div>
                 ${(data.cliVersion || data.skillVersion) ? `
                 <div class="header-meta-item">
                     ${data.cliVersion ? `<span class="meta-value">${escapeHtml(data.cliVersion)}</span>` : ''}
                     ${data.skillVersion ? `<span class="meta-value">${escapeHtml(data.skillVersion)}</span>` : ''}
-                    <span class="meta-label">CLI / Skill Version</span>
+                    <span class="meta-label">Versão da CLI / Skill</span>
                 </div>
                 ` : ''}
                 ${jetskiVersion ? `
                 <div class="header-meta-item">
                     <span class="meta-value">${escapeHtml(jetskiVersion)}</span>
-                    <span class="meta-label">Jetski Version</span>
+                    <span class="meta-label">Versão do Jetski</span>
                 </div>
                 ` : ''}
             </div>
@@ -669,7 +669,7 @@ function renderSummary(data) {
 
     if (!data || !data.results) {
         console.error('Problematic data object in renderSummary:', data);
-        container.innerHTML = '<div style="padding: 15px; color: var(--text-secondary); font-style: italic;">No results available for summary.</div>';
+        container.innerHTML = '<div style="padding: 15px; color: var(--text-secondary); font-style: italic;">Nenhum resultado disponível para o resumo.</div>';
         return null;
     }
 
@@ -708,7 +708,7 @@ function renderSummary(data) {
     const guidedPassRate = Math.round(exactRate(guidedStats));
     const upliftDelta = (unguidedStats.total > 0 && guidedStats.total > 0) ? (guidedPassRate - unguidedPassRate) : null;
     const a11yUpliftPp = (a11yStats.unguidedTotal > 0 && a11yStats.guidedTotal > 0) ? (a11yStats.guidedRate - a11yStats.unguidedRate) : null;
-    const fraction = (/** @type {number} */ passed, /** @type {number} */ total) => `${passed.toLocaleString()}/${total.toLocaleString()}`;
+    const fraction = (/** @type {number} */ passed, /** @type {number} */ total) => `${passed.toLocaleString('pt-BR')}/${total.toLocaleString('pt-BR')}`;
     const toolActivationRate = tasksCount > 0 ? Math.round((tasksWithTools.size / tasksCount) * 100) : 0;
     const guideUsageRate = tasksCount > 0 ? Math.round((tasksWithGuides.size / tasksCount) * 100) : 0;
 
@@ -726,13 +726,13 @@ function renderSummary(data) {
         const deltaHtml = dimPp !== null
             ? ` <span class="a11y-dim-delta ${dimPp < 0 ? 'negative' : (dimPp === 0 ? 'neutral' : '')}">(${dimPp > 0 ? '+' : ''}${dimPp} pp)</span>`
             : '';
-        return `<div class="a11y-dim-row"> <div class="a11y-dim-header"> <span class="a11y-dim-label">${escapeHtml(sub.shortLabel)}</span> <span class="a11y-dim-values"><span class="visually-hidden">unguided </span>${uStr} <span aria-hidden="true">→</span><span class="visually-hidden">guided</span> <strong>${gStr}</strong>${deltaHtml}</span> </div> ${renderSparkline(sc.unguidedRate, sc.guidedRate, true)} </div>`;
+        return `<div class="a11y-dim-row"> <div class="a11y-dim-header"> <span class="a11y-dim-label">${escapeHtml(sub.shortLabel)}</span> <span class="a11y-dim-values"><span class="visually-hidden">sem guia </span>${uStr} <span aria-hidden="true">→</span><span class="visually-hidden">guiado</span> <strong>${gStr}</strong>${deltaHtml}</span> </div> ${renderSparkline(sc.unguidedRate, sc.guidedRate, true)} </div>`;
     }).join('');
     /** @param {number} deltaPct
  * @param {{ less: string, more: string, noun: string }} words */
     const deltaPill = (deltaPct, words) => {
         if (deltaPct < 0) return `<span class="efficiency-delta-pill positive"><span aria-hidden="true">▼ </span>${Math.abs(deltaPct)}% ${escapeHtml(words.less)}<span class="visually-hidden"> (${escapeHtml(words.noun)})</span></span>`;
-        if (deltaPct === 0) return `<span class="efficiency-delta-pill neutral">±0%<span class="visually-hidden"> ${escapeHtml(words.noun)}, no change</span></span>`;
+        if (deltaPct === 0) return `<span class="efficiency-delta-pill neutral">±0%<span class="visually-hidden"> ${escapeHtml(words.noun)}, sem alteração</span></span>`;
         return `<span class="efficiency-delta-pill neutral"><span aria-hidden="true">▲ </span>${deltaPct}% ${escapeHtml(words.more)}<span class="visually-hidden"> (${escapeHtml(words.noun)})</span></span>`;
     };
     /** @param {number | null} deltaPp
@@ -750,41 +750,41 @@ function renderSummary(data) {
         <!-- Card 1: Overall Uplift & Adoption -->
         <article class="header-meta-item dog-ear-card narrative-card">
             <div class="meta-item-header">
-                <span class="meta-label">Pass rate</span>
-                ${ratePill(upliftDelta, 'pass rate change')}
+                <span class="meta-label">Taxa de aprovação</span>
+                ${ratePill(upliftDelta, 'variação na taxa de aprovação')}
             </div>
             <div class="sparkline-container">
                 ${renderSparkline(unguidedPassRate, guidedPassRate)}
-                <span class="sparkline-labels"><span class="visually-hidden">Unguided </span>${unguidedPassRate}% <span aria-hidden="true">→</span><span class="visually-hidden">guided</span> <strong>${guidedPassRate}%</strong> <span class="narrative-subtext">(${fraction(unguidedStats.passed, unguidedStats.total)} → ${fraction(guidedStats.passed, guidedStats.total)} checks)</span></span>
+                <span class="sparkline-labels"><span class="visually-hidden">Sem guia </span>${unguidedPassRate}% <span aria-hidden="true">→</span><span class="visually-hidden">guiado</span> <strong>${guidedPassRate}%</strong> <span class="narrative-subtext">(${fraction(unguidedStats.passed, unguidedStats.total)} → ${fraction(guidedStats.passed, guidedStats.total)} verificações)</span></span>
             </div>
             <div class="narrative-metrics-list">
                 <div class="narrative-metric-row">
-                    <span>Tool activation</span>
-                    <strong>${toolActivationRate}% (${tasksWithTools.size}/${tasksCount} tasks)</strong>
+                    <span>Ativação de ferramentas</span>
+                    <strong>${toolActivationRate}% (${tasksWithTools.size}/${tasksCount} tarefas)</strong>
                 </div>
                 <div class="narrative-metric-row">
-                    <span>Guidance consumed</span>
-                    <strong>${guideUsageRate}% (${tasksWithGuides.size}/${tasksCount} tasks)</strong>
+                    <span>Orientações consumidas</span>
+                    <strong>${guideUsageRate}% (${tasksWithGuides.size}/${tasksCount} tarefas)</strong>
                 </div>
-                ${validPairsCount < tasksCount ? `<div class="narrative-metric-row"> <span>Valid task pairs</span> <strong class="text-warning">${validPairsCount} / ${tasksCount}</strong> </div>` : ''}
+                ${validPairsCount < tasksCount ? `<div class="narrative-metric-row"> <span>Pares de tarefas válidos</span> <strong class="text-warning">${validPairsCount} / ${tasksCount}</strong> </div>` : ''}
                 <div class="narrative-metric-row narrative-note">
-                    <span>Graded checks per condition differ when a trial encounters an infra error before grading (excluded from check totals).</span>
+                    <span>As verificações avaliadas por condição diferem quando uma tentativa sofre erro de infraestrutura antes da avaliação (excluída dos totais).</span>
                 </div>
-                ${summary.expectedTotalRuns !== undefined ? ` <div class="narrative-metric-row"> <span>Expected trials</span> <strong>${summary.expectedTotalRuns}${summary.taskCount ? ` (${summary.taskCount} × ${summary.runCountPerTask})` : ''}</strong> </div> ` : ''}
-                ${(summary.unguidedEarlyFailures !== undefined || summary.guidedEarlyFailures !== undefined || totalInfraErrors > 0) ? `<div class="narrative-metric-row"> <span>Infra errors (excluded)</span> <strong class="${totalInfraErrors > 0 ? 'text-warning' : 'text-success'}">${totalInfraErrorRate}% (${totalInfraErrors} invalid trial${totalInfraErrors === 1 ? '' : 's'})</strong> </div>` : ''}
-                ${unguidedLeaksCount > 0 ? `<div class="narrative-metric-row"> <span>Unguided leaks</span> <strong class="text-leak">${unguidedLeakRate}% (${unguidedLeaksCount} trial${unguidedLeaksCount === 1 ? '' : 's'})</strong> </div>` : ''}
+                ${summary.expectedTotalRuns !== undefined ? ` <div class="narrative-metric-row"> <span>Tentativas esperadas</span> <strong>${summary.expectedTotalRuns}${summary.taskCount ? ` (${summary.taskCount} × ${summary.runCountPerTask})` : ''}</strong> </div> ` : ''}
+                ${(summary.unguidedEarlyFailures !== undefined || summary.guidedEarlyFailures !== undefined || totalInfraErrors > 0) ? `<div class="narrative-metric-row"> <span>Erros de infra (excluídos)</span> <strong class="${totalInfraErrors > 0 ? 'text-warning' : 'text-success'}">${totalInfraErrorRate}% (${totalInfraErrors} ${totalInfraErrors === 1 ? 'tentativa inválida' : 'tentativas inválidas'})</strong> </div>` : ''}
+                ${unguidedLeaksCount > 0 ? `<div class="narrative-metric-row"> <span>Vazamentos sem guia</span> <strong class="text-leak">${unguidedLeakRate}% (${unguidedLeaksCount} ${unguidedLeaksCount === 1 ? 'tentativa' : 'tentativas'})</strong> </div>` : ''}
             </div>
         </article>
 
         <!-- Card 2: Automated Accessibility Checks -->
         <article class="header-meta-item dog-ear-card narrative-card">
             <div class="meta-item-header">
-                <span class="meta-label">Automated accessibility checks</span>
-                ${ratePill(a11yUpliftPp, 'accessibility check pass rate change')}
+                <span class="meta-label">Verificações automáticas de acessibilidade</span>
+                ${ratePill(a11yUpliftPp, 'variação na taxa de aprovação em acessibilidade')}
             </div>
             <div class="sparkline-container">
                 ${renderSparkline(a11yStats.unguidedRate, a11yStats.guidedRate)}
-                <span class="sparkline-labels"><span class="visually-hidden">Unguided </span>${a11yStats.unguidedRate}% <span aria-hidden="true">→</span><span class="visually-hidden">guided</span> <strong>${a11yStats.guidedRate}%</strong> <span class="narrative-subtext">(${fraction(a11yStats.unguidedPassed, a11yStats.unguidedTotal)} → ${fraction(a11yStats.guidedPassed, a11yStats.guidedTotal)} checks, <a href="#guide-section" class="a11y-guides-jump" data-filter-a11y-guides="true">${a11yStats.guideCount} guides <span aria-hidden="true">→</span></a>)</span></span>
+                <span class="sparkline-labels"><span class="visually-hidden">Sem guia </span>${a11yStats.unguidedRate}% <span aria-hidden="true">→</span><span class="visually-hidden">guiado</span> <strong>${a11yStats.guidedRate}%</strong> <span class="narrative-subtext">(${fraction(a11yStats.unguidedPassed, a11yStats.unguidedTotal)} → ${fraction(a11yStats.guidedPassed, a11yStats.guidedTotal)} verificações, <a href="#guide-section" class="a11y-guides-jump" data-filter-a11y-guides="true">${a11yStats.guideCount} ${a11yStats.guideCount === 1 ? 'guia' : 'guias'} <span aria-hidden="true">→</span></a>)</span></span>
             </div>
             <div class="a11y-dimensions-grid">
                 ${a11yDimensionsHtml}
@@ -794,26 +794,26 @@ function renderSummary(data) {
         <!-- Card 3: Task Duration (U → G) -->
         <article class="header-meta-item dog-ear-card narrative-card">
             <div class="meta-item-header">
-                <span class="meta-label"><span aria-hidden="true">⏱</span> Median agent duration</span>
-                ${hasRuntime ? deltaPill(rt.medianDeltaPct, { less: 'faster', more: 'slower', noun: 'median agent duration' }) : ''}
+                <span class="meta-label"><span aria-hidden="true">⏱</span> Duração mediana do agente</span>
+                ${hasRuntime ? deltaPill(rt.medianDeltaPct, { less: 'mais rápido', more: 'mais lento', noun: 'duração mediana do agente' }) : ''}
             </div>
             <div class="narrative-hero-pair">
-                <span><span class="visually-hidden">Unguided </span>${formatDuration(rt.unguidedMedianMs)}</span>
+                <span><span class="visually-hidden">Sem guia </span>${formatDuration(rt.unguidedMedianMs)}</span>
                 <span class="pair-arrow" aria-hidden="true">→</span>
-                <strong><span class="visually-hidden">guided </span>${formatDuration(rt.guidedMedianMs)}</strong>
+                <strong><span class="visually-hidden">guiado </span>${formatDuration(rt.guidedMedianMs)}</strong>
             </div>
             <div class="narrative-metrics-list">
                 <div class="narrative-metric-row">
-                    <span>Mean task duration</span>
+                    <span>Duração média por tarefa</span>
                     <strong>${formatDuration(rt.unguidedMeanMs)} → ${formatDuration(rt.guidedMeanMs)}</strong>
                 </div>
                 <div class="narrative-metric-row">
-                    <span>Tasks faster or equal</span>
-                    <strong>${rt.fasterTaskPct}% (${rt.fasterTasksCount}/${rt.pairedTaskCount} tasks)</strong>
+                    <span>Tarefas mais rápidas ou iguais</span>
+                    <strong>${rt.fasterTaskPct}% (${rt.fasterTasksCount}/${rt.pairedTaskCount} tarefas)</strong>
                 </div>
                 <div class="narrative-metric-row">
-                    <span>Timed-out trials (≥10 min)</span>
-                    <strong>${rt.unguidedTimeouts} unguided → ${rt.guidedTimeouts} guided</strong>
+                    <span>Tentativas com tempo esgotado (≥10 min)</span>
+                    <strong>${rt.unguidedTimeouts} sem guia → ${rt.guidedTimeouts} guiado</strong>
                 </div>
             </div>
         </article>
@@ -821,26 +821,26 @@ function renderSummary(data) {
         <!-- Card 4: Token Efficiency (U → G) -->
         <article class="header-meta-item dog-ear-card narrative-card">
             <div class="meta-item-header">
-                <span class="meta-label"><span aria-hidden="true">🪙</span> Median uncached tokens</span>
-                ${hasTokens ? deltaPill(tok.uncachedMedianDeltaPct, { less: 'fewer', more: 'more', noun: 'uncached tokens' }) : ''}
+                <span class="meta-label"><span aria-hidden="true">🪙</span> Mediana de tokens sem cache</span>
+                ${hasTokens ? deltaPill(tok.uncachedMedianDeltaPct, { less: 'a menos', more: 'a mais', noun: 'tokens sem cache' }) : ''}
             </div>
             <div class="narrative-hero-pair">
-                <span><span class="visually-hidden">Unguided </span>${formatTokens(tok.unguidedUncachedMedian)}</span>
+                <span><span class="visually-hidden">Sem guia </span>${formatTokens(tok.unguidedUncachedMedian)}</span>
                 <span class="pair-arrow" aria-hidden="true">→</span>
-                <strong><span class="visually-hidden">guided </span>${formatTokens(tok.guidedUncachedMedian)}</strong>
+                <strong><span class="visually-hidden">guiado </span>${formatTokens(tok.guidedUncachedMedian)}</strong>
             </div>
             <div class="narrative-metrics-list">
                 <div class="narrative-metric-row">
-                    <span>Job uncached</span>
+                    <span>Sem cache na execução</span>
                     <strong>${formatTokens(tok.unguidedUncachedTotal)} → ${formatTokens(tok.guidedUncachedTotal)} (${jobTokSign}${tok.suiteUncachedDeltaPct}%)</strong>
                 </div>
                 <div class="narrative-metric-row">
-                    <span>Job total, incl. cache</span>
-                    <strong>${formatTokens(tok.unguidedTotal)} → ${formatTokens(tok.guidedTotal)} (${tok.guidedCachedSharePct}% cached)</strong>
+                    <span>Total da execução, incl. cache</span>
+                    <strong>${formatTokens(tok.unguidedTotal)} → ${formatTokens(tok.guidedTotal)} (${tok.guidedCachedSharePct}% em cache)</strong>
                 </div>
                 <div class="narrative-metric-row">
-                    <span>Tasks with fewer or equal</span>
-                    <strong>${tok.fewerUncachedTokensTaskPct}% (${tok.fewerUncachedTasksCount}/${tok.pairedTaskCount} tasks)</strong>
+                    <span>Tarefas com menos ou igual</span>
+                    <strong>${tok.fewerUncachedTokensTaskPct}% (${tok.fewerUncachedTasksCount}/${tok.pairedTaskCount} tarefas)</strong>
                 </div>
             </div>
         </article>
@@ -871,10 +871,10 @@ function yieldToMain() {
 }
 
 const HINT_TEXT = {
-    infra: 'Infrastructure or CLI errors stop a trial before grading. Those trials are excluded from pass rates.',
-    build: "The agent produced a broken app or build, so grading failed. Open the task to see each trial's failure reason.",
-    leak: "The unguided agent accessed Modern Web Guidance and this task's guide, so the trial isn't a clean baseline.",
-    invalid: 'Excluded from the rollup because one or both sides have 0 valid trials.',
+    infra: 'Erros de infraestrutura ou CLI interrompem a tentativa antes da avaliação. Essas tentativas são excluídas das taxas de aprovação.',
+    build: 'O agente produziu um app ou build quebrado, fazendo a avaliação falhar. Abra a tarefa para ver o motivo da falha de cada tentativa.',
+    leak: 'O agente sem guia acessou o Modern Web Guidance e o guia desta tarefa, portanto a tentativa não é uma linha de base limpa.',
+    invalid: 'Excluído do consolidado porque um ou ambos os lados têm 0 tentativas válidas.',
 };
 /** @type {WeakMap<DashboardEvalsReport, Promise<TaskItem[]>>} */
 const taskCache = new WeakMap();
@@ -1106,7 +1106,7 @@ function renderEvalFilterControls(baseTasks) {
         const allFeatures = Array.from(featureCounts.keys()).sort();
         datalist.innerHTML = allFeatures.map(f => {
             const count = featureCounts.get(f) || 0;
-            return `<option value="${escapeHtml(f)}">${count} ${count === 1 ? 'eval' : 'evals'}</option>`;
+            return `<option value="${escapeHtml(f)}">${count} ${count === 1 ? 'avaliação' : 'avaliações'}</option>`;
         }).join('');
     }
     const pillsContainer = document.getElementById('eval-category-pills');
@@ -1121,7 +1121,7 @@ function renderEvalFilterControls(baseTasks) {
             currentCategoryFilter = 'all';
         }
         const pills = [
-            `<button type="button" class="category-pill${currentCategoryFilter === 'all' ? ' active' : ''}" data-category="all" aria-pressed="${currentCategoryFilter === 'all'}">All <span class="pill-count">${baseTasks.length}</span></button>`,
+            `<button type="button" class="category-pill${currentCategoryFilter === 'all' ? ' active' : ''}" data-category="all" aria-pressed="${currentCategoryFilter === 'all'}">Todas <span class="pill-count">${baseTasks.length}</span></button>`,
             ...categories.map(cat => {
                 const active = currentCategoryFilter === cat;
                 return `<button type="button" class="category-pill${active ? ' active' : ''}" data-category="${escapeHtml(cat)}" aria-pressed="${active}">${escapeHtml(formatCategoryLabel(cat))} <span class="pill-count">${counts.get(cat)}</span></button>`;
@@ -1153,12 +1153,12 @@ function buildEvalsTableHeader() {
         return `<button type="button" class="eval-col-sort-btn${isSorted ? ' active' : ''}" data-sort="${col}" aria-sort="${ariaSort}"><span>${label}${arrow}</span>${sub ? `<span class="eval-col-sub">${sub}</span>` : ''}</button>`;
     };
     header.innerHTML = `
-        <div class="eval-col-task">${sortBtn('default', 'Guide / Task')}</div>
+        <div class="eval-col-task">${sortBtn('default', 'Guia / Tarefa')}</div>
         ${isA11yMode ? '' : `<div class="eval-col-a11y">${sortBtn('a11y', 'A11y')}</div>`}
-        <div class="eval-col-time">${sortBtn('time', 'Duration', 'Unguided / Guided')}</div>
-        <div class="eval-col-tokens">${sortBtn('tokens', 'Tokens', 'Unguided / Guided')}</div>
-        <div class="eval-col-dumbbell"><span>${isA11yMode ? 'A11y pass rate' : 'Pass rate'}</span><span class="eval-col-sub">Unguided → Guided</span></div>
-        <div class="eval-col-uplift">${sortBtn('uplift', 'Uplift')}</div>
+        <div class="eval-col-time">${sortBtn('time', 'Duração', 'Sem guia / Guiado')}</div>
+        <div class="eval-col-tokens">${sortBtn('tokens', 'Tokens', 'Sem guia / Guiado')}</div>
+        <div class="eval-col-dumbbell"><span>${isA11yMode ? 'Taxa de acessibilidade' : 'Taxa de aprovação'}</span><span class="eval-col-sub">Sem guia → Guiado</span></div>
+        <div class="eval-col-uplift">${sortBtn('uplift', 'Ganho')}</div>
     `;
     header.querySelectorAll('.eval-col-sort-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1216,8 +1216,8 @@ async function renderGridOnce(data, testId) {
     const countEl = document.getElementById('evals-count');
     if (countEl) {
         countEl.textContent = filteredTasks.length === baseTasks.length
-            ? `${baseTasks.length} evals`
-            : `${filteredTasks.length} of ${baseTasks.length} evals`;
+            ? `${baseTasks.length} ${baseTasks.length === 1 ? 'avaliação' : 'avaliações'}`
+            : `${filteredTasks.length} de ${baseTasks.length} avaliações`;
     }
     const sortResetBtn = document.getElementById('eval-sort-reset');
     if (sortResetBtn) {
@@ -1262,7 +1262,7 @@ async function renderGridOnce(data, testId) {
     if (filteredTasks.length === 0) {
         const empty = document.createElement('div');
         empty.className = 'evals-empty-state';
-        empty.textContent = 'No matching evals.';
+        empty.textContent = 'Nenhuma avaliação correspondente.';
         guideGrid.append(empty);
         return;
     }
@@ -1297,7 +1297,7 @@ async function renderGridOnce(data, testId) {
             catHeader.setAttribute('aria-expanded', collapsedCategories.has(cat) ? 'false' : 'true');
             catHeader.innerHTML = `
                 <span class="eval-category-title"><span class="chevron" aria-hidden="true">▼</span> ${escapeHtml(formatCategoryLabel(cat))}</span>
-                <span class="eval-category-meta">${items.length} ${items.length === 1 ? 'eval' : 'evals'}${avgUplift !== null ? ` · <strong class="${avgUplift > 0 ? 'positive' : avgUplift < 0 ? 'negative' : ''}">${avgUplift >= 0 ? '+' : ''}${avgUplift} pp avg</strong>` : ''}</span>
+                <span class="eval-category-meta">${items.length} ${items.length === 1 ? 'avaliação' : 'avaliações'}${avgUplift !== null ? ` · <strong class="${avgUplift > 0 ? 'positive' : avgUplift < 0 ? 'negative' : ''}">${avgUplift >= 0 ? '+' : ''}${avgUplift} pp (média)</strong>` : ''}</span>
             `;
             const body = document.createElement('div');
             body.className = 'eval-category-body';
@@ -1355,7 +1355,7 @@ function buildAccordion(item, testId) {
     const appSuffixHtml = displayBaseApp && displayBaseApp !== 'daily-grind'
         ? ` <span class="task-app-tag">(${escapeHtml(displayBaseApp)})</span>`
         : '';
-    const trendLabel = `View trend over time for ${escapeHtml(guide)} (${escapeHtml(baseApp)})`;
+    const trendLabel = `Ver tendência ao longo do tempo para ${escapeHtml(guide)} (${escapeHtml(baseApp)})`;
     const trendLinkHtml = `<a href="${trendUrl}" class="trend-link" aria-label="${trendLabel}" title="${trendLabel}"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <line x1="7" y1="17" x2="17" y2="7"></line> <polyline points="7 7 17 7 17 17"></polyline> </svg> </a>`;
     const primaryFeatureId = featureIds[0] || '';
     const featureChipHtml = primaryFeatureId && primaryFeatureId !== guide
@@ -1364,16 +1364,16 @@ function buildAccordion(item, testId) {
     const rowCategoryHtml = `<span class="row-category-tag">${escapeHtml(categoryLabel)}</span>`;
     const a11yColHtml = currentMetricMode === 'a11y' ? '' : (
         a11yCheckCount > 0
-            ? `<div class="task-a11y-col"><span class="visually-hidden">Accessibility checks: ${a11yCheckCount} checks, unguided ${a11yUnguidedAvg}%, guided ${a11yGuidedAvg}%, change </span><span class="metric-before">${a11yCheckCount} ${a11yCheckCount === 1 ? 'check' : 'checks'}</span><span class="metric-after ${a11yUplift !== null && a11yUplift > 0 ? 'positive' : a11yUplift !== null && a11yUplift < 0 ? 'negative' : ''}">${a11yUplift !== null ? `${a11yUplift >= 0 ? '+' : ''}${a11yUplift} pp` : '—'}</span></div>`
+            ? `<div class="task-a11y-col"><span class="visually-hidden">Verificações de acessibilidade: ${a11yCheckCount} ${a11yCheckCount === 1 ? 'verificação' : 'verificações'}, sem guia ${a11yUnguidedAvg}%, guiado ${a11yGuidedAvg}%, variação </span><span class="metric-before">${a11yCheckCount} ${a11yCheckCount === 1 ? 'verif.' : 'verifs.'}</span><span class="metric-after ${a11yUplift !== null && a11yUplift > 0 ? 'positive' : a11yUplift !== null && a11yUplift < 0 ? 'negative' : ''}">${a11yUplift !== null ? `${a11yUplift >= 0 ? '+' : ''}${a11yUplift} pp` : '—'}</span></div>`
             : `<div class="task-a11y-col"><span class="metric-empty">—</span></div>`
     );
     const hasRuntime = uRuntimeMs > 0 || gRuntimeMs > 0;
     const hasTokens = uUncachedTokens > 0 || gUncachedTokens > 0;
     const timeColHtml = hasRuntime
-        ? `<div class="task-metric-stack"><span class="visually-hidden">Average duration, unguided to guided: </span><span class="metric-before">${formatDuration(uRuntimeMs)}</span><span class="metric-after">${formatDuration(gRuntimeMs)}</span></div>`
+        ? `<div class="task-metric-stack"><span class="visually-hidden">Duração média, de sem guia para guiado: </span><span class="metric-before">${formatDuration(uRuntimeMs)}</span><span class="metric-after">${formatDuration(gRuntimeMs)}</span></div>`
         : '<div class="task-metric-stack"><span class="metric-empty">—</span></div>';
     const tokensColHtml = hasTokens
-        ? `<div class="task-metric-stack"><span class="visually-hidden">Average uncached tokens, unguided to guided: </span><span class="metric-before">${formatTokens(uUncachedTokens)}</span><span class="metric-after">${formatTokens(gUncachedTokens)}</span></div>`
+        ? `<div class="task-metric-stack"><span class="visually-hidden">Média de tokens sem cache, de sem guia para guiado: </span><span class="metric-before">${formatTokens(uUncachedTokens)}</span><span class="metric-after">${formatTokens(gUncachedTokens)}</span></div>`
         : '<div class="task-metric-stack"><span class="metric-empty">—</span></div>';
     const contentId = `${accordion.id}-content`;
     /** @type {string[]} */
@@ -1388,16 +1388,16 @@ function buildAccordion(item, testId) {
         return `<button type="button" class="${className ? `${className} ` : ''}hint-trigger" interestfor="${hintId}" style="anchor-name: --${hintId};">${escapeHtml(label)}</button>`;
     };
     const infraBadgeHtml = hasInfraError
-        ? hintButton('infra', 'generation-failed-badge infra-error-badge', `${infraErrorCount} Infra Error${infraErrorCount === 1 ? '' : 's'}`, HINT_TEXT.infra)
+        ? hintButton('infra', 'generation-failed-badge infra-error-badge', `${infraErrorCount} ${infraErrorCount === 1 ? 'Erro de Infra' : 'Erros de Infra'}`, HINT_TEXT.infra)
         : '';
     const buildBadgeHtml = hasBuildFailure
-        ? hintButton('build', 'generation-failed-badge', 'Build Failed', HINT_TEXT.build)
+        ? hintButton('build', 'generation-failed-badge', 'Falha de Build', HINT_TEXT.build)
         : '';
     const leakBadgeHtml = leakCount > 0
-        ? hintButton('leak', 'generation-failed-badge leak-badge', leakCount > 1 ? `${leakCount} Unguided Leaks` : 'Unguided Leak', HINT_TEXT.leak)
+        ? hintButton('leak', 'generation-failed-badge leak-badge', leakCount > 1 ? `${leakCount} Vazamentos sem Guia` : 'Vazamento sem Guia', HINT_TEXT.leak)
         : '';
     const invalidBadgeHtml = displayUplift === null
-        ? hintButton('invalid', '', 'INVALID', HINT_TEXT.invalid)
+        ? hintButton('invalid', '', 'INVÁLIDO', HINT_TEXT.invalid)
         : '';
     const badgesHtml = [featureChipHtml, rowCategoryHtml, infraBadgeHtml, buildBadgeHtml, leakBadgeHtml].filter(Boolean).join('');
     accordion.innerHTML = ` <div class="task-accordion-header"> <div class="left-section"> <div class="task-title-row"> <h3 class="task-accordion-heading"> <button type="button" class="task-toggle" aria-expanded="false" aria-controls="${contentId}"> <span class="expand-icon" aria-hidden="true"></span>
@@ -1416,9 +1416,9 @@ function buildAccordion(item, testId) {
                 ${displayU !== null ? `<div class="dot unguided" style="left: ${scale(displayU)};"></div>` : ''}
                 ${displayG !== null ? `<div class="dot guided" style="left: ${scale(displayG)};"></div>` : ''}
             </div>
-            ${displayUplift !== null ? `<div class="uplift-score ${displayUplift < 0 ? 'negative' : (displayUplift === 0 ? 'flat' : '')}"> <span class="visually-hidden">Unguided ${displayU}%, guided ${displayG}%, change </span>${displayUplift >= 0 ? '+' : ''}${displayUplift} pp </div>` : ` <div class="uplift-score invalid"> ${invalidBadgeHtml}
+            ${displayUplift !== null ? `<div class="uplift-score ${displayUplift < 0 ? 'negative' : (displayUplift === 0 ? 'flat' : '')}"> <span class="visually-hidden">Sem guia ${displayU}%, guiado ${displayG}%, variação </span>${displayUplift >= 0 ? '+' : ''}${displayUplift} pp </div>` : ` <div class="uplift-score invalid"> ${invalidBadgeHtml}
             </div>
-            `} </div> <div class="task-accordion-content" id="${contentId}" hidden="until-found"> <div class="task-accordion-body"> <div class="task-details-grid"> <div class="task-prompt-slot"><div class="expansion-loading">Loading details...</div></div> ${buildTruthMatrixHtml(taskKey, unguidedTrials, guidedTrials)}
+            `} </div> <div class="task-accordion-content" id="${contentId}" hidden="until-found"> <div class="task-accordion-body"> <div class="task-details-grid"> <div class="task-prompt-slot"><div class="expansion-loading">Carregando detalhes…</div></div> ${buildTruthMatrixHtml(taskKey, unguidedTrials, guidedTrials)}
                 </div>
             </div>
         </div>
@@ -1491,25 +1491,25 @@ function buildTruthMatrixHtml(taskKey, unguidedTrials, guidedTrials) {
     const uFailed = hasInfraErrorInTrials(unguidedTrials);
     const gFailed = hasInfraErrorInTrials(guidedTrials);
     const taskGuide = parseResultKey(`${taskKey} - unguided`)?.guide || '';
-    let truthMatrixHtml = `<div class="truth-matrix-wrap" role="region" aria-label="Check results for ${escapeHtml(taskKey)}" tabindex="0"><table class="truth-matrix"><caption class="visually-hidden">Grader check results for ${escapeHtml(taskKey)}, unguided vs. guided</caption><thead>`;
+    let truthMatrixHtml = `<div class="truth-matrix-wrap" role="region" aria-label="Resultados das verificações para ${escapeHtml(taskKey)}" tabindex="0"><table class="truth-matrix"><caption class="visually-hidden">Resultados das verificações do avaliador para ${escapeHtml(taskKey)}, sem guia vs. guiado</caption><thead>`;
     if (maxTrials > 1) {
-        truthMatrixHtml += `<tr> <th scope="colgroup" class="center${uFailed ? ' text-warning' : ''}" colspan="${maxTrials}">Unguided</th> <th scope="colgroup" class="center${gFailed ? ' text-warning' : ''}" colspan="${maxTrials}">Guided</th> <th scope="col" rowspan="2">Check Requirement</th> </tr> <tr>`;
+        truthMatrixHtml += `<tr> <th scope="colgroup" class="center${uFailed ? ' text-warning' : ''}" colspan="${maxTrials}">Sem guia</th> <th scope="colgroup" class="center${gFailed ? ' text-warning' : ''}" colspan="${maxTrials}">Guiado</th> <th scope="col" rowspan="2">Requisito da verificação</th> </tr> <tr>`;
         for (let i = 0; i < maxTrials; i++) truthMatrixHtml += `<th scope="col" class="center">#${i+1}</th>`;
         for (let i = 0; i < maxTrials; i++) truthMatrixHtml += `<th scope="col" class="center">#${i+1}</th>`;
         truthMatrixHtml += `</tr>`;
     } else {
-        truthMatrixHtml += `<tr> <th scope="col" class="center${uFailed ? ' text-warning' : ''}">Unguided</th> <th scope="col" class="center${gFailed ? ' text-warning' : ''}">Guided</th> <th scope="col">Check Requirement</th> </tr>`;
+        truthMatrixHtml += `<tr> <th scope="col" class="center${uFailed ? ' text-warning' : ''}">Sem guia</th> <th scope="col" class="center${gFailed ? ' text-warning' : ''}">Guiado</th> <th scope="col">Requisito da verificação</th> </tr>`;
     }
     truthMatrixHtml += `</thead><tbody>`;
 
     const guideName = taskGuide || taskKey.split(' - ')[1] || '';
     if (checkMap.size === 0) {
         const totalCols = maxTrials > 1 ? (maxTrials * 2 + 1) : 3;
-        truthMatrixHtml += `<tr><td colspan="${totalCols}" class="center text-warning">No grader checks recorded (all trials encountered infrastructure errors before grading).</td></tr>`;
+        truthMatrixHtml += `<tr><td colspan="${totalCols}" class="center text-warning">Nenhuma verificação do avaliador registrada (todas as tentativas sofreram erros de infraestrutura antes da avaliação).</td></tr>`;
     }
 
-    const passSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg><span class="visually-hidden">Pass</span>';
-    const failSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg><span class="visually-hidden">Fail</span>';
+    const passSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg><span class="visually-hidden">Aprovado</span>';
+    const failSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg><span class="visually-hidden">Reprovado</span>';
     const passCell = (/** @type {boolean | undefined} */ pass) => `<td class="center ${pass !== undefined ? (pass ? 'pass' : 'fail') : ''}">${pass !== undefined ? (pass ? passSvg : failSvg) : '-'}</td>`;
     checkMap.forEach((status, message) => {
         const a11yInfo = classifyAccessibilityCheck(sampleTrial?.discipline || '', guideName, message);
@@ -1526,10 +1526,10 @@ function buildTruthMatrixHtml(taskKey, unguidedTrials, guidedTrials) {
             diagnosticsHtml += `<div class="assertion-error">${escapeHtml(status.error.length > 300 ? status.error.substring(0, 300) + '...' : status.error)}${loc}</div>`;
         }
         if (status.pageSnapshot) {
-            diagnosticsHtml += `<details class="assertion-diagnostic"><summary>Page Snapshot</summary><pre>${escapeHtml(status.pageSnapshot)}</pre></details>`;
+            diagnosticsHtml += `<details class="assertion-diagnostic"><summary>Snapshot da página</summary><pre>${escapeHtml(status.pageSnapshot)}</pre></details>`;
         }
         if (status.browserErrors) {
-            diagnosticsHtml += `<details class="assertion-diagnostic browser-errors"><summary>Browser Errors</summary><pre>${escapeHtml(status.browserErrors)}</pre></details>`;
+            diagnosticsHtml += `<details class="assertion-diagnostic browser-errors"><summary>Erros do navegador</summary><pre>${escapeHtml(status.browserErrors)}</pre></details>`;
         }
         truthMatrixHtml += `<td> ${escapeHtml(message)}${a11yBadge} ${diagnosticsHtml} </td></tr>`;
     });
@@ -1546,8 +1546,8 @@ function buildTruthMatrixHtml(taskKey, unguidedTrials, guidedTrials) {
  */
 async function fillAccordionDetails(container, taskKey, unguidedTrials, guidedTrials, testId) {
     try {
-        let promptHtml = '<div style="color: var(--text-secondary); margin-bottom: 20px;">Prompt fetch deferred or failed.</div>';
-        let baseApp = 'n/a';
+        let promptHtml = '<div style="color: var(--text-secondary); margin-bottom: 20px;">Busca do prompt adiada ou falhou.</div>';
+        let baseApp = 'n/d';
 
         // The prompt recorded on the first trial (unguided or guided) is authoritative; older
         // results without one are reconstructed from run.mjs, then from the task file at HEAD.
@@ -1600,7 +1600,7 @@ async function fillAccordionDetails(container, taskKey, unguidedTrials, guidedTr
                 promptHtml = `
                     <div class="task-prompt-container">
                         <div class="task-prompt-meta">
-                            <span class="task-prompt-meta-label">Base App:</span>
+                            <span class="task-prompt-meta-label">App base:</span>
                             <span class="task-prompt-meta-value">${escapeHtml(baseApp)}</span>
                         </div>
                         <div class="task-prompt-quote">
@@ -1634,7 +1634,7 @@ async function fillAccordionDetails(container, taskKey, unguidedTrials, guidedTr
             const style = 'padding: 2px 4px; border-radius: 4px; font-family: monospace; text-decoration: none;';
 
             const url = `guide.html?guide=${encodeURIComponent(g)}&testId=${encodeURIComponent(testId)}&source=${encodeURIComponent(api.source)}`;
-            return `<a href="${url}" class="${className}" style="${style}">${escapeHtml(g)}<span class="visually-hidden"> (view guide trend)</span></a>`;
+            return `<a href="${url}" class="${className}" style="${style}">${escapeHtml(g)}<span class="visually-hidden"> (ver tendência do guia)</span></a>`;
         };
 
         /**
@@ -1668,7 +1668,7 @@ async function fillAccordionDetails(container, taskKey, unguidedTrials, guidedTr
                  const runtimeFile = files.includes('runtime.json') ? 'runtime.json' : null;
                  const hasInfraErr = isInfraErrorTrial(trial.results);
                  const isLeak = conditionTitle === 'Unguided' && isUnguidedLeakTrial(trial, taskGuide);
-                 const infraErrorMsg = hasInfraErr ? (trial.results?.find(c => c.isEarlyFailure)?.message || 'Infrastructure Error') : '';
+                 const infraErrorMsg = hasInfraErr ? (trial.results?.find(c => c.isEarlyFailure)?.message || 'Erro de infraestrutura') : '';
                  const buildFailureReason = !hasInfraErr ? (trial.results?.find(c => c.failureReason)?.failureReason || '') : '';
                  const failureFile = hasInfraErr ? (files.includes('generation_failed.json') ? 'generation_failed.json' : (files.includes('agent_stderr.log') ? 'agent_stderr.log' : null)) : null;
                  // A trial with a built app can be opened and diffed against its base app; see getResultInfo.
@@ -1684,21 +1684,21 @@ async function fillAccordionDetails(container, taskKey, unguidedTrials, guidedTr
                  chips.push(`
                      <div class="tfoot-chip">
                          ${hasInfraErr
-                             ? `<details class="tfoot-chip-details"><summary class="tfoot-chip-error">ERROR</summary><p class="tfoot-chip-msg">${escapeHtml(infraErrorMsg)}</p></details>`
+                             ? `<details class="tfoot-chip-details"><summary class="tfoot-chip-error">ERRO</summary><p class="tfoot-chip-msg">${escapeHtml(infraErrorMsg)}</p></details>`
                              : `<span class="tfoot-chip-rate" style="--rate-color: ${getColor(s.rate)};">${s.rate}%</span>`
                          }
-                         ${isLeak ? `<span class="run-chip-leak">Unguided Leak<span class="visually-hidden">: accessed modern-web-guidance and ${escapeHtml(taskGuide)}</span></span>` : ''}
-                         ${buildFailureReason ? `<details class="tfoot-chip-details"><summary class="tfoot-chip-build-failed">Build Failed</summary><p class="tfoot-chip-msg">${escapeHtml(buildFailureReason)}</p></details>` : ''}
-                         ${taskRuntime ? `<span class="run-chip-meta"><span class="visually-hidden">Agent duration: </span>${formatDuration(taskRuntime)}</span>` : ''}
-                         ${tb.total > 0 ? `<span class="run-chip-meta small">${formatTokens(tb.uncached)}<span class="visually-hidden"> uncached tokens, ${tb.total.toLocaleString()} total, ${tb.cachedPct}% cached</span></span>` : ''}
+                         ${isLeak ? `<span class="run-chip-leak">Vazamento sem Guia<span class="visually-hidden">: acessou modern-web-guidance e ${escapeHtml(taskGuide)}</span></span>` : ''}
+                         ${buildFailureReason ? `<details class="tfoot-chip-details"><summary class="tfoot-chip-build-failed">Falha de Build</summary><p class="tfoot-chip-msg">${escapeHtml(buildFailureReason)}</p></details>` : ''}
+                         ${taskRuntime ? `<span class="run-chip-meta"><span class="visually-hidden">Duração do agente: </span>${formatDuration(taskRuntime)}</span>` : ''}
+                         ${tb.total > 0 ? `<span class="run-chip-meta small">${formatTokens(tb.uncached)}<span class="visually-hidden"> tokens sem cache, ${tb.total.toLocaleString('pt-BR')} no total, ${tb.cachedPct}% em cache</span></span>` : ''}
                          <div class="tfoot-chip-actions">
-                             ${sessionFile ? `<button type="button" class="tfoot-action-btn" data-action="trajectory" data-base-path="${escapeHtml(usedBasePath)}" data-session-file="${escapeHtml(sessionFile)}"><svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg> Traj</button>` : ''}
+                             ${sessionFile ? `<button type="button" class="tfoot-action-btn" data-action="trajectory" data-base-path="${escapeHtml(usedBasePath)}" data-session-file="${escapeHtml(sessionFile)}"><svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg> Traj.</button>` : ''}
                              ${patchFile ? `<button type="button" class="tfoot-action-btn" data-action="content" data-file-name="${escapeHtml(`${usedBasePath}/${patchFile}`)}" data-file-path="${escapeHtml(`${usedBasePath}/${patchFile}`)}"><svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M1 2.5A1.5 1.5 0 0 1 2.5 1h11A1.5 1.5 0 0 1 15 2.5v11a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 13.5v-11zM2.5 2a.5.5 0 0 0-.5.5V13c0 .1.03.18.08.25L7.33 8 2.08 2.75A.5.5 0 0 0 2.5 2zm11 11a.5.5 0 0 0 .5-.5V2.5a.5.5 0 0 0-.85-.35L7.83 8l5.32 5.32c.07.07.13.1.18.12l.17.06zM7.5 9.41l-.91-.91L7.5 7.59l.91.91-.91.91z"/></svg> Diff</button>` : !hasApp ? '' : `<button type="button" class="tfoot-action-btn" data-action="diff" data-setup-path="${escapeHtml(setupPath)}" data-result-path="${escapeHtml(resultPath)}" data-task-key="${escapeHtml(taskKey)}" data-trial-number="${trial.runNumber}"><svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M1 2.5A1.5 1.5 0 0 1 2.5 1h11A1.5 1.5 0 0 1 15 2.5v11a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 13.5v-11zM2.5 2a.5.5 0 0 0-.5.5V13c0 .1.03.18.08.25L7.33 8 2.08 2.75A.5.5 0 0 0 2.5 2zm11 11a.5.5 0 0 0 .5-.5V2.5a.5.5 0 0 0-.85-.35L7.83 8l5.32 5.32c.07.07.13.1.18.12l.17.06zM7.5 9.41l-.91-.91L7.5 7.59l.91.91-.91.91z"/></svg> Diff</button>`}
                              ${!appUrl ? '' : `<button type="button" class="tfoot-action-btn" data-action="app" data-app-url="${escapeHtml(appUrl)}"><svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M14 11v3h-12v-12h3v-1h-4v14h14v-4h-1zm-4-10v1h3.3l-5.6 5.6.7.7 5.6-5.6v3.3h1v-5h-5z"/></svg> App</button>`}
                              ${jsonFile ? `<button type="button" class="tfoot-action-btn" data-action="content" data-file-name="${escapeHtml(`${usedBasePath}/${jsonFile}`)}" data-file-path="${escapeHtml(`${usedBasePath}/${jsonFile}`)}"><svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M4.5 2A1.5 1.5 0 0 0 3 3.5v9A1.5 1.5 0 0 0 4.5 14h7a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 11.5 2h-7zm0 1h7a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5z"/><path d="M4.5 5.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/></svg> JSON</button>` : ''}
-                             ${runtimeFile ? `<button type="button" class="tfoot-action-btn" data-action="content" data-file-name="${escapeHtml(`${usedBasePath}/${runtimeFile}`)}" data-file-path="${escapeHtml(`${usedBasePath}/${runtimeFile}`)}"><svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/></svg> Runtime</button>` : ''}
+                             ${runtimeFile ? `<button type="button" class="tfoot-action-btn" data-action="content" data-file-name="${escapeHtml(`${usedBasePath}/${runtimeFile}`)}" data-file-path="${escapeHtml(`${usedBasePath}/${runtimeFile}`)}"><svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/></svg> Tempo</button>` : ''}
                              ${logFile ? `<button type="button" class="tfoot-action-btn" data-action="content" data-file-name="${escapeHtml(`${usedBasePath}/${logFile}`)}" data-file-path="${escapeHtml(`${usedBasePath}/${logFile}`)}"><svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2.5 1.5A1.5 1.5 0 0 1 4 0h8a1.5 1.5 0 0 1 1.5 1.5v13a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5V1.5zM4 1a.5.5 0 0 0-.5.5V14a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V1.5a.5.5 0 0 0-.5-.5H4z"/><path fill-rule="evenodd" d="M4 4.5h5v1H4v-1zm0 2h8v1H4v-1zm0 2h8v1H4v-1z"/></svg> Log</button>` : ''}
-                             ${failureFile ? `<button type="button" class="tfoot-action-btn" data-action="content" data-file-name="${escapeHtml(`${usedBasePath}/${failureFile}`)}" data-file-path="${escapeHtml(`${usedBasePath}/${failureFile}`)}"><svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2.5 1.5A1.5 1.5 0 0 1 4 0h8a1.5 1.5 0 0 1 1.5 1.5v13a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5V1.5zM4 1a.5.5 0 0 0-.5.5V14a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V1.5a.5.5 0 0 0-.5-.5H4z"/><path fill-rule="evenodd" d="M4 4.5h5v1H4v-1zm0 2h8v1H4v-1zm0 2h8v1H4v-1z"/></svg> Failure Log</button>` : ''}
+                             ${failureFile ? `<button type="button" class="tfoot-action-btn" data-action="content" data-file-name="${escapeHtml(`${usedBasePath}/${failureFile}`)}" data-file-path="${escapeHtml(`${usedBasePath}/${failureFile}`)}"><svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2.5 1.5A1.5 1.5 0 0 1 4 0h8a1.5 1.5 0 0 1 1.5 1.5v13a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5V1.5zM4 1a.5.5 0 0 0-.5.5V14a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V1.5a.5.5 0 0 0-.5-.5H4z"/><path fill-rule="evenodd" d="M4 4.5h5v1H4v-1zm0 2h8v1H4v-1zm0 2h8v1H4v-1z"/></svg> Log de Falha</button>` : ''}
                          </div>
                      </div>
                  `);
@@ -1730,13 +1730,14 @@ async function fillAccordionDetails(container, taskKey, unguidedTrials, guidedTr
 
                  if (toolsUsed.length === 0 && guidesUsed.length === 0 && retrievedGuides.length === 0 && fileReadGuides.length === 0) continue;
 
+                 const conditionDisplay = conditionTitle === 'Guided' ? 'Guiado' : 'Sem guia';
                  html += `
                      <div class="run-card">
-                         <span class="run-card-title">${conditionTitle} Trial ${i + 1}</span>
+                         <span class="run-card-title">${conditionDisplay} — Tentativa ${i + 1}</span>
 
                          ${toolsUsed.length > 0 ? `
                          <div class="run-card-row">
-                             <span class="run-card-label">Tools Used:</span>
+                             <span class="run-card-label">Ferramentas usadas:</span>
                              <div class="run-card-row-inner" style="flex-wrap: wrap;">
 ${toolsUsed.map((/** @type {string} */ t) => {
                                       const isCorrectTool = trial.expectedToolPrefixes && trial.expectedToolPrefixes.some((/** @type {string} */ p) => t.startsWith(p));
@@ -1750,7 +1751,7 @@ ${toolsUsed.map((/** @type {string} */ t) => {
 
                          ${retrievedGuides.length > 0 ? `
                          <div class="run-card-row">
-                             <span class="run-card-label">Retrieved Guides:</span>
+                             <span class="run-card-label">Guias recuperados:</span>
                              <div class="run-card-row-inner" style="flex-wrap: wrap;">
                                  ${retrievedGuides.map(g => renderGuideChip(g, trial)).join('')}
                              </div>
@@ -1758,7 +1759,7 @@ ${toolsUsed.map((/** @type {string} */ t) => {
 
                          ${fileReadGuides.length > 0 ? `
                          <div class="run-card-row">
-                             <span class="run-card-label">File Read Guides:</span>
+                             <span class="run-card-label">Guias lidos de arquivo:</span>
                              <div class="run-card-row-inner" style="flex-wrap: wrap;">
                                  ${fileReadGuides.map(g => renderGuideChip(g, trial)).join('')}
                              </div>
@@ -1795,14 +1796,14 @@ ${toolsUsed.map((/** @type {string} */ t) => {
                 if (msg.scrollHeight > msg.clientHeight) {
                     msg.tabIndex = 0;
                     msg.setAttribute('role', 'region');
-                    msg.setAttribute('aria-label', `${details.querySelector('summary')?.textContent || 'Failure'} message`);
+                    msg.setAttribute('aria-label', `Mensagem de ${details.querySelector('summary')?.textContent || 'falha'}`);
                 } else { msg.removeAttribute('tabindex'); msg.removeAttribute('role'); msg.removeAttribute('aria-label'); }
             });
         });
 
     } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
-        const errorHtml = `<div style="color: var(--accent-failure);">Error loading details: ${escapeHtml(msg)}</div>`;
+        const errorHtml = `<div style="color: var(--accent-failure);">Erro ao carregar detalhes: ${escapeHtml(msg)}</div>`;
         const promptSlot = container.querySelector('.task-prompt-slot');
         if (promptSlot) promptSlot.innerHTML = errorHtml;
         else container.innerHTML = errorHtml;
@@ -1834,7 +1835,7 @@ function openFrameModal(titleText) {
     $('.modal-content').classList.add('frame-modal');
     const loading = document.createElement('div');
     loading.className = 'modal-status-msg';
-    loading.textContent = 'Loading…';
+    loading.textContent = 'Carregando…';
     body.replaceChildren(renderBackButton(), loading);
     if (!modal.open) modal.showModal();
     return body;
@@ -1882,7 +1883,7 @@ async function openTrajectory(usedBasePath, sessionFile) {
         if (!modal.open || !placeholder || !body.contains(placeholder)) return;
         const frame = createSandboxedFrame({
             srcdoc: withEscBridge(html),
-            title: `Agent trajectory: ${sessionFile}`,
+            title: `Trajetória do agente: ${sessionFile}`,
             sandbox: 'allow-scripts',
         });
         frame.dataset.escBridge = '';
@@ -1892,7 +1893,7 @@ async function openTrajectory(usedBasePath, sessionFile) {
             toolbar.appendChild(renderBackButton());
             const meta = document.createElement('div');
             meta.className = 'trajectory-meta-pill';
-            const modelLabel = trajSummary.model || allTestData?.model || 'unknown';
+            const modelLabel = trajSummary.model || allTestData?.model || 'desconhecido';
             const effortSource = trajSummary.reasoningEffort ?? allTestData?.reasoningEffort;
             setupEffortTooltip();
             meta.innerHTML = `<span class="trajectory-meta-model">${escapeHtml(modelLabel)}</span>${renderEffortChip(effortSource)}`;
@@ -1904,7 +1905,7 @@ async function openTrajectory(usedBasePath, sessionFile) {
     } catch (e) {
         if (!modal.open || !placeholder || !body.contains(placeholder)) return;
         console.error('Error loading trajectory:', e);
-        showFrameError(body, 'Error loading trajectory', e);
+        showFrameError(body, 'Erro ao carregar a trajetória', e);
     }
 }
 
@@ -1912,11 +1913,11 @@ async function openTrajectory(usedBasePath, sessionFile) {
 function openApp(appUrl) {
     const url = new URL(appUrl, window.location.href);
     if (url.origin !== window.location.origin) { window.open(url.href, '_blank', 'noopener,noreferrer'); return; }
-    const body = openFrameModal('Agent-built app');
+    const body = openFrameModal('App criado pelo agente');
     const hint = document.createElement('p');
     hint.className = 'frame-esc-hint';
-    hint.textContent = 'Keyboard: inside the app, press Shift+Tab to move focus back out, then Esc to close.';
-    body.replaceChildren(renderBackButton(), hint, createSandboxedFrame({ src: url.href, title: 'Agent-built app preview (sandboxed)', sandbox: 'allow-scripts allow-forms', }));
+    hint.textContent = 'Teclado: dentro do app, pressione Shift+Tab para tirar o foco e depois Esc para fechar.';
+    body.replaceChildren(renderBackButton(), hint, createSandboxedFrame({ src: url.href, title: 'Prévia do app criado pelo agente (sandbox)', sandbox: 'allow-scripts allow-forms', }));
 }
 // Global helper to open details from task list
 window.openDetailsFromTask = (/** @type {string} */ taskKey, /** @type {string} */ testId) => {
@@ -1930,7 +1931,7 @@ window.openDetailsFromTask = (/** @type {string} */ taskKey, /** @type {string} 
     if (allTestData.results[finalKey]) {
         showDetails(finalKey, allTestData.results[finalKey], allTestData.stats[finalKey], testId);
     } else {
-        alert('Could not find trial data for this task.');
+        alert('Não foi possível encontrar dados de tentativa para esta tarefa.');
     }
 };
 
@@ -1974,7 +1975,7 @@ async function showDetails(testName, trials, stats, testId) {
 function renderBackButton() {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.textContent = '← Back';
+    btn.textContent = '← Voltar';
     btn.className = 'secondary-btn modal-back-btn';
     btn.onclick = () => {
         const modal = $('dialog#modal');
@@ -2011,7 +2012,7 @@ async function viewContent(fileName, filePath) {
     const pre = document.createElement('pre');
     pre.className = 'log-content';
     pre.tabIndex = 0;
-    pre.textContent = 'Loading content...';
+    pre.textContent = 'Carregando conteúdo…';
     body.appendChild(pre);
 
     try {
@@ -2068,7 +2069,7 @@ async function viewContent(fileName, filePath) {
 
         const lines = text.split('\n');
         const truncated = lines.length > 5000;
-        const content = truncated ? lines.slice(0, 5000).join('\n') + '\n\n...[truncated for display]...' : text;
+        const content = truncated ? lines.slice(0, 5000).join('\n') + '\n\n...[truncado para exibição]...' : text;
         const inner = document.createElement(fileName.endsWith('.log') ? 'samp' : 'code');
         inner.textContent = content;
         pre.replaceChildren(inner);
@@ -2082,7 +2083,7 @@ async function viewContent(fileName, filePath) {
         error.style.color = 'var(--accent-failure)';
         error.style.padding = '20px';
         const msg = e instanceof Error ? e.message : String(e);
-        error.textContent = `Error loading file: ${msg}`;
+        error.textContent = `Erro ao carregar arquivo: ${msg}`;
         body.appendChild(error);
     }
 }
@@ -2117,7 +2118,7 @@ async function viewDiff(setupPath, resultPath, testName, trialNumber) {
         fileName = resultPath.split('/').pop() || '';
     }
     title.textContent = fileName;
-    body.innerHTML = '<div style="text-align:center; padding: 20px;">Computing diff...</div>';
+    body.innerHTML = '<div style="text-align:center; padding: 20px;">Calculando diff…</div>';
 
     // Optional: Make modal wider for diff
     modal.classList.add('diff-modal');
@@ -2134,7 +2135,7 @@ async function viewDiff(setupPath, resultPath, testName, trialNumber) {
             // If it's a real error, throw
             const msg = e instanceof Error ? e.message : String(e);
             if (!msg.includes('404')) {
-                throw new Error(`Failed to load setup file: ${setupPath}`);
+                throw new Error(`Falha ao carregar o arquivo original: ${setupPath}`);
             }
         }
 
@@ -2143,7 +2144,7 @@ async function viewDiff(setupPath, resultPath, testName, trialNumber) {
         let diffHtml = '<div class="diff-container" tabindex="0">';
 
         if (setupText === null) {
-            diffHtml += `<div class="diff-missing-banner"> <strong>Original file not found.</strong> Displaying current file content below.
+            diffHtml += `<div class="diff-missing-banner"> <strong>Arquivo original não encontrado.</strong> Exibindo o conteúdo do arquivo atual abaixo.
             </div>`;
             diffHtml += `<pre class="diff-fallback-pre"><code>${escapeHtml(resultText)}</code></pre>`;
         } else {
@@ -2196,7 +2197,7 @@ async function viewDiff(setupPath, resultPath, testName, trialNumber) {
 
                 if (hiddenCount > 0) {
                     if (head) diffHtml += `<span class="${colorClass}">${escapeHtml(head)}</span>`;
-                    diffHtml += `<div class="diff-separator">... ${hiddenCount} unchanged lines ...</div>`;
+                    diffHtml += `<div class="diff-separator">... ${hiddenCount} ${hiddenCount === 1 ? 'linha inalterada' : 'linhas inalteradas'} ...</div>`;
                     if (tail) diffHtml += `<span class="${colorClass}">${escapeHtml(tail)}</span>`;
                     return;
                 }
@@ -2222,7 +2223,7 @@ async function viewDiff(setupPath, resultPath, testName, trialNumber) {
         error.style.color = 'var(--accent-failure)';
         error.style.padding = '20px';
         const msg = e instanceof Error ? e.message : String(e);
-        error.textContent = `Error loading diff: ${msg}`;
+        error.textContent = `Erro ao carregar o diff: ${msg}`;
         body.appendChild(error);
         contentDiv.classList.remove('diff-modal');
     }
@@ -2298,7 +2299,7 @@ function renderDashboardDumbbellChart(data, summary = currentJobSummary) {
     Object.keys(results).forEach(key => {
         const trials = results[key];
         const sampleTrial = trials[0];
-        const discipline = (sampleTrial && sampleTrial.discipline) || 'Uncategorized';
+        const discipline = (sampleTrial && sampleTrial.discipline) || 'Sem categoria';
 
         if (!groupedByDiscipline[discipline]) {
             groupedByDiscipline[discipline] = {};
@@ -2342,7 +2343,7 @@ function renderDashboardDumbbellChart(data, summary = currentJobSummary) {
 
         const titleEl = document.createElement('div');
         titleEl.className = 'meta-label';
-        titleEl.textContent = currentMetricMode === 'a11y' ? `${discipline} (Accessibility Checks)` : discipline;
+        titleEl.textContent = currentMetricMode === 'a11y' ? `${discipline} (Verificações de acessibilidade)` : discipline;
         titleEl.style.padding = '12px 16px 0'; // Padding top and horizontal
         chartDiv.appendChild(titleEl);
 
@@ -2424,8 +2425,8 @@ function renderDashboardDumbbellChart(data, summary = currentJobSummary) {
         const emptyMsg = document.createElement('p');
         emptyMsg.className = 'empty-chart-msg';
         emptyMsg.textContent = currentMetricMode === 'a11y'
-            ? 'No accessibility checks recorded in this job.'
-            : 'No chart data available for this job.';
+            ? 'Nenhuma verificação de acessibilidade registrada nesta execução.'
+            : 'Nenhum dado de gráfico disponível para esta execução.';
         container.appendChild(emptyMsg);
     }
 }

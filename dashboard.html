@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8">
@@ -9,22 +9,22 @@
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#f8f9fa" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#111418" media="(prefers-color-scheme: dark)">
-  <meta name="description" content="Evaluation Job Results for Modern Web Guidance: Inspect per-task guided vs. unguided uplift, automated accessibility check pass rates, completion time, and token usage.">
-  <meta property="og:site_name" content="Modern Web Guidance Evals">
+  <meta name="description" content="Resultados da Execução de Avaliação do Modern Web Guidance: inspecione o ganho guiado vs. sem guia por tarefa, taxas de aprovação em verificações automáticas de acessibilidade, tempo de conclusão e uso de tokens.">
+  <meta property="og:site_name" content="Avaliações Modern Web Guidance">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Evaluation Job Results — Modern Web Guidance Evals">
-  <meta property="og:description" content="Inspect per-task guided vs. unguided uplift, automated accessibility check pass rates, completion time, and token usage.">
+  <meta property="og:title" content="Resultados da Execução de Avaliação — Avaliações Modern Web Guidance">
+  <meta property="og:description" content="Inspecione o ganho guiado vs. sem guia por tarefa, taxas de aprovação em verificações automáticas de acessibilidade, tempo de conclusão e uso de tokens.">
   <meta property="og:image" content="https://theobarros22.github.io/modern-web-guidance-src/og-image.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="2400">
   <meta property="og:image:height" content="1260">
-  <meta property="og:image:alt" content="Modern Web Guidance Evals: Lantern logo beside a dumbbell chart illustrating paired A/B pass-rate lift with Modern Web Guidance across Claude Code, Codex CLI, and Antigravity CLI.">
+  <meta property="og:image:alt" content="Avaliações Modern Web Guidance: logotipo de lanterna ao lado de um gráfico de halteres ilustrando o ganho pareado A/B na taxa de aprovação com Modern Web Guidance no Claude Code, Codex CLI e Antigravity CLI.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Evaluation Job Results — Modern Web Guidance Evals">
-  <meta name="twitter:description" content="Inspect per-task guided vs. unguided uplift, automated accessibility check pass rates, completion time, and token usage.">
+  <meta name="twitter:title" content="Resultados da Execução de Avaliação — Avaliações Modern Web Guidance">
+  <meta name="twitter:description" content="Inspecione o ganho guiado vs. sem guia por tarefa, taxas de aprovação em verificações automáticas de acessibilidade, tempo de conclusão e uso de tokens.">
   <meta name="twitter:image" content="https://theobarros22.github.io/modern-web-guidance-src/og-image.png">
-  <meta name="twitter:image:alt" content="Modern Web Guidance Evals: Lantern logo beside a dumbbell chart illustrating paired A/B pass-rate lift with Modern Web Guidance across Claude Code, Codex CLI, and Antigravity CLI.">
-  <title>Job Results</title>
+  <meta name="twitter:image:alt" content="Avaliações Modern Web Guidance: logotipo de lanterna ao lado de um gráfico de halteres ilustrando o ganho pareado A/B na taxa de aprovação com Modern Web Guidance no Claude Code, Codex CLI e Antigravity CLI.">
+  <title>Resultados da Execução de Avaliação</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://storage.googleapis.com" crossorigin>
   <link rel="stylesheet" href="dashboard.css">
@@ -33,18 +33,18 @@
 </head>
 
 <body>
-  <a href="#main-content" class="skip-link visually-hidden">Skip to main content</a>
+  <a href="#main-content" class="skip-link visually-hidden">Pular para o conteúdo principal</a>
   <div class="container">
     <header>
       <div class="suite-header-row">
         <div id="test-header" class="suite-test-header" aria-busy="true">
-          <h1 class="suite-page-title">Evaluation Job Results</h1>
+          <h1 class="suite-page-title">Resultados da Execução de Avaliação</h1>
           <!-- Test ID and metadata will be injected here -->
         </div>
         <div class="suite-header-actions">
-          <a href="./" class="secondary-btn">← Back to results</a>
+          <a href="./" class="secondary-btn">← Voltar aos resultados</a>
           <button id="auth-btn" class="secondary-btn" type="button" style="display: none;">
-            Sign in with Google
+            Entrar com Google
           </button>
         </div>
       </div>
@@ -55,29 +55,29 @@
 
     <main id="main-content" tabindex="-1">
       <section id="chart-section" class="chart-container suite-chart-section" aria-labelledby="suite-summary-heading" aria-busy="true">
-        <h2 id="suite-summary-heading" class="visually-hidden">Job summary</h2>
+        <h2 id="suite-summary-heading" class="visually-hidden">Resumo da execução</h2>
         <div id="summary-side-panel" class="narrative-summary-grid"></div>
         <p class="dumbbell-legend suite-legend">
-          <span class="legend-item"><span class="legend-dot unguided" aria-hidden="true"></span>Unguided (without MWG)</span>
-          <span class="legend-item"><span class="legend-dot guided" aria-hidden="true"></span>Guided (with MWG)</span>
-          <span class="legend-item"><span class="legend-line improved" aria-hidden="true"></span>Improved</span>
-          <span class="legend-item"><span class="legend-line regressed" aria-hidden="true"></span>Regressed (dashed)</span>
-          <span class="legend-item legend-note"><span class="legend-glyph" aria-hidden="true">⚠</span>Infra error before grading; shaded band shows the possible pass-rate range</span>
-          <span class="legend-item legend-note">Pass-rate change in percentage points (pp); duration and token change in %, lower is better.</span>
+          <span class="legend-item"><span class="legend-dot unguided" aria-hidden="true"></span>Sem guia (sem MWG)</span>
+          <span class="legend-item"><span class="legend-dot guided" aria-hidden="true"></span>Guiado (com MWG)</span>
+          <span class="legend-item"><span class="legend-line improved" aria-hidden="true"></span>Melhorou</span>
+          <span class="legend-item"><span class="legend-line regressed" aria-hidden="true"></span>Regrediu (tracejado)</span>
+          <span class="legend-item legend-note"><span class="legend-glyph" aria-hidden="true">⚠</span>Erro de infraestrutura antes da avaliação; a faixa sombreada mostra o intervalo possível da taxa de aprovação</span>
+          <span class="legend-item legend-note">Variação da taxa de aprovação em pontos percentuais (pp); variação de duração e tokens em %, quanto menor, melhor.</span>
         </p>
         <div class="chart-toolbar">
           <div class="chart-toolbar-left">
-            <span class="meta-label">Chart &amp; task view:</span>
+            <span class="meta-label">Visualização do gráfico e tarefas:</span>
             <fieldset class="metric-mode-toggle">
-              <legend class="visually-hidden">Evaluation check filter</legend>
-              <label class="mode-toggle-btn" id="dash-mode-all-btn"><input type="radio" name="dash-mode" value="all" checked>All checks</label>
-              <label class="mode-toggle-btn" id="dash-mode-a11y-btn"><input type="radio" name="dash-mode" value="a11y">Accessibility checks</label>
+              <legend class="visually-hidden">Filtro de verificações de avaliação</legend>
+              <label class="mode-toggle-btn" id="dash-mode-all-btn"><input type="radio" name="dash-mode" value="all" checked>Todas as verificações</label>
+              <label class="mode-toggle-btn" id="dash-mode-a11y-btn"><input type="radio" name="dash-mode" value="a11y">Verificações de acessibilidade</label>
             </fieldset>
-            <button type="button" class="info-hint-btn anchor-dash-a11y" interestfor="dash-tooltip-a11y" aria-label="About automated accessibility checks">?</button>
+            <button type="button" class="info-hint-btn anchor-dash-a11y" interestfor="dash-tooltip-a11y" aria-label="Sobre verificações automáticas de acessibilidade">?</button>
           </div>
           <div class="chart-toolbar-right">
-            <span class="meta-label">Hover or focus bars for runtime &amp; uncached token deltas</span>
-            <button type="button" class="info-hint-btn anchor-dash-tokens" interestfor="dash-tooltip-tokens" aria-label="About uncached vs. total tokens">?</button>
+            <span class="meta-label">Passe o mouse ou foque nas barras para ver variações de tempo e tokens sem cache</span>
+            <button type="button" class="info-hint-btn anchor-dash-tokens" interestfor="dash-tooltip-tokens" aria-label="Sobre tokens sem cache vs. totais">?</button>
           </div>
         </div>
         <div id="dumbbell-chart" class="suite-dumbbell-chart"></div>
@@ -86,48 +86,48 @@
       <section id="guide-section" aria-labelledby="guide-evals-heading">
         <div class="guide-section-header">
           <div class="guide-title-group">
-            <h2 id="guide-evals-heading" class="guide-evals-heading">Guide evals</h2>
+            <h2 id="guide-evals-heading" class="guide-evals-heading">Avaliações por guia</h2>
             <span id="evals-count" class="evals-count" aria-live="polite"></span>
           </div>
           <div class="guide-controls">
-            <input type="search" id="eval-filter" class="eval-filter-input" list="eval-features-datalist" placeholder="Filter guides, tasks, or web-feature…" autocomplete="off" aria-label="Filter guides, tasks, or web-feature">
+            <input type="search" id="eval-filter" class="eval-filter-input" list="eval-features-datalist" placeholder="Filtrar guias, tarefas ou web-feature…" autocomplete="off" aria-label="Filtrar guias, tarefas ou web-feature">
             <datalist id="eval-features-datalist"></datalist>
-            <button type="button" id="eval-sort-reset" class="text-btn eval-sort-reset" hidden>Reset sort</button>
+            <button type="button" id="eval-sort-reset" class="text-btn eval-sort-reset" hidden>Redefinir ordenação</button>
           </div>
         </div>
-        <div id="eval-category-pills" class="eval-category-pills" role="group" aria-label="Filter by category"></div>
+        <div id="eval-category-pills" class="eval-category-pills" role="group" aria-label="Filtrar por categoria"></div>
         <div id="guide-grid" class="dashboard-grid" aria-busy="true"></div>
       </section>
     </main>
 
     <footer class="dashboard-footer site-legal-footer">
-      <a href="./" class="secondary-btn">← Back to results</a>
-      <button id="view-gcs-artifacts-btn" class="secondary-btn" hidden>View source</button>
-      <button id="view-log-btn" class="secondary-btn">View full job log</button>
-      <nav aria-label="Legal and privacy links" class="site-legal-nav">
-        <a href="https://policies.google.com/privacy" class="site-legal-link" rel="noopener">Privacy</a>
+      <a href="./" class="secondary-btn">← Voltar aos resultados</a>
+      <button id="view-gcs-artifacts-btn" class="secondary-btn" hidden>Ver origem</button>
+      <button id="view-log-btn" class="secondary-btn">Ver log completo da execução</button>
+      <nav aria-label="Links legais e de privacidade" class="site-legal-nav">
+        <a href="https://policies.google.com/privacy" class="site-legal-link" rel="noopener">Privacidade</a>
         <span class="site-legal-sep" aria-hidden="true">·</span>
-        <a href="https://policies.google.com/terms" class="site-legal-link" rel="noopener">Terms</a>
+        <a href="https://policies.google.com/terms" class="site-legal-link" rel="noopener">Termos</a>
       </nav>
     </footer>
   </div>
 
   <div id="dash-tooltip-a11y" popover="hint" class="hint-popover">
-    <strong>Automated accessibility checks</strong><br>
-    Aggregates deterministic browser checks that verify foundational platform accessibility mechanics across both dedicated <code>accessibility/</code> guides and UI, CSS, and HTML component guides. Each check is classified into one of five dimensions: Focus &amp; <code>inert</code> management; Motion, contrast &amp; visual; ARIA, roles &amp; live regions; Form labels &amp; grouping; and Keyboard &amp; non-gesture operability. Automated checks catch common AI omissions in code but do not measure full WCAG compliance or replace manual and assistive-technology testing.
+    <strong>Verificações automáticas de acessibilidade</strong><br>
+    Agrega verificações determinísticas de navegador que validam fundamentos de acessibilidade da plataforma tanto em guias dedicados de <code>accessibility/</code> quanto em guias de componentes de UI, CSS e HTML. Cada verificação é classificada em uma de cinco dimensões: Foco e gerenciamento de <code>inert</code>; Movimento, contraste e visual; ARIA, papéis e regiões live; Rótulos e agrupamento de formulários; e Operabilidade por teclado e sem gestos. Verificações automáticas detectam omissões comuns de IA no código, mas não medem conformidade completa com WCAG nem substituem testes manuais e com tecnologias assistivas.
   </div>
   <div id="dash-tooltip-tokens" popover="hint" class="hint-popover">
-    <strong>Uncached vs. total token accounting</strong><br>
-    <code>Uncached tokens = total − cached</code> (fresh input + output + thinking tokens). Multi-turn agents re-read cached prompt prefixes on every tool turn (roughly 85–96% cached for Claude Code and Codex CLI, ~20% for Antigravity CLI), so both uncached tokens and totals with cache share are shown.
+    <strong>Contabilização de tokens sem cache vs. totais</strong><br>
+    <code>Tokens sem cache = total − em cache</code> (entrada nova + saída + tokens de raciocínio). Agentes de múltiplos turnos releem prefixos de prompt em cache a cada chamada de ferramenta (cerca de 85–96% em cache no Claude Code e Codex CLI, ~20% no Antigravity CLI), por isso exibimos tanto os tokens sem cache quanto o total com a parcela em cache.
   </div>
   <div id="dumbbell-tooltip" popover="hint" class="chart-tooltip" role="tooltip"></div>
   <div id="effort-tooltip" class="hint-popover" popover="hint" role="tooltip"></div>
   <dialog id="modal" aria-labelledby="modal-title" closedby="any">
     <div class="modal-content">
       <form method="dialog" class="close-modal-form">
-        <button class="close-modal" aria-label="Close modal">&times;</button>
+        <button class="close-modal" aria-label="Fechar modal">&times;</button>
       </form>
-      <h2 id="modal-title">Trial Details</h2>
+      <h2 id="modal-title">Detalhes da Execução</h2>
       <div id="modal-body">
         <!-- Detailed trials will be injected here -->
       </div>
