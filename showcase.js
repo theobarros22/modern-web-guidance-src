@@ -300,7 +300,7 @@ function renderPromptBar(task, pair) {
         const cleanGuides = rawGuides.map(g => g.replace(/;+$/, '')).filter(Boolean);
         const guideLinksHtml = cleanGuides.map(slug => {
             const cat = guideCategoryMap[slug] || task.category;
-            const ghHref = `https://github.com/GoogleChrome/modern-web-guidance-src/blob/main/guides/${encodeURIComponent(cat)}/${encodeURIComponent(slug)}/guide.md`;
+            const ghHref = `https://github.com/theobarros22/modern-web-guidance-src/blob/main/guides/${encodeURIComponent(cat)}/${encodeURIComponent(slug)}/guide.md`;
             return `<a class="ab-prov-link" href="${ghHref}" target="_blank" rel="noopener">${escapeHtml(slug)}</a>`;
         }).join(', ');
         const guidePrefix = cleanGuides.length > 1 ? 'Guides:' : 'Guide:';
