@@ -102,7 +102,7 @@
 .agent-table tr + tr { border-block-start: 1px solid var(--color-outline-variant); }
 .agent-table th, .agent-table td { border-block-start: 0; }
 .agent-table tbody th { padding-block-end: var(--space-1); background: var(--color-surface-container-low); white-space: normal; }
-.agent-table { --agent-col-2: "Pass rate"; --agent-col-3: "Accessibility"; --agent-col-4: "Sample"; }
+.agent-table { --agent-col-2: "Taxa de aprovação"; --agent-col-3: "Acessibilidade"; --agent-col-4: "Amostra"; }
 .agent-table td { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: flex-start; gap: var(--space-2); padding-block: var(--space-2); }
 .agent-table .metric-main { flex-wrap: wrap; justify-content: flex-end; }
 .agent-cell-stack { align-items: flex-end; text-align: end; }
